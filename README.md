@@ -23,7 +23,7 @@ OR OTHER DEALINGS IN THE SOFTWARE.
 --->
 # Gotemir
 
-[![Build Status](https://github.com/blablatdinov/gotemir/workflows/test/badge.svg?branch=master&event=push)](https://github.com/blablatdinov/gotemir/actions?query=workflow%3Apr-check)
+[![Build status](https://github.com/blablatdinov/gotemir/actions/workflows/pr-check.yaml/badge.svg)](https://github.com/blablatdinov/gotemir/actions/workflows/pr-check.yaml)
 [![Lines of code](https://tokei.rs/b1/github/blablatdinov/gotemir)](https://github.com/XAMPPRocky/tokei_rs)
 [![Hits-of-Code](https://hitsofcode.com/github/blablatdinov/gotemir)](https://hitsofcode.com/github/blablatdinov/gotemir/view)
 
