@@ -22,6 +22,32 @@
 
 package logic
 
-type Directory interface {
-	Structure() ([]string, error)
+import (
+	"os"
+	"path/filepath"
+)
+
+type OsDirectory struct {
+	path string
+}
+
+func OsDirectoryCtor(path string) Directory {
+	return OsDirectory{
+		path,
+	}
+}
+
+func (osDirectory OsDirectory) Structure() ([]string, error) {
+	var files []string
+	err := filepath.Walk(osDirectory.path, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if !info.IsDir() {
+			relativePath, _ := filepath.Rel(osDirectory.path, path)
+			files = append(files, relativePath)
+		}
+		return nil
+	})
+	return files, err
 }
