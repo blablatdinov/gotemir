@@ -1,0 +1,7 @@
+linters:
+  enable-all: true
+issues:
+  exclude:
+    - returns interface
+    - return with no blank line before
+    - break with no blank line before
