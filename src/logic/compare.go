@@ -26,24 +26,6 @@ import (
 	"strings"
 )
 
-type Directory interface {
-	structure() ([]string, error)
-}
-
-type FkDirectory struct {
-	origin []string
-}
-
-func FkDirectoryCtor(origin []string) Directory {
-	return FkDirectory{
-		origin,
-	}
-}
-
-func (fkDirectory FkDirectory) structure() ([]string, error) {
-	return fkDirectory.origin, nil
-}
-
 func Compare(srcDir Directory, testsDir Directory) []string {
 	filesWithoutTests := make([]string, 0)
 	srcFiles, _ := srcDir.structure()

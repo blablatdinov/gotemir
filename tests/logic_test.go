@@ -26,7 +26,7 @@ import (
 	"strings"
 	"testing"
 
-	gotemir "github.com/blablatdinov/gotemir/src"
+	gotemir "github.com/blablatdinov/gotemir/src/logic"
 )
 
 func TestCompare(t *testing.T) {
