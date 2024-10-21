@@ -1,0 +1,17 @@
+[project]
+name = "gotemir"
+version = "0.0.0"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+
+[tool.uv]
+dev-dependencies = [
+    "isort==5.13.2",
+    "pytest==8.3.3",
+]
+
+[tool.isort]
+line_length = 120
+multi_line_output = 3
+include_trailing_comma = true
