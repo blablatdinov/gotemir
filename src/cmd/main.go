@@ -20,13 +20,40 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 
-module github.com/blablatdinov/gotemir
+package main
 
-go 1.22.5
+import (
+	"fmt"
+	"log"
+	"os"
+	"strings"
 
-require (
-	github.com/cpuguy83/go-md2man/v2 v2.0.5 // indirect
-	github.com/russross/blackfriday/v2 v2.1.0 // indirect
-	github.com/urfave/cli/v2 v2.27.5 // indirect
-	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
+	"github.com/urfave/cli/v2"
 )
+
+func main() {
+	app := &cli.App{
+		Name: "Gotemir",
+		Description: strings.Join(
+			[]string{
+				"is a tool that verifies if the structure of the test directory",
+				"mirrors the structure of the source code directory. It ensures",
+				"that for every source file, a corresponding test file exists",
+				"in the appropriate directory.",
+			},
+			" ",
+		),
+		Action: func(cliCtx *cli.Context) error {
+			if cliCtx.NArg() < 2 {
+				return fmt.Errorf("you must provide both source and test directories")
+			}
+			srcDir := cliCtx.Args().Get(0)
+			testDir := cliCtx.Args().Get(1)
+			fmt.Println(srcDir, testDir)
+			return nil
+		},
+	}
+	if err := app.Run(os.Args); err != nil {
+		log.Fatal(err)
+	}
+}
