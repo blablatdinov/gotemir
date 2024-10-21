@@ -53,5 +53,8 @@ func (osDirectory OsDirectory) Structure() ([]string, error) {
 		}
 		return nil
 	})
-	return files, fmt.Errorf("%w. Dirname=%s error: %w", errWalking, osDirectory.path, err)
+	if err != nil {
+		err = fmt.Errorf("%w. Dirname=%s error: %w", errWalking, osDirectory.path, err)
+	}
+	return files, err
 }
