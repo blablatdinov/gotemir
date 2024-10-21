@@ -24,6 +24,7 @@ package logic_test
 
 import (
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -60,6 +61,14 @@ func TestOsDirectory(t *testing.T) {
 	tempDir := prepareFiles(t)
 	osDir := gotemir.OsDirectoryCtor(tempDir)
 	expected := []string{"src/entry.py", "src/handlers/file.py"}
+	localizedExpected := make([]string, len(expected), len(expected))
+	for idx, expectedFile := range expected {
+		localized, err := filepath.Localize(expectedFile)
+		if err != nil {
+			t.Fatalf("Fail on localized path: %s", expectedFile)
+		}
+		localizedExpected[idx] = localized
+	}
 
 	got, err := osDir.Structure()
 	if err != nil {
@@ -77,11 +86,11 @@ func TestOsDirectory(t *testing.T) {
 				"\n",
 			),
 			got,
-			expected,
+			localizedExpected,
 		)
 	}
 	for idx, actual := range got {
-		if actual != expected[idx] {
+		if actual != localizedExpected[idx] {
 			t.Errorf(
 				strings.Join(
 					[]string{
@@ -93,7 +102,7 @@ func TestOsDirectory(t *testing.T) {
 				),
 				idx,
 				got,
-				expected,
+				localizedExpected,
 			)
 		}
 	}
