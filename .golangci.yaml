@@ -2,6 +2,20 @@ linters:
   enable-all: true
 issues:
   exclude:
+    # Work via interface only
+    # https://www.yegor256.com/2014/11/20/seven-virtues-of-good-object.html#2-he-works-by-contracts
     - returns interface
+    # Empty line in function is smell
+    # https://www.yegor256.com/2014/11/03/empty-line-code-smell.html
     - return with no blank line before
     - break with no blank line before
+    - only one cuddle assignment allowed before range statement
+    - return statements should not be cuddled if block has more than two lines
+    - Assignments should only be cuddled with other assignments
+linters-settings:
+  depguard:
+    rules:
+      main:
+        allow:
+          - $gostd
+          - github.com/blablatdinov/gotemir

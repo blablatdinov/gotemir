@@ -20,7 +20,7 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 
-package tests
+package logic_test
 
 import (
 	"strings"
@@ -30,6 +30,7 @@ import (
 )
 
 func TestCompare(t *testing.T) {
+	t.Parallel()
 	cases := []struct {
 		srcDir   gotemir.Directory
 		testsDir gotemir.Directory
@@ -80,6 +81,7 @@ func TestCompare(t *testing.T) {
 }
 
 func TestFileWithoutTest(t *testing.T) {
+	t.Parallel()
 	cases := []struct {
 		srcDir   gotemir.Directory
 		testsDir gotemir.Directory
@@ -115,9 +117,9 @@ func TestFileWithoutTest(t *testing.T) {
 				testCase.expected,
 			)
 		}
-		for i := 0; i < len(got); i++ {
-			if testCase.expected[i] != got[i] {
-				t.Errorf("Expected: %s, actual: %s\n", testCase.expected, got[i])
+		for idx, actualFile := range got {
+			if testCase.expected[idx] != actualFile {
+				t.Errorf("Expected: %s, actual: %s\n", testCase.expected, actualFile)
 				t.Errorf(
 					strings.Join(
 						[]string{
@@ -129,11 +131,11 @@ func TestFileWithoutTest(t *testing.T) {
 						},
 						"\n",
 					),
-					i,
+					idx,
 					testCase.srcDir,
 					testCase.testsDir,
-					got[i],
-					testCase.expected[i],
+					actualFile,
+					testCase.expected[idx],
 				)
 			}
 		}
