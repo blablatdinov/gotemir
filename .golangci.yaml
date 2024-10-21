@@ -41,3 +41,4 @@ linters-settings:
         allow:
           - $gostd
           - github.com/blablatdinov/gotemir
+          - github.com/urfave/cli/v2
