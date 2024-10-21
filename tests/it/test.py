@@ -20,9 +20,10 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
 
+"""Integration tests for gotemir."""
+
 import os
 import subprocess
-import zipfile
 from collections.abc import Generator
 from pathlib import Path
 
@@ -30,34 +31,35 @@ import pytest
 from _pytest.legacypath import TempdirFactory
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def current_dir() -> Path:
     """Current directory for installing actual gotemir."""
     return Path().absolute()
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def _test_dir(tmpdir_factory: TempdirFactory, current_dir: str) -> Generator[Path, None, None]:
     """Directory with test structure."""
-    tmp_path = tmpdir_factory.mktemp('test')
+    tmp_path = tmpdir_factory.mktemp("test")
     subprocess.run(
-        ['go', 'build', '-o', str(tmp_path / 'gotemir'), str(current_dir / 'src' / 'cmd' / 'gotemir.go')],
+        ["go", "build", "-o", str(tmp_path / "gotemir"), str(current_dir / "src" / "cmd" / "gotemir.go")],
         check=True,
     )
     os.chdir(tmp_path)
-    Path('src').mkdir(exist_ok=True, parents=True)
-    Path('src/handlers').mkdir(exist_ok=True, parents=True)
-    Path('tests/handlers').mkdir(exist_ok=True, parents=True)
-    Path('src/entry.py').write_bytes(b'')
-    Path('src/handlers/users.py').write_bytes(b'')
-    Path('tests/test_entry.py').write_bytes(b'')
-    Path('tests/handlers/test_users.py').write_bytes(b'')
+    Path("src").mkdir(exist_ok=True, parents=True)
+    Path("src/handlers").mkdir(exist_ok=True, parents=True)
+    Path("tests/handlers").mkdir(exist_ok=True, parents=True)
+    Path("src/entry.py").write_bytes(b"")
+    Path("src/handlers/users.py").write_bytes(b"")
+    Path("tests/test_entry.py").write_bytes(b"")
+    Path("tests/handlers/test_users.py").write_bytes(b"")
     yield tmp_path
     os.chdir(current_dir)
 
 
-@pytest.mark.usefixtures('_test_dir')
-def test():
-    got = subprocess.run(['./gotemir', 'src', 'tests'], check=True)
+@pytest.mark.usefixtures("_test_dir")
+def test() -> None:
+    """Test run gotemir."""
+    got = subprocess.run(["./gotemir", "src", "tests"], check=True)
 
     assert got.returncode == 0
