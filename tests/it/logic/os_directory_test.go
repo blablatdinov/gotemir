@@ -31,6 +31,7 @@ import (
 )
 
 func prepareFiles(t *testing.T) string {
+	t.Helper()
 	tempDir, err := os.MkdirTemp(os.TempDir(), "gotemir_test")
 	if err != nil {
 		t.Fatalf("Fail on create temp dir: %s", err)
@@ -39,10 +40,18 @@ func prepareFiles(t *testing.T) string {
 	handlersDirPath := srcDirPath + "/handlers"
 	entryPath := srcDirPath + "/entry.py"
 	filePath := handlersDirPath + "/file.py"
-	os.Mkdir(srcDirPath, 0770)
-	os.Mkdir(handlersDirPath, 0770)
-	os.WriteFile(entryPath, []byte(""), 0660)
-	os.WriteFile(filePath, []byte(""), 0660)
+	if err = os.Mkdir(srcDirPath, 0o770); err != nil {
+		t.Fatalf("Fail on create dir %s: %s", srcDirPath, err)
+	}
+	if err = os.Mkdir(handlersDirPath, 0o770); err != nil {
+		t.Fatalf("Fail on create dir %s: %s", handlersDirPath, err)
+	}
+	if err = os.WriteFile(entryPath, []byte(""), 0o600); err != nil {
+		t.Fatalf("Fail on create file %s: %s", entryPath, err)
+	}
+	if err = os.WriteFile(filePath, []byte(""), 0o600); err != nil {
+		t.Fatalf("Fail on create file %s: %s", filePath, err)
+	}
 	return tempDir
 }
 

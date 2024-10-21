@@ -23,6 +23,8 @@
 package logic
 
 import (
+	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 )
@@ -37,11 +39,13 @@ func OsDirectoryCtor(path string) Directory {
 	}
 }
 
+var errWalking = errors.New("fail on walk directory")
+
 func (osDirectory OsDirectory) Structure() ([]string, error) {
 	var files []string
 	err := filepath.Walk(osDirectory.path, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
-			return err
+			return fmt.Errorf("%w. Dirname=%s error: %w", errWalking, path, err)
 		}
 		if !info.IsDir() {
 			relativePath, _ := filepath.Rel(osDirectory.path, path)
@@ -49,5 +53,5 @@ func (osDirectory OsDirectory) Structure() ([]string, error) {
 		}
 		return nil
 	})
-	return files, err
+	return files, fmt.Errorf("%w. Dirname=%s error: %w", errWalking, osDirectory.path, err)
 }

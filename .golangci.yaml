@@ -34,6 +34,8 @@ issues:
     - only one cuddle assignment allowed before range statement
     - return statements should not be cuddled if block has more than two lines
     - Assignments should only be cuddled with other assignments
+    - only one cuddle assignment allowed before if statement
+    - if statements should only be cuddled with assignments
 linters-settings:
   depguard:
     rules:

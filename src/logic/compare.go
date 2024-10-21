@@ -59,7 +59,7 @@ func Compare(srcDir Directory, testsDir Directory) []string {
 				}
 			}
 		}
-		if !testFileFound { //nolint:wsl
+		if !testFileFound {
 			filesWithoutTests = append(filesWithoutTests, srcFile)
 		}
 	}
