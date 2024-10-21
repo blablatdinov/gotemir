@@ -28,6 +28,7 @@ import (
 	"os"
 	"strings"
 
+	gotemir "github.com/blablatdinov/gotemir/src/logic"
 	"github.com/urfave/cli/v2"
 )
 
@@ -50,9 +51,18 @@ func main() {
 			if cliCtx.NArg() < expectedOptionCount {
 				return errOptions
 			}
-			srcDir := cliCtx.Args().Get(0)
-			testDir := cliCtx.Args().Get(1)
-			log.Printf("srcDir=%s testDir=%s\n", srcDir, testDir)
+			filesWithoutTests := gotemir.Compare(
+				gotemir.OsDirectoryCtor(
+					cliCtx.Args().Get(0),
+				),
+				gotemir.OsDirectoryCtor(
+					cliCtx.Args().Get(1),
+				),
+			)
+			log.Println("Files without tests:")
+			for _, fileWithoutTest := range filesWithoutTests {
+				log.Printf(" - %s\n", fileWithoutTest)
+			}
 			return nil
 		},
 	}

@@ -42,6 +42,26 @@ jobs:
           go-version: 1.23.2
       - name: Run test
         run: go test ./...
+
+  integration-test:
+    strategy:
+      matrix:
+        os: [ ubuntu-24.04, windows-2022, macos-15 ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.23.2
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+      - name: Run test
+        run: uv run pytest tests/it/test.py
   
   editorconfig:
     runs-on: ubuntu-24.04
@@ -54,7 +74,7 @@ jobs:
           bin/ec-linux-amd64
 
   golangci:
-    name: lint
+    name: lint via golangci
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -65,3 +85,17 @@ jobs:
         uses: golangci/golangci-lint-action@v6
         with:
           version: v1.60
+
+  ruff:
+    name: lint via ruff
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+      - name: Run ruff
+        run: uv run ruff check tests
