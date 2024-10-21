@@ -74,7 +74,7 @@ jobs:
           bin/ec-linux-amd64
 
   golangci:
-    name: lint
+    name: lint via golangci
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -87,7 +87,7 @@ jobs:
           version: v1.60
 
   ruff:
-    name: lint
+    name: lint via ruff
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
