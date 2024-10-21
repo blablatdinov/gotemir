@@ -23,7 +23,7 @@
 package main
 
 import (
-	"fmt"
+	"errors"
 	"log"
 	"os"
 	"strings"
@@ -31,8 +31,10 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+var errOptions = errors.New("you must provide both source and test directories")
+
 func main() {
-	app := &cli.App{
+	app := &cli.App{ //nolint:exhaustruct
 		Name: "Gotemir",
 		Description: strings.Join(
 			[]string{
@@ -44,12 +46,13 @@ func main() {
 			" ",
 		),
 		Action: func(cliCtx *cli.Context) error {
-			if cliCtx.NArg() < 2 {
-				return fmt.Errorf("you must provide both source and test directories")
+			expectedOptionCount := 2
+			if cliCtx.NArg() < expectedOptionCount {
+				return errOptions
 			}
 			srcDir := cliCtx.Args().Get(0)
 			testDir := cliCtx.Args().Get(1)
-			fmt.Println(srcDir, testDir)
+			log.Printf("srcDir=%s testDir=%s\n", srcDir, testDir)
 			return nil
 		},
 	}
