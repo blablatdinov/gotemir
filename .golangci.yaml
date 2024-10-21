@@ -20,45 +20,24 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
 ---
-name: Build
-
-on:
-  pull_request:
-    branches: [ "master" ]
-  push:
-    branches: [ "master" ]
-
-jobs:
-  build:
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: 1.22.5
-      - name: Run test
-        run: go test ./...
-  
-  editorconfig:
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Checking files for compliance with editorconfig
-        run: |
-          VERSION="v3.0.3"
-          curl -O -L -C - https://github.com/editorconfig-checker/editorconfig-checker/releases/download/$VERSION/ec-linux-amd64.tar.gz
-          tar xzf ec-linux-amd64.tar.gz
-          bin/ec-linux-amd64
-
-  golangci:
-    name: lint
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version: 1.22.5
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v6
-        with:
-          version: v1.60
+linters:
+  enable-all: true
+issues:
+  exclude:
+    # Work via interface only
+    # https://www.yegor256.com/2014/11/20/seven-virtues-of-good-object.html#2-he-works-by-contracts
+    - returns interface
+    # Empty line in function is smell
+    # https://www.yegor256.com/2014/11/03/empty-line-code-smell.html
+    - return with no blank line before
+    - break with no blank line before
+    - only one cuddle assignment allowed before range statement
+    - return statements should not be cuddled if block has more than two lines
+    - Assignments should only be cuddled with other assignments
+linters-settings:
+  depguard:
+    rules:
+      main:
+        allow:
+          - $gostd
+          - github.com/blablatdinov/gotemir

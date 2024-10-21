@@ -28,8 +28,8 @@ import (
 
 func Compare(srcDir Directory, testsDir Directory) []string {
 	filesWithoutTests := make([]string, 0)
-	srcFiles, _ := srcDir.structure()
 	testFiles, _ := testsDir.structure()
+	srcFiles, _ := srcDir.structure()
 	for _, srcFile := range srcFiles {
 		fileExtension := "." + strings.Split(srcFile, ".")[1]
 		splittedPath := strings.Split(srcFile, "/")
@@ -59,7 +59,7 @@ func Compare(srcDir Directory, testsDir Directory) []string {
 				}
 			}
 		}
-		if !testFileFound {
+		if !testFileFound { //nolint:wsl
 			filesWithoutTests = append(filesWithoutTests, srcFile)
 		}
 	}
