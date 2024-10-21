@@ -39,6 +39,10 @@ jobs:
           go-version: 1.22.5
       - name: Run test
         run: go test ./...
+  
+  editorconfig:
+    runs-on: ubuntu-24.04
+    steps:
       - name: Checking files for compliance with editorconfig
         run: |
           VERSION="v3.0.3"
@@ -48,7 +52,7 @@ jobs:
 
   golangci:
     name: lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
