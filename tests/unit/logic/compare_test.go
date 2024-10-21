@@ -119,7 +119,6 @@ func TestFileWithoutTest(t *testing.T) {
 		}
 		for idx, actualFile := range got {
 			if testCase.expected[idx] != actualFile {
-				t.Errorf("Expected: %s, actual: %s\n", testCase.expected, actualFile)
 				t.Errorf(
 					strings.Join(
 						[]string{

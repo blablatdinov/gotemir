@@ -22,6 +22,39 @@
 
 package logic
 
-type Directory interface {
-	Structure() ([]string, error)
+import (
+	"errors"
+	"fmt"
+	"os"
+	"path/filepath"
+)
+
+type OsDirectory struct {
+	path string
+}
+
+func OsDirectoryCtor(path string) Directory {
+	return OsDirectory{
+		path,
+	}
+}
+
+var errWalking = errors.New("fail on walk directory")
+
+func (osDirectory OsDirectory) Structure() ([]string, error) {
+	var files []string
+	err := filepath.Walk(osDirectory.path, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return fmt.Errorf("%w. Dirname=%s error: %w", errWalking, path, err)
+		}
+		if !info.IsDir() {
+			relativePath, _ := filepath.Rel(osDirectory.path, path)
+			files = append(files, relativePath)
+		}
+		return nil
+	})
+	if err != nil {
+		err = fmt.Errorf("%w. Dirname=%s error: %w", errWalking, osDirectory.path, err)
+	}
+	return files, err
 }

@@ -32,6 +32,6 @@ func FkDirectoryCtor(origin []string) Directory {
 	}
 }
 
-func (fkDirectory FkDirectory) structure() ([]string, error) {
+func (fkDirectory FkDirectory) Structure() ([]string, error) {
 	return fkDirectory.origin, nil
 }
