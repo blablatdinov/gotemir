@@ -36,27 +36,32 @@ func TestCompare(t *testing.T) {
 		testsDir gotemir.Directory
 	}{
 		{
-			srcDir:   gotemir.FkDirectoryCtor([]string{"logic.go"}),
-			testsDir: gotemir.FkDirectoryCtor([]string{"logic_test.go"}),
+			srcDir:   gotemir.FkDirectoryCtor([]string{"src/logic.go"}),
+			testsDir: gotemir.FkDirectoryCtor([]string{"tests/logic_test.go"}),
 		},
 		{
-			srcDir:   gotemir.FkDirectoryCtor([]string{"logic.py"}),
-			testsDir: gotemir.FkDirectoryCtor([]string{"logic_test.py"}),
+			srcDir:   gotemir.FkDirectoryCtor([]string{"src/logic.py"}),
+			testsDir: gotemir.FkDirectoryCtor([]string{"tests/logic_test.py"}),
 		},
 		{
-			srcDir:   gotemir.FkDirectoryCtor([]string{"logic.py"}),
-			testsDir: gotemir.FkDirectoryCtor([]string{"test_logic.py"}),
+			srcDir:   gotemir.FkDirectoryCtor([]string{"src/logic.py"}),
+			testsDir: gotemir.FkDirectoryCtor([]string{"tests/test_logic.py"}),
 		},
 		{
 			srcDir: gotemir.FkDirectoryCtor([]string{
-				"handlers/users.py",
-				"logic/auth.py",
+				"src/handlers/users.py",
+				"src/logic/auth.py",
 			}),
 			testsDir: gotemir.FkDirectoryCtor([]string{
-				"handlers/test_users.py",
-				"logic/test_auth.py",
+				"tests/handlers/test_users.py",
+				"tests/logic/test_auth.py",
 			}),
 		},
+		// TODO: case when source code and test in one directory
+		// {
+		// 	srcDir:   gotemir.FkDirectoryCtor([]string{"logic.go"}),
+		// 	testsDir: gotemir.FkDirectoryCtor([]string{"logic_test.go"}),
+		// },
 	}
 	for _, testCase := range cases {
 		got := gotemir.Compare(testCase.srcDir, testCase.testsDir)
@@ -88,31 +93,37 @@ func TestFileWithoutTest(t *testing.T) {
 		expected []string
 	}{
 		{
-			srcDir:   gotemir.FkDirectoryCtor([]string{"logic.go"}),
-			testsDir: gotemir.FkDirectoryCtor([]string{"unbounded_test.go"}),
-			expected: []string{"logic.go"},
+			srcDir:   gotemir.FkDirectoryCtor([]string{"src/logic.go"}),
+			testsDir: gotemir.FkDirectoryCtor([]string{"tests/unbounded_test.go"}),
+			expected: []string{"src/logic.go"},
 		},
 		{
-			srcDir:   gotemir.FkDirectoryCtor([]string{"logic.py"}),
+			srcDir:   gotemir.FkDirectoryCtor([]string{"src/logic.py"}),
 			testsDir: gotemir.FkDirectoryCtor([]string{}),
-			expected: []string{"logic.py"},
+			expected: []string{"src/logic.py"},
 		},
 		{
 			srcDir: gotemir.FkDirectoryCtor([]string{
-				"handlers/users.py",
-				"logic/auth.py",
+				"src/handlers/users.py",
+				"src/logic/auth.py",
 			}),
 			testsDir: gotemir.FkDirectoryCtor([]string{
-				"handlers/test_users.py",
+				"tests/handlers/test_users.py",
 			}),
-			expected: []string{"logic/auth.py"},
+			expected: []string{"src/logic/auth.py"},
+		},
+		{
+			srcDir:   gotemir.FkDirectoryCtor([]string{"src/logic/logic.py"}),
+			testsDir: gotemir.FkDirectoryCtor([]string{"tests/logic/test_logic.py"}),
+			expected: []string{},
 		},
 	}
-	for _, testCase := range cases {
+	for idx, testCase := range cases {
 		got := gotemir.Compare(testCase.srcDir, testCase.testsDir)
 		if len(got) != len(testCase.expected) {
 			t.Fatalf(
-				"Len of actual and expected not equal\nActual: %v\nExpected: %v\n",
+				"Case %d: len of actual and expected not equal\nActual: %v\nExpected: %v\n",
+				idx+1,
 				got,
 				testCase.expected,
 			)

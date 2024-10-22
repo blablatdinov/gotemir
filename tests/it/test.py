@@ -75,29 +75,53 @@ def create_path(test_dir: Path) -> Callable[[str], None]:
 
 
 @pytest.mark.usefixtures("test_dir")
-@pytest.mark.parametrize("file_structure", [
+@pytest.mark.parametrize(("file_structure", "src_dir", "tests_dir"), [
     (
-        "src/handlers/users.py",
-        "src/entry.py",
-        "tests/handlers/test_users.py",
-        "tests/test_entry.py",
+        (
+            "src/handlers/users.py",
+            "src/entry.py",
+            "tests/handlers/test_users.py",
+            "tests/test_entry.py",
+        ),
+        "src",
+        "tests",
     ),
     (
-        "src/handlers/users.py",
-        "src/entry.py",
-        "src/README.md",
-        "tests/handlers/test_users.py",
-        "tests/test_entry.py",
+        (
+            "src/handlers/users.py",
+            "src/entry.py",
+            "src/README.md",
+            "tests/handlers/test_users.py",
+            "tests/test_entry.py",
+        ),
+        "src",
+        "tests",
+    ),
+    (
+        (
+            "src/handlers/users.py",
+            "src/entry.py",
+            "src/README.md",
+            "src/tests/handlers/test_users.py",
+            "src/tests/test_entry.py",
+        ),
+        "src",
+        "src/tests",
     ),
 ])
 # TODO @blablatdinov: fix test for windows
 # https://github.com/blablatdinov/gotemir/issues/14
 @pytest.mark.skipif(sys.platform == "win32", reason="Test fail on windows")
-def test_correct(create_path: Callable[[str], None], file_structure: tuple[str, ...]) -> None:
+def test_correct(
+    create_path: Callable[[str], None],
+    file_structure: tuple[str, ...],
+    src_dir: str,
+    tests_dir: str,
+) -> None:
     """Test run gotemir."""
     [create_path(file) for file in file_structure]
     got = subprocess.run(
-        ["./gotemir", "--ext=.py", "src", "tests"],
+        ["./gotemir", "--ext=.py", src_dir, tests_dir],
         stdout=subprocess.PIPE,
         check=False,
     )
@@ -137,5 +161,5 @@ def test_invalid(create_path: Callable[[str], None], file_structure: tuple[str, 
     assert got.returncode == 1
     assert got.stdout.decode("utf-8").strip() == "\n".join([
         "Files without tests:",
-        " - {0}".format(str(Path("handlers/users.py"))),
+        " - {0}".format(str(Path("src/handlers/users.py"))),
     ])
