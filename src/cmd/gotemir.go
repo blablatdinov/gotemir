@@ -24,6 +24,8 @@ package main
 
 import (
 	"errors"
+	"fmt"
+	"io"
 	"log"
 	"os"
 	"strings"
@@ -59,10 +61,19 @@ func main() {
 					cliCtx.Args().Get(1),
 				),
 			)
-			log.Println("Files without tests:")
-			for _, fileWithoutTest := range filesWithoutTests {
-				log.Printf(" - %s\n", fileWithoutTest)
+			if len(filesWithoutTests) > 0 {
+				io.WriteString(os.Stdout, "Files without tests:\n")
+			} else {
+				io.WriteString(os.Stdout, "Complete!\n")
+				os.Exit(0)
 			}
+			for _, fileWithoutTest := range filesWithoutTests {
+				io.WriteString(
+					os.Stdout,
+					fmt.Sprintf(" - %s\n", fileWithoutTest),
+				)
+			}
+			os.Exit(1)
 			return nil
 		},
 	}
