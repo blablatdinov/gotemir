@@ -36,6 +36,7 @@ issues:
     - Assignments should only be cuddled with other assignments
     - only one cuddle assignment allowed before if statement
     - if statements should only be cuddled with assignments
+    - ranges should only be cuddled with assignments used in the iteration
 linters-settings:
   depguard:
     rules:
