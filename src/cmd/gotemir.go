@@ -62,16 +62,25 @@ func main() {
 				),
 			)
 			if len(filesWithoutTests) > 0 {
-				io.WriteString(os.Stdout, "Files without tests:\n")
+				_, err := io.WriteString(os.Stdout, "Files without tests:\n")
+				if err != nil {
+					log.Fatal("Fail write to stdout")
+				}
 			} else {
-				io.WriteString(os.Stdout, "Complete!\n")
+				_, err := io.WriteString(os.Stdout, "Complete!\n")
+				if err != nil {
+					log.Fatal("Fail write to stdout")
+				}
 				os.Exit(0)
 			}
 			for _, fileWithoutTest := range filesWithoutTests {
-				io.WriteString(
+				_, err := io.WriteString(
 					os.Stdout,
 					fmt.Sprintf(" - %s\n", fileWithoutTest),
 				)
+				if err != nil {
+					log.Fatal("Fail write to stdout")
+				}
 			}
 			os.Exit(1)
 			return nil
