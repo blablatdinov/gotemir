@@ -24,11 +24,14 @@
 
 import os
 import subprocess
+import logging
 from collections.abc import Callable, Generator
 from pathlib import Path
 
 import pytest
 from _pytest.legacypath import TempdirFactory
+
+log = logging.getLogger('tests')
 
 
 @pytest.fixture(scope="module")
@@ -66,6 +69,7 @@ def create_path(test_dir: Path) -> Callable[[str], None]:
         dir_ = "/".join(path.split("/")[:-1])
         Path(test_dir / dir_).mkdir(exist_ok=True, parents=True)
         Path(test_dir / path).write_bytes(b"")
+        log.debug("Created files: {0}".format(list(Path().glob('**/*'))))
     return _create_path
 
 
