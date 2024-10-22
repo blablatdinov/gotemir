@@ -84,7 +84,6 @@ def test_correct(create_path: Callable[[str], None], file_structure: tuple[str, 
     got = subprocess.run(
         ["./gotemir", "src", "tests"],
         stdout=subprocess.PIPE,
-        check=True,
     )
 
     assert got.returncode == 0
