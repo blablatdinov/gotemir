@@ -9,7 +9,7 @@ dependencies = []
 dev-dependencies = [
   "isort==5.13.2",
   "pytest==8.3.3",
-  "ruff>=0.7.0",
+  "ruff==0.7.0",
 ]
 
 [tool.isort]

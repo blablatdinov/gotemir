@@ -100,7 +100,7 @@ def test_correct(create_path: Callable[[str], None], file_structure: tuple[str, 
 
 
 @pytest.mark.usefixtures("test_dir")
-def test_help():
+def test_help() -> None:
     """Test --help flag."""
     got = subprocess.run(
         ["./gotemir", "--help"],
