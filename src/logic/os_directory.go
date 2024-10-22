@@ -50,6 +50,7 @@ func (osDirectory OsDirectory) Structure() ([]string, error) {
 		if err != nil {
 			return fmt.Errorf("%w. Dirname=%s error: %w", errWalking, path, err)
 		}
+		fmt.Printf("path=%s expectedExtension=%s, HasSuffix=%v\n", path, osDirectory.extension, strings.HasSuffix(path, osDirectory.extension))
 		if !info.IsDir() && strings.HasSuffix(path, osDirectory.extension) {
 			relativePath, _ := filepath.Rel(osDirectory.path, path)
 			files = append(files, relativePath)

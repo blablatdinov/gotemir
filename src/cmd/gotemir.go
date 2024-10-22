@@ -25,7 +25,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"io"
 	"log"
 	"os"
 	"strings"
@@ -49,7 +48,7 @@ func main() {
 			" ",
 		),
 		Flags: []cli.Flag{
-			&cli.StringFlag{
+			&cli.StringFlag{ //nolint:exhaustruct
 				Name:  "ext",
 				Value: ".go",
 				Usage: "file extension for scan",
@@ -60,6 +59,7 @@ func main() {
 			if cliCtx.NArg() < expectedOptionCount {
 				return errOptions
 			}
+			fmt.Printf("Cli ext=%s\n", cliCtx.String("ext"))
 			filesWithoutTests := gotemir.Compare(
 				gotemir.OsDirectoryCtor(
 					cliCtx.Args().Get(0),
@@ -70,32 +70,25 @@ func main() {
 					cliCtx.String("ext"),
 				),
 			)
-			if len(filesWithoutTests) > 0 {
-				_, err := io.WriteString(os.Stdout, "Files without tests:\n")
-				if err != nil {
-					log.Fatal("Fail write to stdout")
-				}
-			} else {
-				_, err := io.WriteString(os.Stdout, "Complete!\n")
-				if err != nil {
-					log.Fatal("Fail write to stdout")
-				}
-				os.Exit(0)
-			}
-			for _, fileWithoutTest := range filesWithoutTests {
-				_, err := io.WriteString(
-					os.Stdout,
-					fmt.Sprintf(" - %s\n", fileWithoutTest),
-				)
-				if err != nil {
-					log.Fatal("Fail write to stdout")
-				}
-			}
-			os.Exit(1)
+			exitStatus := writeResult(filesWithoutTests)
+			os.Exit(exitStatus)
 			return nil
 		},
 	}
 	if err := app.Run(os.Args); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func writeResult(filesWithoutTests []string) int {
+	if len(filesWithoutTests) > 0 {
+		fmt.Println("Files without tests:") //nolint:forbidigo
+	} else {
+		fmt.Println("Complete!") //nolint:forbidigo
+		return 0
+	}
+	for _, fileWithoutTest := range filesWithoutTests {
+		fmt.Printf(" - %s\n", fileWithoutTest) //nolint:forbidigo
+	}
+	return 1
 }

@@ -130,7 +130,7 @@ def test_invalid(create_path: Callable[[str], None], file_structure: tuple[str, 
     """Test invalid cases."""
     [create_path(file) for file in file_structure]
     got = subprocess.run(
-        ["./gotemir", "src", "tests"],
+        ["./gotemir", "src", "tests", "--ext .py"],
         stdout=subprocess.PIPE, check=False,
     )
 
