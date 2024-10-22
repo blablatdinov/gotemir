@@ -23,7 +23,6 @@
 package logic
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -31,8 +30,6 @@ func Compare(srcDir Directory, testsDir Directory) []string {
 	filesWithoutTests := make([]string, 0)
 	testFiles, _ := testsDir.Structure()
 	srcFiles, _ := srcDir.Structure()
-	fmt.Printf("srcFiles=%s\n", srcFiles)
-	fmt.Printf("testFiles=%s\n", testFiles)
 	for _, srcFile := range srcFiles {
 		fileExtension := "." + strings.Split(srcFile, ".")[1]
 		splittedPath := strings.Split(srcFile, "/")

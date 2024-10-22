@@ -56,10 +56,12 @@ func main() {
 		},
 		Action: func(cliCtx *cli.Context) error {
 			expectedOptionCount := 2
+			ext := cliCtx.String("ext")
+			fmt.Printf("Cli ext=%s\n", ext)
+			fmt.Printf("Args=%v\n", cliCtx.Args())
 			if cliCtx.NArg() < expectedOptionCount {
 				return errOptions
 			}
-			fmt.Printf("Cli ext=%s\n", cliCtx.String("ext"))
 			filesWithoutTests := gotemir.Compare(
 				gotemir.OsDirectoryCtor(
 					cliCtx.Args().Get(0),
