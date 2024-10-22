@@ -97,7 +97,7 @@ def test_correct(create_path: Callable[[str], None], file_structure: tuple[str, 
     """Test run gotemir."""
     [create_path(file) for file in file_structure]
     got = subprocess.run(
-        ["./gotemir", "src", "tests", "--ext=.py"],
+        ["./gotemir", "--ext=.py", "src", "tests"],
         stdout=subprocess.PIPE,
         check=False,
     )
@@ -130,7 +130,7 @@ def test_invalid(create_path: Callable[[str], None], file_structure: tuple[str, 
     """Test invalid cases."""
     [create_path(file) for file in file_structure]
     got = subprocess.run(
-        ["./gotemir", "src", "tests", "--ext .py"],
+        ["./gotemir", "--ext", ".py", "src", "tests"],
         stdout=subprocess.PIPE, check=False,
     )
 
