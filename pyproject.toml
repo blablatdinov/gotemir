@@ -7,9 +7,9 @@ dependencies = []
 
 [tool.uv]
 dev-dependencies = [
-    "isort==5.13.2",
-    "pytest==8.3.3",
-    "ruff>=0.7.0",
+  "isort==5.13.2",
+  "pytest==8.3.3",
+  "ruff>=0.7.0",
 ]
 
 [tool.isort]
@@ -24,7 +24,13 @@ target-version = "py312"
 [tool.ruff.lint]
 select = ["ALL"]
 fixable = ["ALL"]
-ignore = ["D401", "S603", "S607"]
+ignore = [
+  "D401",
+  "S603",
+  "S607",
+  "FLY002",
+  "UP030",
+]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = [

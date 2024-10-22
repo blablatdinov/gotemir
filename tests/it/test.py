@@ -24,7 +24,7 @@
 
 import os
 import subprocess
-from collections.abc import Generator
+from collections.abc import Callable, Generator
 from pathlib import Path
 
 import pytest
@@ -51,8 +51,18 @@ def test_dir(tmpdir_factory: TempdirFactory, current_dir: str) -> Generator[Path
 
 
 @pytest.fixture
-def create_path(test_dir):
-    def _create_path(path: str):
+def create_path(test_dir: Path) -> Callable[[str], None]:
+    """Creating structure via path to file.
+
+    Exmaple:
+
+    from "src/handlers/users.py" create_path generate next structure:
+
+    └── src
+        └── handlers
+            └── users.py
+    """
+    def _create_path(path: str) -> None:
         dir_ = "/".join(path.split("/")[:-1])
         Path(test_dir / dir_).mkdir(exist_ok=True, parents=True)
         Path(test_dir / path).write_bytes(b"")
@@ -68,7 +78,7 @@ def create_path(test_dir):
         "tests/test_entry.py",
     ),
 ])
-def test_correct(create_path, file_structure) -> None:
+def test_correct(create_path: Callable[[str], None], file_structure: tuple[str, ...]) -> None:
     """Test run gotemir."""
     [create_path(file) for file in file_structure]
     got = subprocess.run(
@@ -89,16 +99,16 @@ def test_correct(create_path, file_structure) -> None:
         "tests/test_entry.py",
     ),
 ])
-def test_invalid(create_path, file_structure) -> None:
+def test_invalid(create_path: Callable[[str], None], file_structure: tuple[str, ...]) -> None:
     """Test invalid cases."""
     [create_path(file) for file in file_structure]
     got = subprocess.run(
         ["./gotemir", "src", "tests"],
-        stdout=subprocess.PIPE,
+        stdout=subprocess.PIPE, check=False,
     )
 
     assert got.returncode == 1
     assert got.stdout.decode("utf-8").strip() == "\n".join([
         "Files without tests:",
-        " - handlers/users.py"
+        " - {0}".format(str(Path("handlers/users.py"))),
     ])
