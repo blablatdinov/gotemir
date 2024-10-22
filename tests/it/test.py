@@ -22,16 +22,17 @@
 
 """Integration tests for gotemir."""
 
+import logging
 import os
 import subprocess
-import logging
+import sys
 from collections.abc import Callable, Generator
 from pathlib import Path
 
 import pytest
 from _pytest.legacypath import TempdirFactory
 
-log = logging.getLogger('tests')
+log = logging.getLogger("tests")
 
 
 @pytest.fixture(scope="module")
@@ -61,15 +62,15 @@ def create_path(test_dir: Path) -> Callable[[str], None]:
 
     from "src/handlers/users.py" create_path generate next structure:
 
-    └── src
-        └── handlers
-            └── users.py
+    src
+    └── handlers
+        └── users.py
     """
     def _create_path(path: str) -> None:
         dir_ = "/".join(path.split("/")[:-1])
         Path(test_dir / dir_).mkdir(exist_ok=True, parents=True)
         Path(test_dir / path).write_bytes(b"")
-        log.debug("Created files: {0}".format(list(Path().glob('**/*'))))
+        log.debug("Created files: {0}".format(list(Path().glob("**/*"))))
     return _create_path
 
 
@@ -82,12 +83,16 @@ def create_path(test_dir: Path) -> Callable[[str], None]:
         "tests/test_entry.py",
     ),
 ])
+# TODO @blablatdinov: fix test for windows
+# https://github.com/blablatdinov/gotemir/issues/14
+@pytest.mark.skipif(sys.platform == "win32")
 def test_correct(create_path: Callable[[str], None], file_structure: tuple[str, ...]) -> None:
     """Test run gotemir."""
     [create_path(file) for file in file_structure]
     got = subprocess.run(
         ["./gotemir", "src", "tests"],
         stdout=subprocess.PIPE,
+        check=False,
     )
 
     assert got.returncode == 0
