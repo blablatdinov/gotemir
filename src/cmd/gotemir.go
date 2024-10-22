@@ -24,6 +24,8 @@ package main
 
 import (
 	"errors"
+	"fmt"
+	"io"
 	"log"
 	"os"
 	"strings"
@@ -59,10 +61,28 @@ func main() {
 					cliCtx.Args().Get(1),
 				),
 			)
-			log.Println("Files without tests:")
-			for _, fileWithoutTest := range filesWithoutTests {
-				log.Printf(" - %s\n", fileWithoutTest)
+			if len(filesWithoutTests) > 0 {
+				_, err := io.WriteString(os.Stdout, "Files without tests:\n")
+				if err != nil {
+					log.Fatal("Fail write to stdout")
+				}
+			} else {
+				_, err := io.WriteString(os.Stdout, "Complete!\n")
+				if err != nil {
+					log.Fatal("Fail write to stdout")
+				}
+				os.Exit(0)
 			}
+			for _, fileWithoutTest := range filesWithoutTests {
+				_, err := io.WriteString(
+					os.Stdout,
+					fmt.Sprintf(" - %s\n", fileWithoutTest),
+				)
+				if err != nil {
+					log.Fatal("Fail write to stdout")
+				}
+			}
+			os.Exit(1)
 			return nil
 		},
 	}

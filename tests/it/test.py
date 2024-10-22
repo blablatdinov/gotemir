@@ -22,13 +22,17 @@
 
 """Integration tests for gotemir."""
 
+import logging
 import os
 import subprocess
-from collections.abc import Generator
+import sys
+from collections.abc import Callable, Generator
 from pathlib import Path
 
 import pytest
 from _pytest.legacypath import TempdirFactory
+
+log = logging.getLogger("tests")
 
 
 @pytest.fixture(scope="module")
@@ -37,8 +41,8 @@ def current_dir() -> Path:
     return Path().absolute()
 
 
-@pytest.fixture(scope="module")
-def _test_dir(tmpdir_factory: TempdirFactory, current_dir: str) -> Generator[Path, None, None]:
+@pytest.fixture
+def test_dir(tmpdir_factory: TempdirFactory, current_dir: str) -> Generator[Path, None, None]:
     """Directory with test structure."""
     tmp_path = tmpdir_factory.mktemp("test")
     subprocess.run(
@@ -46,20 +50,73 @@ def _test_dir(tmpdir_factory: TempdirFactory, current_dir: str) -> Generator[Pat
         check=True,
     )
     os.chdir(tmp_path)
-    Path("src").mkdir(exist_ok=True, parents=True)
-    Path("src/handlers").mkdir(exist_ok=True, parents=True)
-    Path("tests/handlers").mkdir(exist_ok=True, parents=True)
-    Path("src/entry.py").write_bytes(b"")
-    Path("src/handlers/users.py").write_bytes(b"")
-    Path("tests/test_entry.py").write_bytes(b"")
-    Path("tests/handlers/test_users.py").write_bytes(b"")
     yield tmp_path
     os.chdir(current_dir)
 
 
-@pytest.mark.usefixtures("_test_dir")
-def test() -> None:
+@pytest.fixture
+def create_path(test_dir: Path) -> Callable[[str], None]:
+    """Creating structure via path to file.
+
+    Exmaple:
+
+    from "src/handlers/users.py" create_path generate next structure:
+
+    src
+    └── handlers
+        └── users.py
+    """
+    def _create_path(path: str) -> None:
+        dir_ = "/".join(path.split("/")[:-1])
+        Path(test_dir / dir_).mkdir(exist_ok=True, parents=True)
+        Path(test_dir / path).write_bytes(b"")
+        log.debug("Created files: {0}".format(list(Path().glob("**/*"))))
+    return _create_path
+
+
+@pytest.mark.usefixtures("test_dir")
+@pytest.mark.parametrize("file_structure", [
+    (
+        "src/handlers/users.py",
+        "src/entry.py",
+        "tests/handlers/test_users.py",
+        "tests/test_entry.py",
+    ),
+])
+# TODO @blablatdinov: fix test for windows
+# https://github.com/blablatdinov/gotemir/issues/14
+@pytest.mark.skipif(sys.platform == "win32", reason="Test fail on windows")
+def test_correct(create_path: Callable[[str], None], file_structure: tuple[str, ...]) -> None:
     """Test run gotemir."""
-    got = subprocess.run(["./gotemir", "src", "tests"], check=True)
+    [create_path(file) for file in file_structure]
+    got = subprocess.run(
+        ["./gotemir", "src", "tests"],
+        stdout=subprocess.PIPE,
+        check=False,
+    )
 
     assert got.returncode == 0
+    assert got.stdout.decode("utf-8").strip() == "Complete!"
+
+
+@pytest.mark.usefixtures("test_dir")
+@pytest.mark.parametrize("file_structure", [
+    (
+        "src/handlers/users.py",
+        "src/entry.py",
+        "tests/test_entry.py",
+    ),
+])
+def test_invalid(create_path: Callable[[str], None], file_structure: tuple[str, ...]) -> None:
+    """Test invalid cases."""
+    [create_path(file) for file in file_structure]
+    got = subprocess.run(
+        ["./gotemir", "src", "tests"],
+        stdout=subprocess.PIPE, check=False,
+    )
+
+    assert got.returncode == 1
+    assert got.stdout.decode("utf-8").strip() == "\n".join([
+        "Files without tests:",
+        " - {0}".format(str(Path("handlers/users.py"))),
+    ])
