@@ -26,5 +26,5 @@ test:
 
 lint:
 	golangci-lint run
-	isort tests
+	uv run isort tests
 	uv run ruff check tests
