@@ -82,6 +82,13 @@ def create_path(test_dir: Path) -> Callable[[str], None]:
         "tests/handlers/test_users.py",
         "tests/test_entry.py",
     ),
+    (
+        "src/handlers/users.py",
+        "src/entry.py",
+        "src/README.md",
+        "tests/handlers/test_users.py",
+        "tests/test_entry.py",
+    ),
 ])
 # TODO @blablatdinov: fix test for windows
 # https://github.com/blablatdinov/gotemir/issues/14
@@ -90,12 +97,12 @@ def test_correct(create_path: Callable[[str], None], file_structure: tuple[str, 
     """Test run gotemir."""
     [create_path(file) for file in file_structure]
     got = subprocess.run(
-        ["./gotemir", "src", "tests"],
+        ["./gotemir", "src", "tests", "--ext=.py"],
         stdout=subprocess.PIPE,
         check=False,
     )
 
-    assert got.returncode == 0
+    assert got.returncode == 0, got.stdout.decode("utf-8").strip()
     assert got.stdout.decode("utf-8").strip() == "Complete!"
 
 

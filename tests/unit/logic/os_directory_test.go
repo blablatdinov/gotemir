@@ -41,6 +41,7 @@ func prepareFiles(t *testing.T) string {
 	handlersDirPath := srcDirPath + "/handlers"
 	entryPath := srcDirPath + "/entry.py"
 	filePath := handlersDirPath + "/file.py"
+	readmeFilePath := handlersDirPath + "/README.md"
 	if err = os.Mkdir(srcDirPath, 0o770); err != nil {
 		t.Fatalf("Fail on create dir %s: %s", srcDirPath, err)
 	}
@@ -53,13 +54,16 @@ func prepareFiles(t *testing.T) string {
 	if err = os.WriteFile(filePath, []byte(""), 0o600); err != nil {
 		t.Fatalf("Fail on create file %s: %s", filePath, err)
 	}
+	if err = os.WriteFile(readmeFilePath, []byte(""), 0o600); err != nil {
+		t.Fatalf("Fail on create file %s: %s", filePath, err)
+	}
 	return tempDir
 }
 
 func TestOsDirectory(t *testing.T) {
 	t.Parallel()
 	tempDir := prepareFiles(t)
-	osDir := gotemir.OsDirectoryCtor(tempDir)
+	osDir := gotemir.OsDirectoryCtor(tempDir, ".py")
 	expected := []string{"src/entry.py", "src/handlers/file.py"}
 	localizedExpected := make([]string, len(expected))
 	for idx, expectedFile := range expected {

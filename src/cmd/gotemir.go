@@ -48,6 +48,13 @@ func main() {
 			},
 			" ",
 		),
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:  "ext",
+				Value: ".go",
+				Usage: "file extension for scan",
+			},
+		},
 		Action: func(cliCtx *cli.Context) error {
 			expectedOptionCount := 2
 			if cliCtx.NArg() < expectedOptionCount {
@@ -56,9 +63,11 @@ func main() {
 			filesWithoutTests := gotemir.Compare(
 				gotemir.OsDirectoryCtor(
 					cliCtx.Args().Get(0),
+					cliCtx.String("ext"),
 				),
 				gotemir.OsDirectoryCtor(
 					cliCtx.Args().Get(1),
+					cliCtx.String("ext"),
 				),
 			)
 			if len(filesWithoutTests) > 0 {

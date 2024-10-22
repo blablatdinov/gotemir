@@ -27,15 +27,18 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 type OsDirectory struct {
-	path string
+	path      string
+	extension string
 }
 
-func OsDirectoryCtor(path string) Directory {
+func OsDirectoryCtor(path string, extension string) Directory {
 	return OsDirectory{
 		path,
+		extension,
 	}
 }
 
@@ -47,7 +50,7 @@ func (osDirectory OsDirectory) Structure() ([]string, error) {
 		if err != nil {
 			return fmt.Errorf("%w. Dirname=%s error: %w", errWalking, path, err)
 		}
-		if !info.IsDir() {
+		if !info.IsDir() && strings.HasSuffix(path, osDirectory.extension) {
 			relativePath, _ := filepath.Rel(osDirectory.path, path)
 			files = append(files, relativePath)
 		}
