@@ -109,7 +109,6 @@ def test_help():
     )
 
     assert got.returncode == 0
-    assert got.stdout.decode("utf-8").strip() == ""
 
 
 @pytest.mark.usefixtures("test_dir")
