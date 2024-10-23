@@ -45,3 +45,6 @@ linters-settings:
           - $gostd
           - github.com/blablatdinov/gotemir
           - github.com/urfave/cli/v2
+  godox:
+    keywords:
+      - FIXME

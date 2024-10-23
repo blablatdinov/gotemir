@@ -44,9 +44,12 @@ func prepareFiles(t *testing.T, paths []string) string {
 			t.Fatalf("failed to create directory %s: %s\n", dir, err)
 		}
 		file, err := os.Create(tempDir + "/" + path)
-		defer file.Close()
 		if err != nil {
-			t.Fatalf("failed to create directory %s: %s\n", dir, err)
+			t.Fatalf("failed to create file %s: %s\n", tempDir+"/"+path, err)
+		}
+		err = file.Close()
+		if err != nil {
+			t.Fatalf("failed to close file %s: %s\n", tempDir+"/"+path, err)
 		}
 	}
 	return tempDir

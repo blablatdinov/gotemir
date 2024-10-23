@@ -57,7 +57,7 @@ func TestCompare(t *testing.T) {
 				"tests/logic/test_auth.py",
 			}),
 		},
-		// TODO: case when source code and test in one directory
+		// TODO: case when source code and test in one directory //nolint:godox
 		// {
 		// 	srcDir:   gotemir.FkDirectoryCtor([]string{"logic.go"}),
 		// 	testsDir: gotemir.FkDirectoryCtor([]string{"logic_test.go"}),
@@ -123,9 +123,7 @@ func TestFileWithoutTest(t *testing.T) {
 		if len(got) != len(testCase.expected) {
 			t.Fatalf(
 				"Case %d: len of actual and expected not equal\nActual: %v\nExpected: %v\n",
-				idx+1,
-				got,
-				testCase.expected,
+				idx+1, got, testCase.expected,
 			)
 		}
 		for idx, actualFile := range got {
@@ -141,11 +139,7 @@ func TestFileWithoutTest(t *testing.T) {
 						},
 						"\n",
 					),
-					idx,
-					testCase.srcDir,
-					testCase.testsDir,
-					actualFile,
-					testCase.expected[idx],
+					idx, testCase.srcDir, testCase.testsDir, actualFile, testCase.expected[idx],
 				)
 			}
 		}
