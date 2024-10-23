@@ -23,6 +23,7 @@
 package logic_test
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -93,7 +94,71 @@ func TestOsDirectory(t *testing.T) {
 		)
 	}
 	for idx, actual := range got {
-		if actual != localizedExpected[idx] {
+		actualVal, _ := actual.Relative()
+		if actualVal != localizedExpected[idx] {
+			t.Errorf(
+				strings.Join(
+					[]string{
+						"Incompare actual and expected at index=%d",
+						"Actual: %v != Expected: %v",
+						"\n",
+					},
+					"\n",
+				),
+				idx,
+				got[idx],
+				localizedExpected[idx],
+			)
+		}
+	}
+}
+
+func TestOsDirectorySeparated(t *testing.T) {
+	t.Parallel()
+	tempDir := prepareFiles(t, []string{
+		"tests/it/test_file.py",
+		"tests/unit/test_auth.py",
+	})
+	osDir := gotemir.OsDirectoryCtor(
+		fmt.Sprintf("%s/tests/it,%s/tests/unit", tempDir, tempDir),
+		".py",
+	)
+	// expected := []string{
+	localizedExpected := []string{
+		tempDir + "/tests/it/test_file.py",
+		tempDir + "/tests/unit/test_auth.py",
+	}
+	// localizedExpected := make([]string, len(expected))
+	// for idx, expectedFile := range expected {
+	// 	localized, err := filepath.Localize(expectedFile)
+	// 	if err != nil {
+	// 		t.Fatalf("Fail on localized path: %s, err: %s", expectedFile, err)
+	// 	}
+	// 	localizedExpected[idx] = localized
+	// }
+
+	got, err := osDir.Structure()
+	if err != nil {
+		t.Fatalf("Fail on parse dir: %s", err)
+	}
+	if len(got) != 2 {
+		t.Errorf(
+			strings.Join(
+				[]string{
+					"Actual must contains 2 elements",
+					"Actual: %v",
+					"Expected: %v",
+					"\n",
+				},
+				"\n",
+			),
+			got,
+			localizedExpected,
+		)
+	}
+	for idx, actual := range got {
+		actualVal, _ := actual.Absolute()
+		if actualVal != localizedExpected[idx] {
 			t.Errorf(
 				strings.Join(
 					[]string{

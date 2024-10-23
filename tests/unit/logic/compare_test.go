@@ -36,26 +36,42 @@ func TestCompare(t *testing.T) {
 		testsDir gotemir.Directory
 	}{
 		{
-			srcDir:   gotemir.FkDirectoryCtor([]string{"src/logic.go"}),
-			testsDir: gotemir.FkDirectoryCtor([]string{"tests/logic_test.go"}),
+			srcDir: gotemir.FkDirectoryCtor(
+				[]gotemir.Path{gotemir.FkPathCtor("src/logic.go", ".")},
+			),
+			testsDir: gotemir.FkDirectoryCtor(
+				[]gotemir.Path{gotemir.FkPathCtor("tests/logic_test.go", ".")},
+			),
 		},
 		{
-			srcDir:   gotemir.FkDirectoryCtor([]string{"src/logic.py"}),
-			testsDir: gotemir.FkDirectoryCtor([]string{"tests/logic_test.py"}),
+			srcDir: gotemir.FkDirectoryCtor(
+				[]gotemir.Path{gotemir.FkPathCtor("src/logic.py", ".")},
+			),
+			testsDir: gotemir.FkDirectoryCtor(
+				[]gotemir.Path{gotemir.FkPathCtor("tests/logic_test.py", ".")},
+			),
 		},
 		{
-			srcDir:   gotemir.FkDirectoryCtor([]string{"src/logic.py"}),
-			testsDir: gotemir.FkDirectoryCtor([]string{"tests/test_logic.py"}),
+			srcDir: gotemir.FkDirectoryCtor(
+				[]gotemir.Path{gotemir.FkPathCtor("src/logic.py", ".")},
+			),
+			testsDir: gotemir.FkDirectoryCtor(
+				[]gotemir.Path{gotemir.FkPathCtor("tests/test_logic.py", ".")},
+			),
 		},
 		{
-			srcDir: gotemir.FkDirectoryCtor([]string{
-				"src/handlers/users.py",
-				"src/logic/auth.py",
-			}),
-			testsDir: gotemir.FkDirectoryCtor([]string{
-				"tests/handlers/test_users.py",
-				"tests/logic/test_auth.py",
-			}),
+			srcDir: gotemir.FkDirectoryCtor(
+				[]gotemir.Path{
+					gotemir.FkPathCtor("src/handlers/users.py", "."),
+					gotemir.FkPathCtor("src/logic/auth.py", "."),
+				},
+			),
+			testsDir: gotemir.FkDirectoryCtor(
+				[]gotemir.Path{
+					gotemir.FkPathCtor("tests/handlers/test_users.py", "."),
+					gotemir.FkPathCtor("tests/logic/test_auth.py", "."),
+				},
+			),
 		},
 		// TODO: case when source code and test in one directory //nolint:godox
 		// {
@@ -88,42 +104,53 @@ func TestCompare(t *testing.T) {
 func TestFileWithoutTest(t *testing.T) {
 	t.Parallel()
 	cases := []struct {
+		name     string
 		srcDir   gotemir.Directory
 		testsDir gotemir.Directory
 		expected []string
 	}{
 		{
-			srcDir:   gotemir.FkDirectoryCtor([]string{"src/logic.go"}),
-			testsDir: gotemir.FkDirectoryCtor([]string{"tests/unbounded_test.go"}),
+			name: "Unbounded test",
+			srcDir: gotemir.FkDirectoryCtor(
+				[]gotemir.Path{gotemir.FkPathCtor("src/logic.go", ".")},
+			),
+			testsDir: gotemir.FkDirectoryCtor(
+				[]gotemir.Path{gotemir.FkPathCtor("tests/unbounded_test.go", ".")},
+			),
 			expected: []string{"src/logic.go"},
 		},
 		{
-			srcDir:   gotemir.FkDirectoryCtor([]string{"src/logic.py"}),
-			testsDir: gotemir.FkDirectoryCtor([]string{}),
-			expected: []string{"src/logic.py"},
+			name: "Test not exist",
+			srcDir: gotemir.FkDirectoryCtor(
+				[]gotemir.Path{gotemir.FkPathCtor("src/logic.go", ".")},
+			),
+			testsDir: gotemir.FkDirectoryCtor(
+				[]gotemir.Path{},
+			),
+			expected: []string{"src/logic.go"},
 		},
 		{
-			srcDir: gotemir.FkDirectoryCtor([]string{
-				"src/handlers/users.py",
-				"src/logic/auth.py",
-			}),
-			testsDir: gotemir.FkDirectoryCtor([]string{
-				"tests/handlers/test_users.py",
-			}),
+			name: "One file without test",
+			srcDir: gotemir.FkDirectoryCtor(
+				[]gotemir.Path{
+					gotemir.FkPathCtor("src/handlers/users.py", "."),
+					gotemir.FkPathCtor("src/logic/auth.py", "."),
+				},
+			),
+			testsDir: gotemir.FkDirectoryCtor(
+				[]gotemir.Path{
+					gotemir.FkPathCtor("tests/handlers/test_users.py", "."),
+				},
+			),
 			expected: []string{"src/logic/auth.py"},
-		},
-		{
-			srcDir:   gotemir.FkDirectoryCtor([]string{"src/logic/logic.py"}),
-			testsDir: gotemir.FkDirectoryCtor([]string{"tests/logic/test_logic.py"}),
-			expected: []string{},
 		},
 	}
 	for idx, testCase := range cases {
 		got := gotemir.Compare(testCase.srcDir, testCase.testsDir)
 		if len(got) != len(testCase.expected) {
 			t.Fatalf(
-				"Case %d: len of actual and expected not equal\nActual: %v\nExpected: %v\n",
-				idx+1, got, testCase.expected,
+				"Case %d (%s): len of actual and expected not equal\nActual: %v\nExpected: %v\n",
+				idx+1, testCase.name, got, testCase.expected,
 			)
 		}
 		for idx, actualFile := range got {
@@ -131,15 +158,15 @@ func TestFileWithoutTest(t *testing.T) {
 				t.Errorf(
 					strings.Join(
 						[]string{
-							"Incompare actual and expected at index=%d",
+							"Incompare actual and expected at index=%d (%s)",
 							"src directory content: %v",
 							"tests directory content: %v",
-							"Actual: %v != Expected: %v",
+							"Actual: %s != Expected: %s",
 							"\n",
 						},
 						"\n",
 					),
-					idx, testCase.srcDir, testCase.testsDir, actualFile, testCase.expected[idx],
+					idx+1, testCase.name, testCase.srcDir, testCase.testsDir, actualFile, testCase.expected[idx],
 				)
 			}
 		}

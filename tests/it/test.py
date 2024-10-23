@@ -108,6 +108,16 @@ def create_path(test_dir: Path) -> Callable[[str], None]:
         "src",
         "src/tests",
     ),
+    (
+        (
+            "src/handlers/users.py",
+            "src/entry.py",
+            "src/tests/unit/handlers/test_users.py",
+            "src/tests/it/test_entry.py",
+        ),
+        "src",
+        "src/tests/unit,src/tests/it",
+    ),
 ])
 # TODO @blablatdinov: fix test for windows
 # https://github.com/blablatdinov/gotemir/issues/14

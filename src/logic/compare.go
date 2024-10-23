@@ -30,8 +30,10 @@ func Compare(srcDir Directory, testsDir Directory) []string {
 	filesWithoutTests := make([]string, 0)
 	testFiles, _ := testsDir.Structure()
 	srcFiles, _ := srcDir.Structure()
+	// fmt.Printf("testFiles=%v srcFiles=%v", testFiles, srcFiles)
 	for _, srcFile := range srcFiles {
-		splittedSrcFile := strings.Split(srcFile, "/")
+		val, _ := srcFile.Absolute()
+		splittedSrcFile := strings.Split(val, "/")
 		srcFileRelative := strings.Join(splittedSrcFile[1:], "/")
 		fileExtension := "." + strings.Split(srcFileRelative, ".")[1]
 		splittedPath := strings.Split(srcFileRelative, "/")
@@ -54,7 +56,8 @@ func Compare(srcDir Directory, testsDir Directory) []string {
 		testFileFound := false
 	out:
 		for _, testFile := range testFiles {
-			splittedTestFile := strings.Split(testFile, "/")
+			val, _ := testFile.Absolute()
+			splittedTestFile := strings.Split(val, "/")
 			testFileRelative := strings.Join(splittedTestFile[1:], "/")
 			for _, testFileVariant := range testFileVariants {
 				if testFileRelative == testFileVariant {
@@ -64,7 +67,8 @@ func Compare(srcDir Directory, testsDir Directory) []string {
 			}
 		}
 		if !testFileFound {
-			filesWithoutTests = append(filesWithoutTests, srcFile)
+			val, _ := srcFile.Absolute()
+			filesWithoutTests = append(filesWithoutTests, val)
 		}
 	}
 	return filesWithoutTests

@@ -22,6 +22,26 @@
 
 package logic
 
-type Directory interface {
-	Structure() ([]Path, error)
+import (
+	"path/filepath"
+)
+
+type FkPath struct {
+	absoulte string
+	dir      string
+}
+
+func FkPathCtor(absoulte, dir string) Path {
+	return FkPath{
+		absoulte,
+		dir,
+	}
+}
+
+func (fkPath FkPath) Relative() (string, error) {
+	return filepath.Rel(fkPath.dir, fkPath.absoulte)
+}
+
+func (fkPath FkPath) Absolute() (string, error) {
+	return fkPath.absoulte, nil
 }

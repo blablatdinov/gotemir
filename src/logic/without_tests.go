@@ -42,14 +42,15 @@ func ExcludedTestsDirectoryCtor(srcDir Directory, testsPath string) Directory {
 
 var errWalkingExcludedTestsDirectory = errors.New("fail on walk directory")
 
-func (excludedTestsDirectory ExcludedTestsDirectory) Structure() ([]string, error) {
+func (excludedTestsDirectory ExcludedTestsDirectory) Structure() ([]Path, error) {
 	origin, err := excludedTestsDirectory.origin.Structure()
 	if err != nil {
 		return nil, fmt.Errorf("%w", errWalkingExcludedTestsDirectory)
 	}
-	updated := make([]string, 0)
+	updated := make([]Path, 0)
 	for _, elem := range origin {
-		if !strings.HasPrefix(elem, excludedTestsDirectory.testsPath) {
+		val, _ := elem.Relative()
+		if !strings.HasPrefix(val, excludedTestsDirectory.testsPath) {
 			updated = append(updated, elem)
 		}
 	}

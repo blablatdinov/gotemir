@@ -23,6 +23,7 @@
 package logic_test
 
 import (
+	"fmt"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -34,11 +35,11 @@ func TestWithoutTests(t *testing.T) {
 	t.Parallel()
 	withoutTests := gotemir.ExcludedTestsDirectoryCtor(
 		gotemir.FkDirectoryCtor(
-			[]string{
-				"src/entry.py",
-				"src/auth.py",
-				"src/tests/entry.py",
-				"src/tests/auth.py",
+			[]gotemir.Path{
+				gotemir.FkPathCtor("src/entry.py", "."),
+				gotemir.FkPathCtor("src/auth.py", "."),
+				gotemir.FkPathCtor("src/tests/entry.py", "."),
+				gotemir.FkPathCtor("src/tests/auth.py", "."),
 			},
 		),
 		"src/tests",
@@ -73,7 +74,9 @@ func TestWithoutTests(t *testing.T) {
 		)
 	}
 	for idx, actual := range got {
-		localizedActual, err := filepath.Localize(actual)
+		actualVal, _ := actual.Relative()
+		fmt.Println("!!!", actualVal)
+		localizedActual, err := filepath.Localize(actualVal)
 		if err != nil {
 			t.Fatalf("Fail on localized path: %s", actual)
 		}
