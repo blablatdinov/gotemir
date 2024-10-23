@@ -25,39 +25,33 @@ package logic
 import (
 	"errors"
 	"fmt"
-	"os"
-	"path/filepath"
 	"strings"
 )
 
-type OsDirectory struct {
-	path      string
-	extension string
+type ExcludedTestsDirectory struct {
+	origin    Directory
+	testsPath string
 }
 
-func OsDirectoryCtor(path string, extension string) Directory {
-	return OsDirectory{
-		path,
-		extension,
+func ExcludedTestsDirectoryCtor(srcDir Directory, testsPath string) Directory {
+	return ExcludedTestsDirectory{
+		srcDir,
+		testsPath,
 	}
 }
 
-var errWalking = errors.New("fail on walk directory")
+var errWalkingExcludedTestsDirectory = errors.New("fail on walk directory")
 
-func (osDirectory OsDirectory) Structure() ([]string, error) {
-	var files []string
-	err := filepath.Walk(osDirectory.path, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return fmt.Errorf("%w. Dirname=%s error: %w", errWalking, path, err)
-		}
-		if !info.IsDir() && strings.HasSuffix(path, osDirectory.extension) {
-			relativePath, _ := filepath.Rel(filepath.Dir(osDirectory.path), path)
-			files = append(files, relativePath)
-		}
-		return nil
-	})
+func (excludedTestsDirectory ExcludedTestsDirectory) Structure() ([]string, error) {
+	origin, err := excludedTestsDirectory.origin.Structure()
 	if err != nil {
-		err = fmt.Errorf("%w. Dirname=%s error: %w", errWalking, osDirectory.path, err)
+		return nil, fmt.Errorf("%w", errWalkingExcludedTestsDirectory)
 	}
-	return files, err
+	updated := make([]string, 0)
+	for _, elem := range origin {
+		if !strings.HasPrefix(elem, excludedTestsDirectory.testsPath) {
+			updated = append(updated, elem)
+		}
+	}
+	return updated, nil
 }

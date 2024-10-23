@@ -23,7 +23,6 @@
 package logic_test
 
 import (
-	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -31,39 +30,20 @@ import (
 	gotemir "github.com/blablatdinov/gotemir/src/logic"
 )
 
-func prepareFiles(t *testing.T, paths []string) string {
-	t.Helper()
-	tempDir, err := os.MkdirTemp(os.TempDir(), "gotemir_test")
-	if err != nil {
-		t.Fatalf("Fail on create temp dir: %s", err)
-	}
-	for _, path := range paths {
-		dir := filepath.Dir(tempDir + "/" + path)
-		err := os.MkdirAll(dir, os.ModePerm)
-		if err != nil {
-			t.Fatalf("failed to create directory %s: %s\n", dir, err)
-		}
-		file, err := os.Create(tempDir + "/" + path)
-		if err != nil {
-			t.Fatalf("failed to create file %s: %s\n", tempDir+"/"+path, err)
-		}
-		err = file.Close()
-		if err != nil {
-			t.Fatalf("failed to close file %s: %s\n", tempDir+"/"+path, err)
-		}
-	}
-	return tempDir
-}
-
-func TestOsDirectory(t *testing.T) {
+func TestWithoutTests(t *testing.T) {
 	t.Parallel()
-	tempDir := prepareFiles(t, []string{
-		"src/handlers/file.py",
-		"src/entry.py",
-		"src/README.md",
-	})
-	osDir := gotemir.OsDirectoryCtor(tempDir+"/src", ".py")
-	expected := []string{"src/entry.py", "src/handlers/file.py"}
+	withoutTests := gotemir.ExcludedTestsDirectoryCtor(
+		gotemir.FkDirectoryCtor(
+			[]string{
+				"src/entry.py",
+				"src/auth.py",
+				"src/tests/entry.py",
+				"src/tests/auth.py",
+			},
+		),
+		"src/tests",
+	)
+	expected := []string{"src/entry.py", "src/auth.py"}
 	localizedExpected := make([]string, len(expected))
 	for idx, expectedFile := range expected {
 		localized, err := filepath.Localize(expectedFile)
@@ -73,12 +53,12 @@ func TestOsDirectory(t *testing.T) {
 		localizedExpected[idx] = localized
 	}
 
-	got, err := osDir.Structure()
+	got, err := withoutTests.Structure()
 	if err != nil {
 		t.Fatalf("Fail on parse dir: %s", err)
 	}
 	if len(got) != 2 {
-		t.Errorf(
+		t.Fatalf(
 			strings.Join(
 				[]string{
 					"Actual must contains 2 elements",
@@ -93,7 +73,11 @@ func TestOsDirectory(t *testing.T) {
 		)
 	}
 	for idx, actual := range got {
-		if actual != localizedExpected[idx] {
+		localizedActual, err := filepath.Localize(actual)
+		if err != nil {
+			t.Fatalf("Fail on localized path: %s", actual)
+		}
+		if localizedActual != localizedExpected[idx] {
 			t.Errorf(
 				strings.Join(
 					[]string{
@@ -103,9 +87,7 @@ func TestOsDirectory(t *testing.T) {
 					},
 					"\n",
 				),
-				idx,
-				got[idx],
-				localizedExpected[idx],
+				idx, got, localizedExpected,
 			)
 		}
 	}

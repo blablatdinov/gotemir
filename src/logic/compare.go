@@ -31,19 +31,21 @@ func Compare(srcDir Directory, testsDir Directory) []string {
 	testFiles, _ := testsDir.Structure()
 	srcFiles, _ := srcDir.Structure()
 	for _, srcFile := range srcFiles {
-		fileExtension := "." + strings.Split(srcFile, ".")[1]
-		splittedPath := strings.Split(srcFile, "/")
+		splittedSrcFile := strings.Split(srcFile, "/")
+		srcFileRelative := strings.Join(splittedSrcFile[1:], "/")
+		fileExtension := "." + strings.Split(srcFileRelative, ".")[1]
+		splittedPath := strings.Split(srcFileRelative, "/")
 		fileName := splittedPath[len(splittedPath)-1]
 		fileNameWithoutExtension := strings.Split(fileName, ".")[0]
 		testFileVariants := []string{
 			strings.Replace(
-				srcFile,
+				srcFileRelative,
 				fileName,
 				fileNameWithoutExtension+"_test"+fileExtension,
 				1,
 			),
 			strings.Replace(
-				srcFile,
+				srcFileRelative,
 				fileName,
 				"test_"+fileNameWithoutExtension+fileExtension,
 				1,
@@ -52,8 +54,10 @@ func Compare(srcDir Directory, testsDir Directory) []string {
 		testFileFound := false
 	out:
 		for _, testFile := range testFiles {
+			splittedTestFile := strings.Split(testFile, "/")
+			testFileRelative := strings.Join(splittedTestFile[1:], "/")
 			for _, testFileVariant := range testFileVariants {
-				if testFile == testFileVariant {
+				if testFileRelative == testFileVariant {
 					testFileFound = true
 					break out
 				}

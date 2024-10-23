@@ -60,9 +60,12 @@ func main() {
 				return errOptions
 			}
 			filesWithoutTests := gotemir.Compare(
-				gotemir.OsDirectoryCtor(
-					cliCtx.Args().Get(0),
-					cliCtx.String("ext"),
+				gotemir.ExcludedTestsDirectoryCtor(
+					gotemir.OsDirectoryCtor(
+						cliCtx.Args().Get(0),
+						cliCtx.String("ext"),
+					),
+					cliCtx.Args().Get(1),
 				),
 				gotemir.OsDirectoryCtor(
 					cliCtx.Args().Get(1),
