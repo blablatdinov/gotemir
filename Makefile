@@ -28,3 +28,4 @@ lint:
 	golangci-lint run
 	uv run isort tests
 	uv run ruff check tests
+	uv run mypy tests

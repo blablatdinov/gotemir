@@ -42,7 +42,7 @@ def current_dir() -> Path:
 
 
 @pytest.fixture
-def test_dir(tmpdir_factory: TempdirFactory, current_dir: str) -> Generator[Path, None, None]:
+def test_dir(tmpdir_factory: TempdirFactory, current_dir: Path) -> Generator[Path, None, None]:
     """Directory with test structure."""
     tmp_path = tmpdir_factory.mktemp("test")
     subprocess.run(
@@ -119,7 +119,7 @@ def test_correct(
     tests_dir: str,
 ) -> None:
     """Test run gotemir."""
-    [create_path(file) for file in file_structure]
+    [create_path(file) for file in file_structure]  # type: ignore [func-returns-value]
     got = subprocess.run(
         ["./gotemir", "--ext=.py", src_dir, tests_dir],
         stdout=subprocess.PIPE,
@@ -155,7 +155,7 @@ def test_help() -> None:
 @pytest.mark.skipif(sys.platform == "win32", reason="Test fail on windows")
 def test_invalid(create_path: Callable[[str], None], file_structure: tuple[str, ...]) -> None:
     """Test invalid cases."""
-    [create_path(file) for file in file_structure]
+    [create_path(file) for file in file_structure]  # type: ignore [func-returns-value]
     got = subprocess.run(
         ["./gotemir", "--ext", ".py", "src", "tests"],
         stdout=subprocess.PIPE, check=False,
