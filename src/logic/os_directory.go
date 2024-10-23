@@ -44,20 +44,28 @@ func OsDirectoryCtor(path string, extension string) Directory {
 
 var errWalking = errors.New("fail on walk directory")
 
-func (osDirectory OsDirectory) Structure() ([]string, error) {
-	var files []string
-	err := filepath.Walk(osDirectory.path, func(path string, info os.FileInfo, err error) error {
+func (osDirectory OsDirectory) Structure() ([]Path, error) {
+	var files []Path
+	splittedPath := strings.Split(osDirectory.path, ",")
+	// fmt.Printf("splittedPath: %v\n", splittedPath)
+	for _, sPath := range splittedPath {
+		err := filepath.Walk(sPath, func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return fmt.Errorf("%w. Dirname=%s error: %w", errWalking, path, err)
+			}
+			if !info.IsDir() && strings.HasSuffix(path, osDirectory.extension) {
+				// relativePath, _ := filepath.Rel(filepath.Dir(sPath), path)
+				fkPath := FkPathCtor(path, filepath.Dir(sPath))
+				// abs, _ := fkPath.Absolute()
+				// rel, _ := fkPath.Relative()
+				// fmt.Printf("osDirectory.path: %s, absolute: %s, relative: %s \n", sPath, abs, rel)
+				files = append(files, fkPath)
+			}
+			return nil
+		})
 		if err != nil {
-			return fmt.Errorf("%w. Dirname=%s error: %w", errWalking, path, err)
+			err = fmt.Errorf("%w. Dirname=%s error: %w", errWalking, osDirectory.path, err)
 		}
-		if !info.IsDir() && strings.HasSuffix(path, osDirectory.extension) {
-			relativePath, _ := filepath.Rel(filepath.Dir(osDirectory.path), path)
-			files = append(files, relativePath)
-		}
-		return nil
-	})
-	if err != nil {
-		err = fmt.Errorf("%w. Dirname=%s error: %w", errWalking, osDirectory.path, err)
 	}
-	return files, err
+	return files, nil
 }

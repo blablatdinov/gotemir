@@ -23,15 +23,15 @@
 package logic
 
 type FkDirectory struct {
-	origin []string
+	origin []Path
 }
 
-func FkDirectoryCtor(origin []string) Directory {
+func FkDirectoryCtor(origin []Path) Directory {
 	return FkDirectory{
 		origin,
 	}
 }
 
-func (fkDirectory FkDirectory) Structure() ([]string, error) {
+func (fkDirectory FkDirectory) Structure() ([]Path, error) {
 	return fkDirectory.origin, nil
 }

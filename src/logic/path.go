@@ -22,6 +22,7 @@
 
 package logic
 
-type Directory interface {
-	Structure() ([]Path, error)
+type Path interface {
+	Relative() (string, error)
+	Absolute() (string, error)
 }

@@ -22,6 +22,40 @@
 
 package logic
 
-type Directory interface {
-	Structure() ([]Path, error)
+import (
+	"errors"
+	"fmt"
+)
+
+type ExcludedTestsDirectory struct {
+	origin   Directory
+	testsDir Directory
+}
+
+func ExcludedTestsDirectoryCtor(srcDir, testsPath Directory) Directory {
+	return ExcludedTestsDirectory{
+		srcDir,
+		testsPath,
+	}
+}
+
+var errWalkingExcludedTestsDirectory = errors.New("fail on walk directory")
+
+func (excludedTestsDirectory ExcludedTestsDirectory) Structure() ([]Path, error) {
+	origin, err := excludedTestsDirectory.origin.Structure()
+	if err != nil {
+		return nil, fmt.Errorf("%w", errWalkingExcludedTestsDirectory)
+	}
+	updated := make([]Path, 0)
+	testsPaths, _ := excludedTestsDirectory.testsDir.Structure()
+	for _, elem := range origin {
+		val, _ := elem.Relative()
+		for _, testPath := range testsPaths {
+			testPathRelative, _ := testPath.Relative()
+			if val != testPathRelative {
+				updated = append(updated, elem)
+			}
+		}
+	}
+	return updated, nil
 }

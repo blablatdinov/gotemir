@@ -108,6 +108,18 @@ def create_path(test_dir: Path) -> Callable[[str], None]:
         "src",
         "src/tests",
     ),
+    (
+        (
+            "src/handlers/users.py",
+            "src/entry.py",
+            "src/tests/unit/handlers/test_users.py",
+            "src/tests/it/test_entry.py",
+        ),
+        "src",
+        # TODO: @blablatdinov: fix without end slash
+        # "src/tests/unit,src/tests/it",
+        "src/tests/unit/,src/tests/it/",
+    ),
 ])
 # TODO @blablatdinov: fix test for windows
 # https://github.com/blablatdinov/gotemir/issues/14
@@ -121,7 +133,7 @@ def test_correct(
     """Test run gotemir."""
     [create_path(file) for file in file_structure]  # type: ignore [func-returns-value]
     got = subprocess.run(
-        ["./gotemir", "--ext=.py", src_dir, tests_dir],
+        ["./gotemir", "--ext=.py", src_dir + "/", tests_dir + "/"],
         stdout=subprocess.PIPE,
         check=False,
     )

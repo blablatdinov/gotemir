@@ -20,38 +20,54 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 
-package logic
+package logic_test
 
 import (
-	"errors"
-	"fmt"
-	"strings"
+	"testing"
+
+	gotemir "github.com/blablatdinov/gotemir/src/logic"
 )
 
-type ExcludedTestsDirectory struct {
-	origin    Directory
-	testsPath string
-}
-
-func ExcludedTestsDirectoryCtor(srcDir Directory, testsPath string) Directory {
-	return ExcludedTestsDirectory{
-		srcDir,
-		testsPath,
+func TestFkPath(t *testing.T) {
+	t.Parallel()
+	cases := []struct {
+		file             string
+		expectedRelative string
+		dir              string
+	}{
+		{
+			"src/tests/test_auth.py",
+			"test_auth.py",
+			"src/tests",
+		},
+		{
+			"src/tests/test_auth.py",
+			"test_auth.py",
+			"src/tests/",
+		},
+		{
+			"src/tests/test_auth.py",
+			"src/tests/test_auth.py",
+			".",
+		},
 	}
-}
-
-var errWalkingExcludedTestsDirectory = errors.New("fail on walk directory")
-
-func (excludedTestsDirectory ExcludedTestsDirectory) Structure() ([]string, error) {
-	origin, err := excludedTestsDirectory.origin.Structure()
-	if err != nil {
-		return nil, fmt.Errorf("%w", errWalkingExcludedTestsDirectory)
-	}
-	updated := make([]string, 0)
-	for _, elem := range origin {
-		if !strings.HasPrefix(elem, excludedTestsDirectory.testsPath) {
-			updated = append(updated, elem)
+	for idx, testCase := range cases {
+		fkPath := gotemir.FkPathCtor(testCase.file, testCase.dir)
+		if val, _ := fkPath.Absolute(); val != testCase.file {
+			t.Errorf(
+				"Case #%d fail\nAbsolute not valid\nActual: %s != Expected %s",
+				idx+1,
+				val,
+				testCase.file,
+			)
+		}
+		if val, _ := fkPath.Relative(); val != testCase.expectedRelative {
+			t.Errorf(
+				"Case #%d fail\nRelative not valid\nActual: %s != Expected %s",
+				idx+1,
+				val,
+				testCase.expectedRelative,
+			)
 		}
 	}
-	return updated, nil
 }

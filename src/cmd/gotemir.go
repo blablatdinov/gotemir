@@ -59,18 +59,19 @@ func main() {
 			if cliCtx.NArg() < expectedOptionCount {
 				return errOptions
 			}
+			testsDir := gotemir.OsDirectoryCtor(
+				cliCtx.Args().Get(1),
+				cliCtx.String("ext"),
+			)
 			filesWithoutTests := gotemir.Compare(
 				gotemir.ExcludedTestsDirectoryCtor(
 					gotemir.OsDirectoryCtor(
 						cliCtx.Args().Get(0),
 						cliCtx.String("ext"),
 					),
-					cliCtx.Args().Get(1),
+					testsDir,
 				),
-				gotemir.OsDirectoryCtor(
-					cliCtx.Args().Get(1),
-					cliCtx.String("ext"),
-				),
+				testsDir,
 			)
 			exitStatus := writeResult(filesWithoutTests)
 			os.Exit(exitStatus)
