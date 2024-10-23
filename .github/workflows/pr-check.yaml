@@ -86,8 +86,8 @@ jobs:
         with:
           version: v1.60
 
-  ruff:
-    name: lint via ruff
+  python-lint:
+    name: lint via ruff / mypy
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -99,3 +99,5 @@ jobs:
         uses: astral-sh/setup-uv@v3
       - name: Run ruff
         run: uv run ruff check tests
+      - name: Run mypy
+        run: uv run mypy tests --strict
