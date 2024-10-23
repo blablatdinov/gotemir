@@ -87,9 +87,7 @@ func TestWithoutTests(t *testing.T) {
 					},
 					"\n",
 				),
-				idx,
-				got,
-				localizedExpected,
+				idx, got, localizedExpected,
 			)
 		}
 	}
