@@ -73,7 +73,11 @@ func TestWithoutTests(t *testing.T) {
 		)
 	}
 	for idx, actual := range got {
-		if actual != localizedExpected[idx] {
+		localizedActual, err := filepath.Localize(actual)
+		if err != nil {
+			t.Fatalf("Fail on localized path: %s", actual)
+		}
+		if localizedActual != localizedExpected[idx] {
 			t.Errorf(
 				strings.Join(
 					[]string{
