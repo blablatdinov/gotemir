@@ -25,15 +25,14 @@ package logic
 import (
 	"errors"
 	"fmt"
-	"strings"
 )
 
 type ExcludedTestsDirectory struct {
-	origin    Directory
-	testsPath string
+	origin   Directory
+	testsDir Directory
 }
 
-func ExcludedTestsDirectoryCtor(srcDir Directory, testsPath string) Directory {
+func ExcludedTestsDirectoryCtor(srcDir, testsPath Directory) Directory {
 	return ExcludedTestsDirectory{
 		srcDir,
 		testsPath,
@@ -48,10 +47,14 @@ func (excludedTestsDirectory ExcludedTestsDirectory) Structure() ([]Path, error)
 		return nil, fmt.Errorf("%w", errWalkingExcludedTestsDirectory)
 	}
 	updated := make([]Path, 0)
+	testsPaths, _ := excludedTestsDirectory.testsDir.Structure()
 	for _, elem := range origin {
 		val, _ := elem.Relative()
-		if !strings.HasPrefix(val, excludedTestsDirectory.testsPath) {
-			updated = append(updated, elem)
+		for _, testPath := range testsPaths {
+			testPathRelative, _ := testPath.Relative()
+			if val != testPathRelative {
+				updated = append(updated, elem)
+			}
 		}
 	}
 	return updated, nil

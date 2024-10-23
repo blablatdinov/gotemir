@@ -23,6 +23,7 @@
 package logic
 
 import (
+	"fmt"
 	"strings"
 )
 
@@ -31,11 +32,19 @@ func Compare(srcDir Directory, testsDir Directory) []string {
 	testFiles, _ := testsDir.Structure()
 	srcFiles, _ := srcDir.Structure()
 	for _, srcFile := range srcFiles {
-		absolutePath, _ := srcFile.Absolute()
-		// relativePath, _ := srcFile.Relative()
+		// absolutePath, _ := srcFile.Absolute()
+		relativePath, _ := srcFile.Relative()
 		// fmt.Printf("src absolute: %s src relative: %s\n", absolutePath, relativePath)
-		splittedSrcFile := strings.Split(absolutePath, "/")
-		srcFileRelative := strings.Join(splittedSrcFile[1:], "/")
+		splittedSrcFile := strings.Split(relativePath, "/")
+		var srcFileRelative string
+		if len(splittedSrcFile) == 1 {
+			srcFileRelative = relativePath
+		} else {
+			srcFileRelative = strings.Join(splittedSrcFile[1:], "/")
+		}
+		// fmt.Printf("src relative: %s splitted: %v\n", srcFileRelative, strings.Split(srcFileRelative, "."))
+		fmt.Printf("src relative: %s\n", srcFileRelative)
+		// os.Exit(0)
 		fileExtension := "." + strings.Split(srcFileRelative, ".")[1]
 		splittedPath := strings.Split(srcFileRelative, "/")
 		fileName := splittedPath[len(splittedPath)-1]
@@ -55,12 +64,14 @@ func Compare(srcDir Directory, testsDir Directory) []string {
 			),
 		}
 		testFileFound := false
+		fmt.Printf("test variants: %v\n", testFileVariants)
 	out:
 		for _, testFile := range testFiles {
-			absolutePath, _ := testFile.Absolute()
-			// relativePath, _ := testFile.Relative()
+			// absolutePath, _ := testFile.Absolute()
+			relativePath, _ := testFile.Relative()
 			// fmt.Printf("src absolute: %s src relative: %s\n", absolutePath, relativePath)
-			splittedTestFile := strings.Split(absolutePath, "/")
+			// splittedTestFile := strings.Split(absolutePath, "/")
+			splittedTestFile := strings.Split(relativePath, "/")
 			testFileRelative := strings.Join(splittedTestFile[1:], "/")
 			for _, testFileVariant := range testFileVariants {
 				if testFileRelative == testFileVariant {
