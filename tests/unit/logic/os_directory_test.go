@@ -128,6 +128,10 @@ func TestOsDirectorySeparated(t *testing.T) {
 		tempDir + "/tests/it/test_file.py",
 		tempDir + "/tests/unit/test_auth.py",
 	}
+	relativeExpected := []string{
+		"test_file.py",
+		"test_auth.py",
+	}
 	// localizedExpected := make([]string, len(expected))
 	// for idx, expectedFile := range expected {
 	// 	localized, err := filepath.Localize(expectedFile)
@@ -157,20 +161,36 @@ func TestOsDirectorySeparated(t *testing.T) {
 		)
 	}
 	for idx, actual := range got {
-		actualVal, _ := actual.Absolute()
-		if actualVal != localizedExpected[idx] {
+		actualAbsolute, _ := actual.Absolute()
+		if actualAbsolute != localizedExpected[idx] {
 			t.Errorf(
 				strings.Join(
 					[]string{
-						"Incompare actual and expected at index=%d",
-						"Actual: %v != Expected: %v",
+						"Incompare actual absolute and expected at index=%d",
+						"Actual: %s != Expected: %s",
 						"\n",
 					},
 					"\n",
 				),
 				idx,
-				got[idx],
+				actualAbsolute,
 				localizedExpected[idx],
+			)
+		}
+		actualRelative, _ := actual.Relative()
+		if actualRelative != relativeExpected[idx] {
+			t.Errorf(
+				strings.Join(
+					[]string{
+						"Incompare actual relative and expected at index=%d",
+						"Actual: %s != Expected: %s",
+						"\n",
+					},
+					"\n",
+				),
+				idx,
+				actualRelative,
+				relativeExpected[idx],
 			)
 		}
 	}

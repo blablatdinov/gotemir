@@ -54,7 +54,11 @@ func (osDirectory OsDirectory) Structure() ([]Path, error) {
 			}
 			if !info.IsDir() && strings.HasSuffix(path, osDirectory.extension) {
 				// relativePath, _ := filepath.Rel(filepath.Dir(sPath), path)
-				files = append(files, FkPathCtor(path, filepath.Dir(sPath)))
+				fkPath := FkPathCtor(path, filepath.Dir(sPath))
+				abs, _ := fkPath.Absolute()
+				rel, _ := fkPath.Relative()
+				fmt.Printf("osDirectory.path: %s, absolute: %s, relative: %s \n", sPath, abs, rel)
+				files = append(files, fkPath)
 			}
 			return nil
 		})

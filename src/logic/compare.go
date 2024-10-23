@@ -30,10 +30,11 @@ func Compare(srcDir Directory, testsDir Directory) []string {
 	filesWithoutTests := make([]string, 0)
 	testFiles, _ := testsDir.Structure()
 	srcFiles, _ := srcDir.Structure()
-	// fmt.Printf("testFiles=%v srcFiles=%v", testFiles, srcFiles)
 	for _, srcFile := range srcFiles {
-		val, _ := srcFile.Absolute()
-		splittedSrcFile := strings.Split(val, "/")
+		absolutePath, _ := srcFile.Absolute()
+		// relativePath, _ := srcFile.Relative()
+		// fmt.Printf("src absolute: %s src relative: %s\n", absolutePath, relativePath)
+		splittedSrcFile := strings.Split(absolutePath, "/")
 		srcFileRelative := strings.Join(splittedSrcFile[1:], "/")
 		fileExtension := "." + strings.Split(srcFileRelative, ".")[1]
 		splittedPath := strings.Split(srcFileRelative, "/")
@@ -56,8 +57,10 @@ func Compare(srcDir Directory, testsDir Directory) []string {
 		testFileFound := false
 	out:
 		for _, testFile := range testFiles {
-			val, _ := testFile.Absolute()
-			splittedTestFile := strings.Split(val, "/")
+			absolutePath, _ := testFile.Absolute()
+			// relativePath, _ := testFile.Relative()
+			// fmt.Printf("src absolute: %s src relative: %s\n", absolutePath, relativePath)
+			splittedTestFile := strings.Split(absolutePath, "/")
 			testFileRelative := strings.Join(splittedTestFile[1:], "/")
 			for _, testFileVariant := range testFileVariants {
 				if testFileRelative == testFileVariant {
