@@ -86,14 +86,12 @@ func main() {
 }
 
 func writeResult(filesWithoutTests []string) int {
-	if len(filesWithoutTests) > 0 {
-		fmt.Println("Files without tests:") //nolint:forbidigo
-	} else {
+	if len(filesWithoutTests) == 0 {
 		fmt.Println("Complete!") //nolint:forbidigo
 		return 0
 	}
 	for _, fileWithoutTest := range filesWithoutTests {
-		fmt.Printf(" - %s\n", fileWithoutTest) //nolint:forbidigo
+		fmt.Printf("%s:0:0 Not found test for file\n", fileWithoutTest) //nolint:forbidigo
 	}
 	return 1
 }

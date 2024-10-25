@@ -172,7 +172,6 @@ def test_invalid(create_path: Callable[[str], None], file_structure: tuple[str, 
     )
 
     assert got.returncode == 1
-    assert got.stdout.decode("utf-8").strip() == "\n".join([
-        "Files without tests:",
-        " - {0}".format(str(Path("src/handlers/users.py"))),
-    ])
+    assert got.stdout.decode("utf-8").strip() == "{0}:0:0 Not found test for file".format(
+        str(Path("src/handlers/users.py")),
+    )
