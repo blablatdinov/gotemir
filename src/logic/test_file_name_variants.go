@@ -24,7 +24,6 @@ package logic
 
 import (
 	"path/filepath"
-	"slices"
 	"strings"
 )
 
@@ -68,39 +67,6 @@ func (testFileNameVariant TestFileNameVariants) AsList() []string {
 				appendix+fileNameWithoutExtension+fileExtension,
 			),
 		)
-	}
-	return result
-}
-
-func SourceFileVariants(path string) []string {
-	testMarkers := []string{
-		"test_",
-		"_test",
-		"tests_",
-		"_tests",
-		"Tests",
-		"Test",
-	}
-	dir, file := filepath.Split(path)
-	result := make([]string, 0)
-	fileNameWithoutExtension := strings.Split(file, ".")[0]
-	fileExt := "." + strings.Split(file, ".")[1]
-	for _, marker := range testMarkers {
-		markerBegin := fileNameWithoutExtension[0:len(marker)] == marker
-		fnLen := len(fileNameWithoutExtension)
-		markerEnd := fileNameWithoutExtension[fnLen-len(marker):fnLen] == marker
-		variant := ""
-		if markerBegin {
-			variant = fileNameWithoutExtension[len(marker):fnLen] + fileExt
-		} else if markerEnd {
-			variant = fileNameWithoutExtension[0:fnLen-len(marker)] + fileExt
-		}
-		if variant != "" && !slices.Contains(result, variant) {
-			result = append(
-				result,
-				filepath.Join(dir, variant),
-			)
-		}
 	}
 	return result
 }
