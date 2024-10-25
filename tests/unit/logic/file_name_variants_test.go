@@ -23,6 +23,7 @@
 package logic_test
 
 import (
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -116,7 +117,8 @@ func TestTestFileVariants(t *testing.T) { //nolint:funlen //Many cases
 		},
 	}
 	for testIdx, testCase := range cases {
-		got := gotemir.TestFileNameVariantsCtor(testCase.input).AsList()
+		localizedInput, _ := filepath.Localize(testCase.input)
+		got := gotemir.TestFileNameVariantsCtor(localizedInput).AsList()
 		if len(got) != len(testCase.expected) {
 			t.Fatalf(
 				"Case %d (%s): len of actual and expected not equal\nActual: %v\nExpected: %v\n",
@@ -124,7 +126,9 @@ func TestTestFileVariants(t *testing.T) { //nolint:funlen //Many cases
 			)
 		}
 		for idx, actualFile := range got {
-			if testCase.expected[idx] != actualFile {
+			localizedActual, _ := filepath.Localize(actualFile)
+			localizedExpected, _ := filepath.Localize(testCase.expected[idx])
+			if localizedExpected != localizedActual {
 				t.Errorf(
 					strings.Join(
 						[]string{
@@ -135,7 +139,7 @@ func TestTestFileVariants(t *testing.T) { //nolint:funlen //Many cases
 						},
 						"\n",
 					),
-					testIdx, testCase.name, got, got[idx], testCase.expected[idx],
+					testIdx+1, testCase.name, got, localizedActual, localizedExpected,
 				)
 			}
 		}
@@ -186,7 +190,8 @@ func TestSourceFileVariants(t *testing.T) { //nolint:funlen //Many cases
 		},
 	}
 	for testIdx, testCase := range cases {
-		got := gotemir.SourceFileNameVariantCtor(testCase.input).AsList()
+		localizedInput, _ := filepath.Localize(testCase.input)
+		got := gotemir.SourceFileNameVariantCtor(localizedInput).AsList()
 		if len(got) != len(testCase.expected) {
 			t.Fatalf(
 				"Case %d (%s): len of actual and expected not equal\nActual: %v\nExpected: %v\n",
@@ -194,7 +199,9 @@ func TestSourceFileVariants(t *testing.T) { //nolint:funlen //Many cases
 			)
 		}
 		for idx, actualFile := range got {
-			if testCase.expected[idx] != actualFile {
+			localizedActual, _ := filepath.Localize(actualFile)
+			localizedExpected, _ := filepath.Localize(testCase.expected[idx])
+			if localizedExpected != localizedActual {
 				t.Errorf(
 					strings.Join(
 						[]string{
@@ -206,7 +213,7 @@ func TestSourceFileVariants(t *testing.T) { //nolint:funlen //Many cases
 						},
 						"\n",
 					),
-					testIdx+1, testCase.name, testCase.input, got, got[idx], testCase.expected[idx],
+					testIdx+1, testCase.name, localizedInput, got, localizedActual, localizedExpected,
 				)
 			}
 		}
