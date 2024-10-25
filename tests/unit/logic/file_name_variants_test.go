@@ -118,7 +118,10 @@ func TestTestFileVariants(t *testing.T) { //nolint:funlen //Many cases
 		},
 	}
 	for testIdx, testCase := range cases {
-		localizedInput, _ := filepath.Localize(testCase.input)
+		localizedInput, err := filepath.Localize(testCase.input)
+		if err != nil {
+			t.Fatalf("Err on localize path: %s. %s", testCase.input, err)
+		}
 		got := sort.StringSlice(
 			gotemir.TestFileNameVariantsCtor(localizedInput).AsList(),
 		)
@@ -129,12 +132,18 @@ func TestTestFileVariants(t *testing.T) { //nolint:funlen //Many cases
 			)
 		}
 		for expIdx, expectedStr := range testCase.expected {
-			localizedExpected, _ := filepath.Localize(expectedStr)
+			localizedExpected, err := filepath.Localize(expectedStr)
+			if err != nil {
+				t.Fatalf("Err on localize path: %s. %s", expectedStr, err)
+			}
 			testCase.expected[expIdx] = localizedExpected
 		}
 		testCase.expected = sort.StringSlice(testCase.expected)
 		for idx, actualFile := range got {
-			localizedActual, _ := filepath.Localize(actualFile)
+			localizedActual, err := filepath.Localize(actualFile)
+			if err != nil {
+				t.Fatalf("Err on localize path: %s. %s", actualFile, err)
+			}
 			if testCase.expected[idx] != localizedActual {
 				t.Errorf(
 					strings.Join(
@@ -197,7 +206,10 @@ func TestSourceFileVariants(t *testing.T) { //nolint:funlen //Many cases
 		},
 	}
 	for testIdx, testCase := range cases {
-		localizedInput, _ := filepath.Localize(testCase.input)
+		localizedInput, err := filepath.Localize(testCase.input)
+		if err != nil {
+			t.Fatalf("Err on localize path: %s. %s", testCase.input, err)
+		}
 		got := sort.StringSlice(
 			gotemir.SourceFileNameVariantCtor(localizedInput).AsList(),
 		)
@@ -208,12 +220,18 @@ func TestSourceFileVariants(t *testing.T) { //nolint:funlen //Many cases
 			)
 		}
 		for expIdx, expectedStr := range testCase.expected {
-			localizedExpected, _ := filepath.Localize(expectedStr)
+			localizedExpected, err := filepath.Localize(expectedStr)
+			if err != nil {
+				t.Fatalf("Err on localize path: %s. %s", expectedStr, err)
+			}
 			testCase.expected[expIdx] = localizedExpected
 		}
 		testCase.expected = sort.StringSlice(testCase.expected)
 		for idx, actualFile := range got {
-			localizedActual, _ := filepath.Localize(actualFile)
+			localizedActual, err := filepath.Localize(actualFile)
+			if err != nil {
+				t.Fatalf("Err on localize path: %s. %s", actualFile, err)
+			}
 			localizedExpected := testCase.expected[idx]
 			if localizedExpected != localizedActual {
 				t.Errorf(
@@ -222,7 +240,7 @@ func TestSourceFileVariants(t *testing.T) { //nolint:funlen //Many cases
 							"Incompare actual and expected at index=%d (%s)",
 							"input: %s",
 							"test file variants: %v",
-							"Actual: %s != Expected: %s",
+							"Actual: '%s' != Expected: %s",
 							"\n",
 						},
 						"\n",
