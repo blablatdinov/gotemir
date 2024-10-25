@@ -36,7 +36,7 @@ func SourceFileNameVariantCtor(path string) FileNameVariants {
 	return SourceFileNameVariant{path}
 }
 
-func (this SourceFileNameVariant) AsList() []string {
+func (srcFileNameVariant SourceFileNameVariant) AsList() []string {
 	testMarkers := []string{
 		"test_",
 		"_test",
@@ -45,7 +45,7 @@ func (this SourceFileNameVariant) AsList() []string {
 		"Tests",
 		"Test",
 	}
-	dir, file := filepath.Split(this.path)
+	dir, file := filepath.Split(srcFileNameVariant.path)
 	result := make([]string, 0)
 	fileNameWithoutExtension := strings.Split(file, ".")[0]
 	fileExt := "." + strings.Split(file, ".")[1]
@@ -53,7 +53,7 @@ func (this SourceFileNameVariant) AsList() []string {
 		markerBegin := fileNameWithoutExtension[0:len(marker)] == marker
 		fnLen := len(fileNameWithoutExtension)
 		markerEnd := fileNameWithoutExtension[fnLen-len(marker):fnLen] == marker
-		var variant string
+		variant := ""
 		if markerBegin {
 			variant = fileNameWithoutExtension[len(marker):fnLen] + fileExt
 		} else if markerEnd {

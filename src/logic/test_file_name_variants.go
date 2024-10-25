@@ -36,8 +36,8 @@ func TestFileNameVariantsCtor(path string) FileNameVariants {
 	return TestFileNameVariants{path}
 }
 
-func (this TestFileNameVariants) AsList() []string {
-	dir, file := filepath.Split(this.path)
+func (testFileNameVariant TestFileNameVariants) AsList() []string {
+	dir, file := filepath.Split(testFileNameVariant.path)
 	fileExtension := "." + strings.Split(file, ".")[1]
 	appendixes := []string{
 		// Snake case
@@ -89,7 +89,7 @@ func SourceFileVariants(path string) []string {
 		markerBegin := fileNameWithoutExtension[0:len(marker)] == marker
 		fnLen := len(fileNameWithoutExtension)
 		markerEnd := fileNameWithoutExtension[fnLen-len(marker):fnLen] == marker
-		var variant string
+		variant := ""
 		if markerBegin {
 			variant = fileNameWithoutExtension[len(marker):fnLen] + fileExt
 		} else if markerEnd {

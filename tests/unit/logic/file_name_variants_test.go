@@ -29,7 +29,7 @@ import (
 	gotemir "github.com/blablatdinov/gotemir/src/logic"
 )
 
-func TestTestFileVariants(t *testing.T) {
+func TestTestFileVariants(t *testing.T) { //nolint:funlen //Many cases
 	t.Parallel()
 	cases := []struct {
 		name     string
@@ -142,7 +142,7 @@ func TestTestFileVariants(t *testing.T) {
 	}
 }
 
-func TestSourceFileVariants(t *testing.T) {
+func TestSourceFileVariants(t *testing.T) { //nolint:funlen //Many cases
 	t.Parallel()
 	cases := []struct {
 		name     string
