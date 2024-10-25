@@ -35,6 +35,40 @@ Gotemir is a tool that verifies if the structure of the test directory mirrors t
 - Verifies that every source file has a corresponding test file.
 - Identifies missing test files and outputs results to the console.
 
+## Installation
+
+To use TestMirror, you need to have Go installed. You can download Go here.
+
+Clone the repository or download the code and compile it:
+
+```bash
+git clone https://github.com/blablatdinov/gotemir.git
+cd gotemir
+go build
+```
+
+## Usage
+
+Once compiled, you can run TestMirror by specifying the source and test directories.
+Example project structure:
+
+```
+src/
+├── main.go
+├── service/
+│   └── user.go
+tests/
+├── main_test.go
+└── service/
+    └── user_test.go
+```
+
+Run `gotemir`
+
+```bash
+./gotemir --ext .go src tests
+```
+
 ## License
 
 [MIT](https://github.com/blablatdinov/gotemir/blob/master/LICENSE)
@@ -42,7 +76,5 @@ Gotemir is a tool that verifies if the structure of the test directory mirrors t
 <!--
 TODO
 
-## Installation
-## Usage
 ## Examples
 -->
