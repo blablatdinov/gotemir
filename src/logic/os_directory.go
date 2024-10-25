@@ -59,7 +59,7 @@ func (osDirectory OsDirectory) Structure() ([]Path, error) {
 			return nil
 		})
 		if err != nil {
-			err = fmt.Errorf("%w. Dirname=%s error: %w", errWalking, osDirectory.path, err)
+			return nil, fmt.Errorf("%w. Dirname=%s error: %w", errWalking, osDirectory.path, err)
 		}
 	}
 	return files, nil

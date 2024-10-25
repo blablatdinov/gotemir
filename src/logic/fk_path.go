@@ -23,28 +23,33 @@
 package logic
 
 import (
+	"errors"
+	"fmt"
 	"path/filepath"
 )
 
 type FkPath struct {
-	absoulte string
+	absolute string
 	dir      string
 }
 
-func FkPathCtor(absoulte, dir string) Path {
+func FkPathCtor(absolute, dir string) Path {
 	return FkPath{
-		absoulte,
+		absolute,
 		dir,
 	}
 }
 
+var errBuildRelative = errors.New("error build relative path")
+
 func (fkPath FkPath) Relative() (string, error) {
-	// fmt.Printf("FkPath.Relative:\n")
-	rel, err := filepath.Rel(fkPath.dir, fkPath.absoulte)
-	// fmt.Printf("    fkPath.dir: %s, fkPath.relative: %s\n", fkPath.dir, rel)
-	return rel, err
+	rel, err := filepath.Rel(fkPath.dir, fkPath.absolute)
+	if err != nil {
+		return "", fmt.Errorf("%w", errBuildRelative)
+	}
+	return rel, nil
 }
 
 func (fkPath FkPath) Absolute() (string, error) {
-	return fkPath.absoulte, nil
+	return fkPath.absolute, nil
 }

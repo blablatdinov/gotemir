@@ -29,7 +29,7 @@ import (
 	gotemir "github.com/blablatdinov/gotemir/src/logic"
 )
 
-func TestCompare(t *testing.T) {
+func TestCompare(t *testing.T) { //nolint:funlen // Many cases
 	t.Parallel()
 	cases := []struct {
 		srcDir   gotemir.Directory
@@ -100,7 +100,7 @@ func TestCompare(t *testing.T) {
 	}
 }
 
-func TestFileWithoutTest(t *testing.T) {
+func TestFileWithoutTest(t *testing.T) { //nolint:funlen // Many cases
 	t.Parallel()
 	cases := []struct {
 		name     string
@@ -190,7 +190,7 @@ func TestTestFileVariants(t *testing.T) {
 			expected: []string{"handlers/user_test.py", "handlers/test_user.py"},
 		},
 		{
-			name:     "File in nested dir dir",
+			name:     "File in nested dir",
 			input:    "handlers/auth/user.py",
 			expected: []string{"handlers/auth/user_test.py", "handlers/auth/test_user.py"},
 		},

@@ -30,16 +30,16 @@ import (
 	gotemir "github.com/blablatdinov/gotemir/src/logic"
 )
 
-func TestWithoutTests(t *testing.T) {
-	t.Skip()
+func TestWithoutTests(t *testing.T) { //nolint:funlen // TODO
+	t.Skip() // TODO
 	t.Parallel()
 	withoutTests := gotemir.ExcludedTestsDirectoryCtor(
 		gotemir.FkDirectoryCtor(
 			[]gotemir.Path{
-				gotemir.FkPathCtor("src/entry.py", "."),
-				gotemir.FkPathCtor("src/auth.py", "."),
-				gotemir.FkPathCtor("src/tests/entry.py", "."),
-				gotemir.FkPathCtor("src/tests/auth.py", "."),
+				gotemir.FkPathCtor("src/entry.py", "src"),
+				gotemir.FkPathCtor("src/auth.py", "src"),
+				gotemir.FkPathCtor("src/tests/entry.py", "src/tests"),
+				gotemir.FkPathCtor("src/tests/auth.py", "src/tests"),
 			},
 		),
 		gotemir.FkDirectoryCtor([]gotemir.Path{
@@ -71,8 +71,7 @@ func TestWithoutTests(t *testing.T) {
 				},
 				"\n",
 			),
-			got,
-			localizedExpected,
+			got, localizedExpected,
 		)
 	}
 	for idx, actual := range got {
