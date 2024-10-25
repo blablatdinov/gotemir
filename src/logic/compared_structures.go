@@ -22,42 +22,7 @@
 
 package logic
 
-import (
-	"path/filepath"
-	"strings"
-)
-
-func TestFileVariants(path string) []string {
-	fileExtension := "." + strings.Split(path, ".")[1]
-	_, fileName := filepath.Split(path)
-	fileNameWithoutExtension := strings.Split(fileName, ".")[0]
-	return []string{
-		strings.Replace(
-			path,
-			fileName,
-			fileNameWithoutExtension+"_test"+fileExtension,
-			1,
-		),
-		strings.Replace(
-			path,
-			fileName,
-			"test_"+fileNameWithoutExtension+fileExtension,
-			1,
-		),
-	}
-}
-
-func SourceFileVariants(path string) string {
-	testMarkers := []string{
-		"test_",
-		"_test",
-	}
-	dir, file := filepath.Split(path)
-	result := file
-	for _, marker := range testMarkers {
-		result = strings.ReplaceAll(
-			result, marker, "",
-		)
-	}
-	return filepath.Join(dir, result)
+type ComparedStructures interface {
+	FilesWithoutTests() []string
+	TestsWithoutSrcFiles() []string
 }

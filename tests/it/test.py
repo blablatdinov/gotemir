@@ -118,7 +118,6 @@ def create_path(test_dir: Path) -> Callable[[str], None]:
         "src",
         "src/tests/unit,src/tests/it",
     ),
-    # TODO: research this case:
     # dir "tcp" equal to file name without extensions "tcp.py"
     (
         (
@@ -128,7 +127,6 @@ def create_path(test_dir: Path) -> Callable[[str], None]:
         "src",
         "tests/unit",
     ),
-    # TODO: research this case:
     # dir name contains "test_" or "_test"
     (
         (
@@ -217,14 +215,6 @@ def test_invalid(create_path: Callable[[str], None], file_structure: tuple[str, 
         ["Complete!"],
         0,
     ),
-    # (
-    #     (
-    #         "src/test_server/tcp.py",
-    #         "tests/unit/test_server/test_tcp.py",
-    #     ),
-    #     "src",
-    #     "tests",
-    # ),
 ])
 def test_unbinded_test_file(
     create_path: Callable[[str], None],
