@@ -41,7 +41,9 @@ func TestWithoutTests(t *testing.T) {
 				gotemir.FkPathCtor("src/tests/auth.py", "."),
 			},
 		),
-		"src/tests",
+		gotemir.FkDirectoryCtor([]Path{
+			gotemir.FkPathCtor("src/tests", "."),
+		}),
 	)
 	expected := []string{"src/entry.py", "src/auth.py"}
 	localizedExpected := make([]string, len(expected))

@@ -76,38 +76,38 @@ def create_path(test_dir: Path) -> Callable[[str], None]:
 
 @pytest.mark.usefixtures("test_dir")
 @pytest.mark.parametrize(("file_structure", "src_dir", "tests_dir"), [
-    # (
-    #     (
-    #         "src/handlers/users.py",
-    #         "src/entry.py",
-    #         "tests/handlers/test_users.py",
-    #         "tests/test_entry.py",
-    #     ),
-    #     "src",
-    #     "tests",
-    # ),
-    # (
-    #     (
-    #         "src/handlers/users.py",
-    #         "src/entry.py",
-    #         "src/README.md",
-    #         "tests/handlers/test_users.py",
-    #         "tests/test_entry.py",
-    #     ),
-    #     "src",
-    #     "tests",
-    # ),
-    # (
-    #     (
-    #         "src/handlers/users.py",
-    #         "src/entry.py",
-    #         "src/README.md",
-    #         "src/tests/handlers/test_users.py",
-    #         "src/tests/test_entry.py",
-    #     ),
-    #     "src",
-    #     "src/tests",
-    # ),
+    (
+        (
+            "src/handlers/users.py",
+            "src/entry.py",
+            "tests/handlers/test_users.py",
+            "tests/test_entry.py",
+        ),
+        "src",
+        "tests",
+    ),
+    (
+        (
+            "src/handlers/users.py",
+            "src/entry.py",
+            "src/README.md",
+            "tests/handlers/test_users.py",
+            "tests/test_entry.py",
+        ),
+        "src",
+        "tests",
+    ),
+    (
+        (
+            "src/handlers/users.py",
+            "src/entry.py",
+            "src/README.md",
+            "src/tests/handlers/test_users.py",
+            "src/tests/test_entry.py",
+        ),
+        "src",
+        "src/tests",
+    ),
     (
         (
             "src/handlers/users.py",
@@ -116,9 +116,7 @@ def create_path(test_dir: Path) -> Callable[[str], None]:
             "src/tests/it/test_entry.py",
         ),
         "src",
-        # TODO: @blablatdinov: fix without end slash
         "src/tests/unit,src/tests/it",
-        # "src/tests/unit/,src/tests/it/"
     ),
 ])
 # TODO @blablatdinov: fix test for windows
