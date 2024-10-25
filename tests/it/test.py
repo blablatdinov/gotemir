@@ -118,6 +118,24 @@ def create_path(test_dir: Path) -> Callable[[str], None]:
         "src",
         "src/tests/unit,src/tests/it",
     ),
+    # dir "tcp" equal to file name without extensions "tcp.py"
+    (
+        (
+            "src/tcp/tcp.py",
+            "tests/unit/tcp/test_tcp.py",
+        ),
+        "src",
+        "tests/unit",
+    ),
+    # dir name contains "test_" or "_test"
+    (
+        (
+            "src/test_server/tcp.py",
+            "tests/unit/test_server/test_tcp.py",
+        ),
+        "src",
+        "tests/unit",
+    ),
 ])
 # TODO @blablatdinov: fix test for windows
 # https://github.com/blablatdinov/gotemir/issues/14
@@ -160,9 +178,6 @@ def test_help() -> None:
         "tests/test_entry.py",
     ),
 ])
-# TODO @blablatdinov: fix test for windows
-# https://github.com/blablatdinov/gotemir/issues/14
-# @pytest.mark.skipif(sys.platform == "win32", reason="Test fail on windows")
 def test_invalid(create_path: Callable[[str], None], file_structure: tuple[str, ...]) -> None:
     """Test invalid cases."""
     [create_path(file) for file in file_structure]  # type: ignore [func-returns-value]
@@ -175,3 +190,44 @@ def test_invalid(create_path: Callable[[str], None], file_structure: tuple[str, 
     assert got.stdout.decode("utf-8").strip() == "{0}:0:0 Not found test for file".format(
         str(Path("src/handlers/users.py")),
     )
+
+
+@pytest.mark.usefixtures("test_dir")
+@pytest.mark.parametrize(("file_structure", "expected_out", "expected_status"), [
+    (
+        (
+            "src/entry.py",
+            "tests/test_entry.py",
+            "tests/test_users.py",
+        ),
+        [
+            "{0}:0:0 Not found source file for test".format(
+                str(Path("tests/test_users.py")),
+            ),
+        ],
+        1,
+    ),
+    (
+        (
+            "src/test_server/tcp.py",
+            "tests/test_server/test_tcp.py",
+        ),
+        ["Complete!"],
+        0,
+    ),
+])
+def test_unbinded_test_file(
+    create_path: Callable[[str], None],
+    file_structure: tuple[str, ...],
+    expected_out: list[str],
+    expected_status: int,
+) -> None:
+    """Check test files without src code."""
+    [create_path(file) for file in file_structure]  # type: ignore [func-returns-value]
+    got = subprocess.run(
+        ["./gotemir", "--ext", ".py", "src", "tests"],
+        stdout=subprocess.PIPE, check=False,
+    )
+
+    assert got.returncode == expected_status, got.stdout.decode("utf-8").strip()
+    assert got.stdout.decode("utf-8").strip().splitlines() == expected_out
