@@ -47,20 +47,13 @@ var errWalking = errors.New("fail on walk directory")
 func (osDirectory OsDirectory) Structure() ([]Path, error) {
 	var files []Path
 	splittedPath := strings.Split(osDirectory.path, ",")
-	// fmt.Printf("splittedPath: %v\n", splittedPath)
-	// fmt.Println("OsDirectory.Structure\n###\n")
 	for _, sPath := range splittedPath {
 		err := filepath.Walk(sPath, func(path string, info os.FileInfo, err error) error {
 			if err != nil {
 				return fmt.Errorf("%w. Dirname=%s error: %w", errWalking, path, err)
 			}
 			if !info.IsDir() && strings.HasSuffix(path, osDirectory.extension) {
-				// relativePath, _ := filepath.Rel(filepath.Dir(sPath), path)
-				// fmt.Printf("    sPath: %s, filepath.Dir(sPath): %s \n", sPath, filepath.Dir(sPath))
 				fkPath := FkPathCtor(path, sPath)
-				// abs, _ := fkPath.Absolute()
-				// rel, _ := fkPath.Relative()
-				// fmt.Printf("    osDirectory.path: %s, absolute: %s, relative: %s \n", sPath, abs, rel)
 				files = append(files, fkPath)
 			}
 			return nil

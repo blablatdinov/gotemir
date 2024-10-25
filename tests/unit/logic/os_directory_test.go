@@ -64,7 +64,7 @@ func TestOsDirectory(t *testing.T) {
 		"src/README.md",
 	})
 	osDir := gotemir.OsDirectoryCtor(tempDir+"/src", ".py")
-	expected := []string{"src/entry.py", "src/handlers/file.py"}
+	expected := []string{"entry.py", "handlers/file.py"}
 	localizedExpected := make([]string, len(expected))
 	for idx, expectedFile := range expected {
 		localized, err := filepath.Localize(expectedFile)
@@ -106,7 +106,7 @@ func TestOsDirectory(t *testing.T) {
 					"\n",
 				),
 				idx,
-				got[idx],
+				actualVal,
 				localizedExpected[idx],
 			)
 		}
