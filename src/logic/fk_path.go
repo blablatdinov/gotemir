@@ -25,33 +25,31 @@ package logic
 import (
 	"errors"
 	"fmt"
-	"strings"
+	"path/filepath"
 )
 
-type ExcludedTestsDirectory struct {
-	origin    Directory
-	testsPath string
+type FkPath struct {
+	absolute string
+	dir      string
 }
 
-func ExcludedTestsDirectoryCtor(srcDir Directory, testsPath string) Directory {
-	return ExcludedTestsDirectory{
-		srcDir,
-		testsPath,
+func FkPathCtor(absolute, dir string) Path {
+	return FkPath{
+		absolute,
+		dir,
 	}
 }
 
-var errWalkingExcludedTestsDirectory = errors.New("fail on walk directory")
+var errBuildRelative = errors.New("error build relative path")
 
-func (excludedTestsDirectory ExcludedTestsDirectory) Structure() ([]string, error) {
-	origin, err := excludedTestsDirectory.origin.Structure()
+func (fkPath FkPath) Relative() (string, error) {
+	rel, err := filepath.Rel(fkPath.dir, fkPath.absolute)
 	if err != nil {
-		return nil, fmt.Errorf("%w", errWalkingExcludedTestsDirectory)
+		return "", fmt.Errorf("%w", errBuildRelative)
 	}
-	updated := make([]string, 0)
-	for _, elem := range origin {
-		if !strings.HasPrefix(elem, excludedTestsDirectory.testsPath) {
-			updated = append(updated, elem)
-		}
-	}
-	return updated, nil
+	return rel, nil
+}
+
+func (fkPath FkPath) Absolute() (string, error) {
+	return fkPath.absolute, nil
 }

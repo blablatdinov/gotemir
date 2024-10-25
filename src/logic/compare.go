@@ -26,36 +26,39 @@ import (
 	"strings"
 )
 
+func TestFileVariants(path string) []string {
+	fileExtension := "." + strings.Split(path, ".")[1]
+	splittedPath := strings.Split(path, "/")
+	fileName := splittedPath[len(splittedPath)-1]
+	fileNameWithoutExtension := strings.Split(fileName, ".")[0]
+	return []string{
+		strings.Replace(
+			path,
+			fileName,
+			fileNameWithoutExtension+"_test"+fileExtension,
+			1,
+		),
+		strings.Replace(
+			path,
+			fileName,
+			"test_"+fileNameWithoutExtension+fileExtension,
+			1,
+		),
+	}
+}
+
 func Compare(srcDir Directory, testsDir Directory) []string {
 	filesWithoutTests := make([]string, 0)
 	testFiles, _ := testsDir.Structure()
 	srcFiles, _ := srcDir.Structure()
 	for _, srcFile := range srcFiles {
-		splittedSrcFile := strings.Split(srcFile, "/")
-		srcFileRelative := strings.Join(splittedSrcFile[1:], "/")
-		fileExtension := "." + strings.Split(srcFileRelative, ".")[1]
-		splittedPath := strings.Split(srcFileRelative, "/")
-		fileName := splittedPath[len(splittedPath)-1]
-		fileNameWithoutExtension := strings.Split(fileName, ".")[0]
-		testFileVariants := []string{
-			strings.Replace(
-				srcFileRelative,
-				fileName,
-				fileNameWithoutExtension+"_test"+fileExtension,
-				1,
-			),
-			strings.Replace(
-				srcFileRelative,
-				fileName,
-				"test_"+fileNameWithoutExtension+fileExtension,
-				1,
-			),
-		}
+		relativePath, _ := srcFile.Relative()
+		testFileVariants := TestFileVariants(relativePath)
 		testFileFound := false
 	out:
 		for _, testFile := range testFiles {
-			splittedTestFile := strings.Split(testFile, "/")
-			testFileRelative := strings.Join(splittedTestFile[1:], "/")
+			relativePath, _ := testFile.Relative()
+			testFileRelative := relativePath
 			for _, testFileVariant := range testFileVariants {
 				if testFileRelative == testFileVariant {
 					testFileFound = true
@@ -64,7 +67,8 @@ func Compare(srcDir Directory, testsDir Directory) []string {
 			}
 		}
 		if !testFileFound {
-			filesWithoutTests = append(filesWithoutTests, srcFile)
+			val, _ := srcFile.Absolute()
+			filesWithoutTests = append(filesWithoutTests, val)
 		}
 	}
 	return filesWithoutTests
