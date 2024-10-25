@@ -25,7 +25,6 @@ package logic
 import (
 	"errors"
 	"fmt"
-	"strings"
 )
 
 type ExcludedTestsDirectory struct {
@@ -49,25 +48,11 @@ func (excludedTestsDirectory ExcludedTestsDirectory) Structure() ([]Path, error)
 	}
 	updated := make([]Path, 0)
 	testsPaths, _ := excludedTestsDirectory.testsDir.Structure()
-	fmt.Printf("ExcludedTestsDirectory.Structure:\n")
 	for _, srcPath := range origin {
 		srcPathStr, _ := srcPath.Absolute()
 		testFound := false
 		for _, testPath := range testsPaths {
 			testPathAbsolute, _ := testPath.Absolute()
-			fmt.Printf(
-				strings.Join(
-					[]string{
-						"  -",
-						"    testPathAbsolute: %s",
-						"    srcPathAbsolute: %s\n",
-						// "    appended: %v\n",
-					},
-					"\n",
-				),
-				testPathAbsolute, srcPathStr,
-			)
-			// fmt.Printf("srcPathStr=%s testPathRelative=%s\n", srcPathStr, testPathRelative)
 			if srcPathStr == testPathAbsolute {
 				testFound = true
 			}
@@ -76,6 +61,5 @@ func (excludedTestsDirectory ExcludedTestsDirectory) Structure() ([]Path, error)
 			updated = append(updated, srcPath)
 		}
 	}
-	// fmt.Printf("updated=%v\n", updated)
 	return updated, nil
 }

@@ -27,26 +27,19 @@ import (
 )
 
 func TestFileVariants(path string) []string {
-	splittedSrcFile := strings.Split(path, "/")
-	var srcFileRelative string
-	if len(splittedSrcFile) == 1 {
-		srcFileRelative = path
-	} else {
-		srcFileRelative = strings.Join(splittedSrcFile[1:], "/")
-	}
-	fileExtension := "." + strings.Split(srcFileRelative, ".")[1]
-	splittedPath := strings.Split(srcFileRelative, "/")
+	fileExtension := "." + strings.Split(path, ".")[1]
+	splittedPath := strings.Split(path, "/")
 	fileName := splittedPath[len(splittedPath)-1]
 	fileNameWithoutExtension := strings.Split(fileName, ".")[0]
 	return []string{
 		strings.Replace(
-			srcFileRelative,
+			path,
 			fileName,
 			fileNameWithoutExtension+"_test"+fileExtension,
 			1,
 		),
 		strings.Replace(
-			srcFileRelative,
+			path,
 			fileName,
 			"test_"+fileNameWithoutExtension+fileExtension,
 			1,
@@ -65,8 +58,7 @@ func Compare(srcDir Directory, testsDir Directory) []string {
 	out:
 		for _, testFile := range testFiles {
 			relativePath, _ := testFile.Relative()
-			splittedTestFile := strings.Split(relativePath, "/")
-			testFileRelative := strings.Join(splittedTestFile[1:], "/")
+			testFileRelative := relativePath
 			for _, testFileVariant := range testFileVariants {
 				if testFileRelative == testFileVariant {
 					testFileFound = true
