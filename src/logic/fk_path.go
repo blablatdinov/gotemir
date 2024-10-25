@@ -39,7 +39,10 @@ func FkPathCtor(absoulte, dir string) Path {
 }
 
 func (fkPath FkPath) Relative() (string, error) {
-	return filepath.Rel(fkPath.dir, fkPath.absoulte)
+	// fmt.Printf("FkPath.Relative:\n")
+	rel, err := filepath.Rel(fkPath.dir, fkPath.absoulte)
+	// fmt.Printf("    fkPath.dir: %s, fkPath.relative: %s\n", fkPath.dir, rel)
+	return rel, err
 }
 
 func (fkPath FkPath) Absolute() (string, error) {

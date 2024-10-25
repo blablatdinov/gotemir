@@ -63,14 +63,35 @@ func main() {
 				cliCtx.Args().Get(1),
 				cliCtx.String("ext"),
 			)
+			allSrcFiles := gotemir.OsDirectoryCtor(
+				cliCtx.Args().Get(0),
+				cliCtx.String("ext"),
+			)
+			fmt.Printf("    all src files relative:\n")
+			allSrcFilesStructure, _ := allSrcFiles.Structure()
+			for _, path := range allSrcFilesStructure {
+				rel, _ := path.Relative()
+				fmt.Printf("    - %s\n", rel)
+			}
+			srcDir := gotemir.ExcludedTestsDirectoryCtor(
+				allSrcFiles,
+				testsDir,
+			)
+			srcDirStructure, _ := srcDir.Structure()
+			fmt.Println("main:")
+			fmt.Printf("    src files without tests relative:\n")
+			for _, path := range srcDirStructure {
+				rel, _ := path.Relative()
+				fmt.Printf("    - %s\n", rel)
+			}
+			fmt.Printf("    tests files relative:\n")
+			testsDirStructure, _ := testsDir.Structure()
+			for _, path := range testsDirStructure {
+				rel, _ := path.Relative()
+				fmt.Printf("    - %s\n", rel)
+			}
 			filesWithoutTests := gotemir.Compare(
-				gotemir.ExcludedTestsDirectoryCtor(
-					gotemir.OsDirectoryCtor(
-						cliCtx.Args().Get(0),
-						cliCtx.String("ext"),
-					),
-					testsDir,
-				),
+				srcDir,
 				testsDir,
 			)
 			exitStatus := writeResult(filesWithoutTests)

@@ -23,7 +23,6 @@
 package logic_test
 
 import (
-	"fmt"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -75,7 +74,7 @@ func TestWithoutTests(t *testing.T) {
 	}
 	for idx, actual := range got {
 		actualVal, _ := actual.Relative()
-		fmt.Println("!!!", actualVal)
+		// fmt.Println("!!!", actualVal)
 		localizedActual, err := filepath.Localize(actualVal)
 		if err != nil {
 			t.Fatalf("Fail on localized path: %s", actual)
