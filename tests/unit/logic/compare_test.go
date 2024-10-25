@@ -56,11 +56,15 @@ func TestCompare(t *testing.T) { //nolint:funlen // Many cases
 			name: "Case with test_ prefix",
 			srcDir: gotemir.FkDirectoryCtor(
 				[]gotemir.Path{gotemir.FkPathCtor(
-					filepath.Join("src", "logic.py"), "src")},
+					filepath.Join("src", "logic.py"),
+					"src",
+				)},
 			),
 			testsDir: gotemir.FkDirectoryCtor(
 				[]gotemir.Path{gotemir.FkPathCtor(
-					filepath.Join("tests", "test_logic.py"), "tests")},
+					filepath.Join("tests", "test_logic.py"),
+					"tests",
+				)},
 			),
 		},
 		{
@@ -68,17 +72,25 @@ func TestCompare(t *testing.T) { //nolint:funlen // Many cases
 			srcDir: gotemir.FkDirectoryCtor(
 				[]gotemir.Path{
 					gotemir.FkPathCtor(
-						filepath.Join("src", "handlers", "users.py"), "src"),
+						filepath.Join("src", "handlers", "users.py"),
+						"src",
+					),
 					gotemir.FkPathCtor(
-						filepath.Join("src", "logic", "auth.py"), "src"),
+						filepath.Join("src", "logic", "auth.py"),
+						"src",
+					),
 				},
 			),
 			testsDir: gotemir.FkDirectoryCtor(
 				[]gotemir.Path{
 					gotemir.FkPathCtor(
-						filepath.Join("tests", "handlers", "test_users.py"), "tests"),
+						filepath.Join("tests", "handlers", "test_users.py"),
+						"tests",
+					),
 					gotemir.FkPathCtor(
-						filepath.Join("tests", "logic", "test_auth.py"), "tests"),
+						filepath.Join("tests", "logic", "test_auth.py"),
+						"tests",
+					),
 				},
 			),
 		},
@@ -123,14 +135,19 @@ func TestFileWithoutTest(t *testing.T) { //nolint:funlen // Many cases
 			name: "Unbounded test",
 			srcDir: gotemir.FkDirectoryCtor(
 				[]gotemir.Path{gotemir.FkPathCtor(
-					filepath.Join("src", "logic.go"), "src")},
+					filepath.Join("src", "logic.go"),
+					"src",
+				)},
 			),
 			testsDir: gotemir.FkDirectoryCtor(
 				[]gotemir.Path{gotemir.FkPathCtor(
-					filepath.Join("tests", "unbounded_test.go"), "tests")},
+					filepath.Join("tests", "unbounded_test.go"),
+					"tests",
+				)},
 			),
 			expected: []string{
-				filepath.Join("src", "logic.go")},
+				filepath.Join("src", "logic.go"),
+			},
 		},
 		{
 			name: "Test not exist",
