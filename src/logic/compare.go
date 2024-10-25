@@ -48,17 +48,18 @@ func TestFileVariants(path string) []string {
 }
 
 func SourceFileVariants(path string) string {
-	return strings.Replace(
-		strings.Replace(
-			path,
-			"test_",
-			"",
-			1,
-		),
+	testMarkers := []string{
+		"test_",
 		"_test",
-		"",
-		1,
-	)
+	}
+	dir, file := filepath.Split(path)
+	result := file
+	for _, marker := range testMarkers {
+		result = strings.ReplaceAll(
+			result, marker, "",
+		)
+	}
+	return filepath.Join(dir, result)
 }
 
 type ComparedStructures interface {

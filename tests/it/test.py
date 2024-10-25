@@ -195,11 +195,27 @@ def test_invalid(create_path: Callable[[str], None], file_structure: tuple[str, 
 
 
 @pytest.mark.usefixtures("test_dir")
-@pytest.mark.parametrize("file_structure", [
+@pytest.mark.parametrize(("file_structure", "expected_out", "expected_status"), [
     (
-        "src/entry.py",
-        "tests/test_entry.py",
-        "tests/test_users.py",
+        (
+            "src/entry.py",
+            "tests/test_entry.py",
+            "tests/test_users.py",
+        ),
+        [
+            "{0}:0:0 Not found source file for test".format(
+                str(Path("tests/test_users.py")),
+            ),
+        ],
+        1,
+    ),
+    (
+        (
+            "src/test_server/tcp.py",
+            "tests/test_server/test_tcp.py",
+        ),
+        ["Complete!"],
+        0,
     ),
     # (
     #     (
@@ -210,7 +226,12 @@ def test_invalid(create_path: Callable[[str], None], file_structure: tuple[str, 
     #     "tests",
     # ),
 ])
-def test_unbinded_test_file(create_path: Callable[[str], None], file_structure: tuple[str, ...]) -> None:
+def test_unbinded_test_file(
+    create_path: Callable[[str], None],
+    file_structure: tuple[str, ...],
+    expected_out: list[str],
+    expected_status: int,
+) -> None:
     """Check test files without src code."""
     [create_path(file) for file in file_structure]  # type: ignore [func-returns-value]
     got = subprocess.run(
@@ -218,7 +239,5 @@ def test_unbinded_test_file(create_path: Callable[[str], None], file_structure: 
         stdout=subprocess.PIPE, check=False,
     )
 
-    assert got.returncode == 1, got.stdout.decode("utf-8").strip()
-    assert got.stdout.decode("utf-8").strip() == "{0}:0:0 Not found source file for test".format(
-        str(Path("tests/test_users.py")),
-    )
+    assert got.returncode == expected_status, got.stdout.decode("utf-8").strip()
+    assert got.stdout.decode("utf-8").strip().splitlines() == expected_out
