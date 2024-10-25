@@ -23,6 +23,7 @@
 package logic_test
 
 import (
+	"path/filepath"
 	"testing"
 
 	gotemir "github.com/blablatdinov/gotemir/src/logic"
@@ -61,12 +62,13 @@ func TestFkPath(t *testing.T) {
 				testCase.file,
 			)
 		}
-		if val, _ := fkPath.Relative(); val != testCase.expectedRelative {
+		localizedExpected, _ := filepath.Localize(testCase.expectedRelative)
+		if val, _ := fkPath.Relative(); val != localizedExpected {
 			t.Errorf(
 				"Case #%d fail\nRelative not valid\nActual: %s != Expected %s",
 				idx+1,
 				val,
-				testCase.expectedRelative,
+				localizedExpected,
 			)
 		}
 	}

@@ -39,18 +39,20 @@ func prepareFiles(t *testing.T, paths []string) string {
 		t.Fatalf("Fail on create temp dir: %s", err)
 	}
 	for _, path := range paths {
-		dir := filepath.Dir(tempDir + "/" + path)
+		localizedPath, _ := filepath.Localize(path)
+		joinedPath := filepath.Join(tempDir, localizedPath)
+		dir := filepath.Dir(joinedPath)
 		err := os.MkdirAll(dir, os.ModePerm)
 		if err != nil {
-			t.Fatalf("failed to create directory %s: %s\n", dir, err)
+			t.Fatalf("failed to create directory '%s': %s\n", dir, err)
 		}
-		file, err := os.Create(tempDir + "/" + path)
+		file, err := os.Create(joinedPath)
 		if err != nil {
-			t.Fatalf("failed to create file %s: %s\n", tempDir+"/"+path, err)
+			t.Fatalf("failed to create file %s: %s\n", joinedPath, err)
 		}
 		err = file.Close()
 		if err != nil {
-			t.Fatalf("failed to close file %s: %s\n", tempDir+"/"+path, err)
+			t.Fatalf("failed to close file %s: %s\n", joinedPath, err)
 		}
 	}
 	return tempDir
@@ -63,7 +65,7 @@ func TestOsDirectory(t *testing.T) {
 		"src/entry.py",
 		"src/README.md",
 	})
-	osDir := gotemir.OsDirectoryCtor(tempDir+"/src", ".py")
+	osDir := gotemir.OsDirectoryCtor(filepath.Join(tempDir, "src"), ".py")
 	expected := []string{"entry.py", "handlers/file.py"}
 	localizedExpected := make([]string, len(expected))
 	for idx, expectedFile := range expected {
@@ -120,26 +122,21 @@ func TestOsDirectorySeparated(t *testing.T) { //nolint:funlen //TODO
 		"tests/unit/test_auth.py",
 	})
 	osDir := gotemir.OsDirectoryCtor(
-		fmt.Sprintf("%s/tests/it/,%s/tests/unit/", tempDir, tempDir),
+		fmt.Sprintf(
+			"%s,%s",
+			filepath.Join(tempDir, "tests", "it"),
+			filepath.Join(tempDir, "tests", "unit"),
+		),
 		".py",
 	)
-	// expected := []string{
 	localizedExpected := []string{
-		tempDir + "/tests/it/test_file.py",
-		tempDir + "/tests/unit/test_auth.py",
+		filepath.Join(tempDir, "tests", "it", "test_file.py"),
+		filepath.Join(tempDir, "tests", "unit", "test_auth.py"),
 	}
 	relativeExpected := []string{
 		"test_file.py",
 		"test_auth.py",
 	}
-	// localizedExpected := make([]string, len(expected))
-	// for idx, expectedFile := range expected {
-	// 	localized, err := filepath.Localize(expectedFile)
-	// 	if err != nil {
-	// 		t.Fatalf("Fail on localized path: %s, err: %s", expectedFile, err)
-	// 	}
-	// 	localizedExpected[idx] = localized
-	// }
 
 	got, err := osDir.Structure()
 	if err != nil {

@@ -23,13 +23,13 @@
 package logic
 
 import (
+	"path/filepath"
 	"strings"
 )
 
 func TestFileVariants(path string) []string {
 	fileExtension := "." + strings.Split(path, ".")[1]
-	splittedPath := strings.Split(path, "/")
-	fileName := splittedPath[len(splittedPath)-1]
+	_, fileName := filepath.Split(path)
 	fileNameWithoutExtension := strings.Split(fileName, ".")[0]
 	return []string{
 		strings.Replace(
