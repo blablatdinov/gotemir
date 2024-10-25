@@ -24,6 +24,7 @@ package logic_test
 
 import (
 	"path/filepath"
+	"sort"
 	"strings"
 	"testing"
 
@@ -118,17 +119,23 @@ func TestTestFileVariants(t *testing.T) { //nolint:funlen //Many cases
 	}
 	for testIdx, testCase := range cases {
 		localizedInput, _ := filepath.Localize(testCase.input)
-		got := gotemir.TestFileNameVariantsCtor(localizedInput).AsList()
+		got := sort.StringSlice(
+			gotemir.TestFileNameVariantsCtor(localizedInput).AsList(),
+		)
 		if len(got) != len(testCase.expected) {
 			t.Fatalf(
 				"Case %d (%s): len of actual and expected not equal\nActual: %v\nExpected: %v\n",
 				testIdx, testCase.name, got, testCase.expected,
 			)
 		}
+		for expIdx, expectedStr := range testCase.expected {
+			localizedExpected, _ := filepath.Localize(expectedStr)
+			testCase.expected[expIdx] = localizedExpected
+		}
+		testCase.expected = sort.StringSlice(testCase.expected)
 		for idx, actualFile := range got {
 			localizedActual, _ := filepath.Localize(actualFile)
-			localizedExpected, _ := filepath.Localize(testCase.expected[idx])
-			if localizedExpected != localizedActual {
+			if testCase.expected[idx] != localizedActual {
 				t.Errorf(
 					strings.Join(
 						[]string{
@@ -139,7 +146,7 @@ func TestTestFileVariants(t *testing.T) { //nolint:funlen //Many cases
 						},
 						"\n",
 					),
-					testIdx+1, testCase.name, got, localizedActual, localizedExpected,
+					testIdx+1, testCase.name, got, localizedActual, testCase.expected[idx],
 				)
 			}
 		}
@@ -191,16 +198,23 @@ func TestSourceFileVariants(t *testing.T) { //nolint:funlen //Many cases
 	}
 	for testIdx, testCase := range cases {
 		localizedInput, _ := filepath.Localize(testCase.input)
-		got := gotemir.SourceFileNameVariantCtor(localizedInput).AsList()
+		got := sort.StringSlice(
+			gotemir.SourceFileNameVariantCtor(localizedInput).AsList(),
+		)
 		if len(got) != len(testCase.expected) {
 			t.Fatalf(
 				"Case %d (%s): len of actual and expected not equal\nActual: %v\nExpected: %v\n",
 				testIdx, testCase.name, got, testCase.expected,
 			)
 		}
+		for expIdx, expectedStr := range testCase.expected {
+			localizedExpected, _ := filepath.Localize(expectedStr)
+			testCase.expected[expIdx] = localizedExpected
+		}
+		testCase.expected = sort.StringSlice(testCase.expected)
 		for idx, actualFile := range got {
 			localizedActual, _ := filepath.Localize(actualFile)
-			localizedExpected, _ := filepath.Localize(testCase.expected[idx])
+			localizedExpected := testCase.expected[idx]
 			if localizedExpected != localizedActual {
 				t.Errorf(
 					strings.Join(
