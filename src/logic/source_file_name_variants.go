@@ -24,40 +24,47 @@ package logic
 
 import (
 	"path/filepath"
+	"slices"
 	"strings"
 )
 
-func TestFileVariants(path string) []string {
-	fileExtension := "." + strings.Split(path, ".")[1]
-	_, fileName := filepath.Split(path)
-	fileNameWithoutExtension := strings.Split(fileName, ".")[0]
-	return []string{
-		strings.Replace(
-			path,
-			fileName,
-			fileNameWithoutExtension+"_test"+fileExtension,
-			1,
-		),
-		strings.Replace(
-			path,
-			fileName,
-			"test_"+fileNameWithoutExtension+fileExtension,
-			1,
-		),
-	}
+type SourceFileNameVariant struct {
+	path string
 }
 
-func SourceFileVariants(path string) string {
+func SourceFileNameVariantCtor(path string) FileNameVariants {
+	return SourceFileNameVariant{path}
+}
+
+func (this SourceFileNameVariant) AsList() []string {
 	testMarkers := []string{
 		"test_",
 		"_test",
+		"tests_",
+		"_tests",
+		"Tests",
+		"Test",
 	}
-	dir, file := filepath.Split(path)
-	result := file
+	dir, file := filepath.Split(this.path)
+	result := make([]string, 0)
+	fileNameWithoutExtension := strings.Split(file, ".")[0]
+	fileExt := "." + strings.Split(file, ".")[1]
 	for _, marker := range testMarkers {
-		result = strings.ReplaceAll(
-			result, marker, "",
-		)
+		markerBegin := fileNameWithoutExtension[0:len(marker)] == marker
+		fnLen := len(fileNameWithoutExtension)
+		markerEnd := fileNameWithoutExtension[fnLen-len(marker):fnLen] == marker
+		var variant string
+		if markerBegin {
+			variant = fileNameWithoutExtension[len(marker):fnLen] + fileExt
+		} else if markerEnd {
+			variant = fileNameWithoutExtension[0:fnLen-len(marker)] + fileExt
+		}
+		if variant != "" && !slices.Contains(result, variant) {
+			result = append(
+				result,
+				filepath.Join(dir, variant),
+			)
+		}
 	}
-	return filepath.Join(dir, result)
+	return result
 }

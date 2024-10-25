@@ -40,7 +40,7 @@ func (cmprdStructures CmprdStructures) FilesWithoutTests() []string {
 	srcFiles, _ := cmprdStructures.srcDir.Structure()
 	for _, srcFile := range srcFiles {
 		relativePath, _ := srcFile.Relative()
-		testFileVariants := TestFileVariants(relativePath)
+		testFileVariants := TestFileNameVariantsCtor(relativePath).AsList()
 		testFileFound := false
 	out:
 		for _, testFile := range testFiles {
@@ -66,13 +66,15 @@ func (cmprdStructures CmprdStructures) TestsWithoutSrcFiles() []string {
 	srcFiles, _ := cmprdStructures.srcDir.Structure()
 	for _, testFile := range testFiles {
 		relativeTestPath, _ := testFile.Relative()
-		srcFileVariant := SourceFileVariants(relativeTestPath)
+		srcFileVariants := SourceFileNameVariantCtor(relativeTestPath).AsList()
 		srcFileFound := false
 		for _, srcFile := range srcFiles {
 			relativeSrcPath, _ := srcFile.Relative()
-			if relativeSrcPath == srcFileVariant {
-				srcFileFound = true
-				break
+			for _, srcFileVariant := range srcFileVariants {
+				if relativeSrcPath == srcFileVariant {
+					srcFileFound = true
+					break
+				}
 			}
 		}
 		if !srcFileFound {
