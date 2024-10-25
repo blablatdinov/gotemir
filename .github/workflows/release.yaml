@@ -51,12 +51,16 @@ jobs:
         run: |
           GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o gotemir-${{ matrix.os }}-${{ matrix.arch }} src/cmd/gotemir.go
 
-      - name: Upload binary
+      - name: Package binary in tar
+        run: |
+          tar -cvf gotemir-${{ matrix.os }}-${{ matrix.arch }}.tar gotemir-${{ matrix.os }}-${{ matrix.arch }}
+
+      - name: Upload tarball
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./gotemir-${{ matrix.os }}-${{ matrix.arch }}
-          asset_name: gotemir-${{ matrix.os }}-${{ matrix.arch }}
-          asset_content_type: application/octet-stream
+          asset_path: ./gotemir-${{ matrix.os }}-${{ matrix.arch }}.tar
+          asset_name: gotemir-${{ matrix.os }}-${{ matrix.arch }}.tar
+          asset_content_type: application/x-tar
