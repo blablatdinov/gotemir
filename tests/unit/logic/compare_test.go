@@ -23,6 +23,7 @@
 package logic_test
 
 import (
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -32,48 +33,57 @@ import (
 func TestCompare(t *testing.T) { //nolint:funlen // Many cases
 	t.Parallel()
 	cases := []struct {
+		name     string
 		srcDir   gotemir.Directory
 		testsDir gotemir.Directory
 	}{
 		{
+			name: "One file case",
 			srcDir: gotemir.FkDirectoryCtor(
-				[]gotemir.Path{gotemir.FkPathCtor("src/logic.go", "src")},
+				[]gotemir.Path{gotemir.FkPathCtor(
+					filepath.Join("src", "logic.go"),
+					"src",
+				)},
 			),
 			testsDir: gotemir.FkDirectoryCtor(
-				[]gotemir.Path{gotemir.FkPathCtor("tests/logic_test.go", "tests")},
+				[]gotemir.Path{gotemir.FkPathCtor(
+					filepath.Join("tests", "logic_test.go"),
+					"tests",
+				)},
 			),
 		},
 		{
+			name: "Case with test_ prefix",
 			srcDir: gotemir.FkDirectoryCtor(
-				[]gotemir.Path{gotemir.FkPathCtor("src/logic.py", "src")},
+				[]gotemir.Path{gotemir.FkPathCtor(
+					filepath.Join("src", "logic.py"), "src")},
 			),
 			testsDir: gotemir.FkDirectoryCtor(
-				[]gotemir.Path{gotemir.FkPathCtor("tests/logic_test.py", "tests")},
+				[]gotemir.Path{gotemir.FkPathCtor(
+					filepath.Join("tests", "test_logic.py"), "tests")},
 			),
 		},
 		{
-			srcDir: gotemir.FkDirectoryCtor(
-				[]gotemir.Path{gotemir.FkPathCtor("src/logic.py", "src")},
-			),
-			testsDir: gotemir.FkDirectoryCtor(
-				[]gotemir.Path{gotemir.FkPathCtor("tests/test_logic.py", "tests")},
-			),
-		},
-		{
+			name: "Case nested deirectories",
 			srcDir: gotemir.FkDirectoryCtor(
 				[]gotemir.Path{
-					gotemir.FkPathCtor("src/handlers/users.py", "src"),
-					gotemir.FkPathCtor("src/logic/auth.py", "src"),
+					gotemir.FkPathCtor(
+						filepath.Join("src", "handlers", "users.py"), "src"),
+					gotemir.FkPathCtor(
+						filepath.Join("src", "logic", "auth.py"), "src"),
 				},
 			),
 			testsDir: gotemir.FkDirectoryCtor(
 				[]gotemir.Path{
-					gotemir.FkPathCtor("tests/handlers/test_users.py", "tests"),
-					gotemir.FkPathCtor("tests/logic/test_auth.py", "tests"),
+					gotemir.FkPathCtor(
+						filepath.Join("tests", "handlers", "test_users.py"), "tests"),
+					gotemir.FkPathCtor(
+						filepath.Join("tests", "logic", "test_auth.py"), "tests"),
 				},
 			),
 		},
 		{
+			name:     "Case file and test in one directory",
 			srcDir:   gotemir.FkDirectoryCtor([]gotemir.Path{gotemir.FkPathCtor("logic.go", ".")}),
 			testsDir: gotemir.FkDirectoryCtor([]gotemir.Path{gotemir.FkPathCtor("logic_test.go", ".")}),
 		},
@@ -84,7 +94,7 @@ func TestCompare(t *testing.T) { //nolint:funlen // Many cases
 			t.Errorf(
 				strings.Join(
 					[]string{
-						"Found files without tests",
+						"Found files without tests. Case: '%s'",
 						"src directory content: %v",
 						"tests directory content: %v",
 						"Actual: %v",
@@ -92,6 +102,7 @@ func TestCompare(t *testing.T) { //nolint:funlen // Many cases
 					},
 					"\n",
 				),
+				testCase.name,
 				testCase.srcDir,
 				testCase.testsDir,
 				got,
@@ -111,12 +122,15 @@ func TestFileWithoutTest(t *testing.T) { //nolint:funlen // Many cases
 		{
 			name: "Unbounded test",
 			srcDir: gotemir.FkDirectoryCtor(
-				[]gotemir.Path{gotemir.FkPathCtor("src/logic.go", "src")},
+				[]gotemir.Path{gotemir.FkPathCtor(
+					filepath.Join("src", "logic.go"), "src")},
 			),
 			testsDir: gotemir.FkDirectoryCtor(
-				[]gotemir.Path{gotemir.FkPathCtor("tests/unbounded_test.go", "tests")},
+				[]gotemir.Path{gotemir.FkPathCtor(
+					filepath.Join("tests", "unbounded_test.go"), "tests")},
 			),
-			expected: []string{"src/logic.go"},
+			expected: []string{
+				filepath.Join("src", "logic.go")},
 		},
 		{
 			name: "Test not exist",
