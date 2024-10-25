@@ -47,10 +47,41 @@ func TestFileVariants(path string) []string {
 	}
 }
 
-func Compare(srcDir Directory, testsDir Directory) []string {
+func SourceFileVariants(path string) string {
+	return strings.Replace(
+		strings.Replace(
+			path,
+			"test_",
+			"",
+			1,
+		),
+		"_test",
+		"",
+		1,
+	)
+}
+
+type ComparedStructures interface {
+	FilesWithoutTests() []string
+	TestsWithoutSrcFiles() []string
+}
+
+type CmprdStructures struct {
+	srcDir   Directory
+	testsDir Directory
+}
+
+func CmprdStructuresCtor(srcDir, testsDir Directory) ComparedStructures {
+	return CmprdStructures{
+		srcDir,
+		testsDir,
+	}
+}
+
+func (cmprdStructures CmprdStructures) FilesWithoutTests() []string {
 	filesWithoutTests := make([]string, 0)
-	testFiles, _ := testsDir.Structure()
-	srcFiles, _ := srcDir.Structure()
+	testFiles, _ := cmprdStructures.testsDir.Structure()
+	srcFiles, _ := cmprdStructures.srcDir.Structure()
 	for _, srcFile := range srcFiles {
 		relativePath, _ := srcFile.Relative()
 		testFileVariants := TestFileVariants(relativePath)
@@ -58,9 +89,8 @@ func Compare(srcDir Directory, testsDir Directory) []string {
 	out:
 		for _, testFile := range testFiles {
 			relativePath, _ := testFile.Relative()
-			testFileRelative := relativePath
 			for _, testFileVariant := range testFileVariants {
-				if testFileRelative == testFileVariant {
+				if relativePath == testFileVariant {
 					testFileFound = true
 					break out
 				}
@@ -72,4 +102,27 @@ func Compare(srcDir Directory, testsDir Directory) []string {
 		}
 	}
 	return filesWithoutTests
+}
+
+func (cmprdStructures CmprdStructures) TestsWithoutSrcFiles() []string {
+	testsWithoutSrcFiles := make([]string, 0)
+	testFiles, _ := cmprdStructures.testsDir.Structure()
+	srcFiles, _ := cmprdStructures.srcDir.Structure()
+	for _, testFile := range testFiles {
+		relativeTestPath, _ := testFile.Relative()
+		srcFileVariant := SourceFileVariants(relativeTestPath)
+		srcFileFound := false
+		for _, srcFile := range srcFiles {
+			relativeSrcPath, _ := srcFile.Relative()
+			if relativeSrcPath == srcFileVariant {
+				srcFileFound = true
+				break
+			}
+		}
+		if !srcFileFound {
+			val, _ := testFile.Absolute()
+			testsWithoutSrcFiles = append(testsWithoutSrcFiles, val)
+		}
+	}
+	return testsWithoutSrcFiles
 }

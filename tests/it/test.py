@@ -118,6 +118,26 @@ def create_path(test_dir: Path) -> Callable[[str], None]:
         "src",
         "src/tests/unit,src/tests/it",
     ),
+    # TODO: research this case:
+    # dir "tcp" equal to file name without extensions "tcp.py"
+    (
+        (
+            "src/tcp/tcp.py",
+            "tests/unit/tcp/test_tcp.py",
+        ),
+        "src",
+        "tests/unit",
+    ),
+    # TODO: research this case:
+    # dir name contains "test_" or "_test"
+    (
+        (
+            "src/test_server/tcp.py",
+            "tests/unit/test_server/test_tcp.py",
+        ),
+        "src",
+        "tests/unit",
+    ),
 ])
 # TODO @blablatdinov: fix test for windows
 # https://github.com/blablatdinov/gotemir/issues/14
@@ -181,8 +201,15 @@ def test_invalid(create_path: Callable[[str], None], file_structure: tuple[str, 
         "tests/test_entry.py",
         "tests/test_users.py",
     ),
+    # (
+    #     (
+    #         "src/test_server/tcp.py",
+    #         "tests/unit/test_server/test_tcp.py",
+    #     ),
+    #     "src",
+    #     "tests",
+    # ),
 ])
-@pytest.mark.skip(reason="Not implemented")
 def test_unbinded_test_file(create_path: Callable[[str], None], file_structure: tuple[str, ...]) -> None:
     """Check test files without src code."""
     [create_path(file) for file in file_structure]  # type: ignore [func-returns-value]

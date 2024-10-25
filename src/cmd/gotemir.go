@@ -71,11 +71,11 @@ func main() {
 				allSrcFiles,
 				testsDir,
 			)
-			filesWithoutTests := gotemir.Compare(
-				srcDir,
-				testsDir,
+			cmprd := gotemir.CmprdStructuresCtor(
+				srcDir, testsDir,
 			)
-			testsWithoutSourceFiles := []string{}
+			filesWithoutTests := cmprd.FilesWithoutTests()
+			testsWithoutSourceFiles := cmprd.TestsWithoutSrcFiles()
 			exitStatus := writeResult(filesWithoutTests, testsWithoutSourceFiles)
 			os.Exit(exitStatus)
 			return nil
