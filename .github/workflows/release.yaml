@@ -47,7 +47,7 @@ jobs:
 
       - name: Build binary
         run: |
-          GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o gotemir-${{ matrix.os }}-${{ matrix.arch }}
+          GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o gotemir-${{ matrix.os }}-${{ matrix.arch }} src/cmd/gotemir.go
 
       - name: Upload binary
         uses: actions/upload-release-asset@v1
