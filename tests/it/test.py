@@ -160,9 +160,6 @@ def test_help() -> None:
         "tests/test_entry.py",
     ),
 ])
-# TODO @blablatdinov: fix test for windows
-# https://github.com/blablatdinov/gotemir/issues/14
-# @pytest.mark.skipif(sys.platform == "win32", reason="Test fail on windows")
 def test_invalid(create_path: Callable[[str], None], file_structure: tuple[str, ...]) -> None:
     """Test invalid cases."""
     [create_path(file) for file in file_structure]  # type: ignore [func-returns-value]
@@ -174,4 +171,27 @@ def test_invalid(create_path: Callable[[str], None], file_structure: tuple[str, 
     assert got.returncode == 1
     assert got.stdout.decode("utf-8").strip() == "{0}:0:0 Not found test for file".format(
         str(Path("src/handlers/users.py")),
+    )
+
+
+@pytest.mark.usefixtures("test_dir")
+@pytest.mark.parametrize("file_structure", [
+    (
+        "src/entry.py",
+        "tests/test_entry.py",
+        "tests/test_users.py",
+    ),
+])
+@pytest.mark.skip(reason="Not implemented")
+def test_unbinded_test_file(create_path: Callable[[str], None], file_structure: tuple[str, ...]) -> None:
+    """Check test files without src code."""
+    [create_path(file) for file in file_structure]  # type: ignore [func-returns-value]
+    got = subprocess.run(
+        ["./gotemir", "--ext", ".py", "src", "tests"],
+        stdout=subprocess.PIPE, check=False,
+    )
+
+    assert got.returncode == 1, got.stdout.decode("utf-8").strip()
+    assert got.stdout.decode("utf-8").strip() == "{0}:0:0 Not found source file for test".format(
+        str(Path("tests/test_users.py")),
     )

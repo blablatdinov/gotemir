@@ -75,7 +75,8 @@ func main() {
 				srcDir,
 				testsDir,
 			)
-			exitStatus := writeResult(filesWithoutTests)
+			testsWithoutSourceFiles := []string{}
+			exitStatus := writeResult(filesWithoutTests, testsWithoutSourceFiles)
 			os.Exit(exitStatus)
 			return nil
 		},
@@ -85,13 +86,16 @@ func main() {
 	}
 }
 
-func writeResult(filesWithoutTests []string) int {
-	if len(filesWithoutTests) == 0 {
+func writeResult(filesWithoutTests, testsWithoutSourceFiles []string) int {
+	if len(filesWithoutTests) == 0 && len(testsWithoutSourceFiles) == 0 {
 		fmt.Println("Complete!") //nolint:forbidigo
 		return 0
 	}
 	for _, fileWithoutTest := range filesWithoutTests {
 		fmt.Printf("%s:0:0 Not found test for file\n", fileWithoutTest) //nolint:forbidigo
+	}
+	for _, testWithoutSourceFile := range testsWithoutSourceFiles {
+		fmt.Printf("%s:0:0 Not found source file for test\n", testWithoutSourceFile) //nolint:forbidigo
 	}
 	return 1
 }
