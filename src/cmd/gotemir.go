@@ -31,6 +31,7 @@ import (
 
 	gotemir "github.com/blablatdinov/gotemir/src/logic"
 	"github.com/urfave/cli/v2"
+	"gopkg.in/yaml.v3"
 )
 
 var errOptions = errors.New("you must provide both source and test directories")
@@ -59,20 +60,25 @@ func main() {
 			if cliCtx.NArg() < expectedOptionCount {
 				return errOptions
 			}
+			config := gotemir.Config{}
+			configFileContent, _ := os.ReadFile(".gotemir.yaml")
+			yaml.Unmarshal(configFileContent, &config)
 			testsDir := gotemir.OsDirectoryCtor(
 				cliCtx.Args().Get(1),
 				cliCtx.String("ext"),
 			)
-			allSrcFiles := gotemir.OsDirectoryCtor(
-				cliCtx.Args().Get(0),
-				cliCtx.String("ext"),
-			)
-			srcDir := gotemir.ExcludedTestsDirectoryCtor(
-				allSrcFiles,
-				testsDir,
-			)
 			cmprd := gotemir.CmprdStructuresCtor(
-				srcDir, testsDir,
+				gotemir.FilteredByConfigFilesCtor(
+					gotemir.ExcludedTestsDirectoryCtor(
+						gotemir.OsDirectoryCtor(
+							cliCtx.Args().Get(0),
+							cliCtx.String("ext"),
+						),
+						testsDir,
+					),
+					config,
+				),
+				testsDir,
 			)
 			filesWithoutTests := cmprd.FilesWithoutTests()
 			testsWithoutSourceFiles := cmprd.TestsWithoutSrcFiles()

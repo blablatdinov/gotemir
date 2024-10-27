@@ -68,10 +68,19 @@ def create_path(test_dir: Path) -> Callable[[str], None]:
     """
     def _create_path(path: str) -> None:
         dir_ = "/".join(path.split("/")[:-1])
+        print(dir_)
         Path(test_dir / dir_).mkdir(exist_ok=True, parents=True)
         Path(test_dir / path).write_bytes(b"")
         log.debug("Created files: {0}".format(list(Path().glob("**/*"))))
     return _create_path
+
+
+@pytest.fixture
+def create_config() -> Callable[[str], None]:
+    """Create config file."""
+    def _create_config(config_content: str) -> None:
+        Path(".gotemir.yaml").write_text(config_content)
+    return _create_config
 
 
 @pytest.mark.usefixtures("test_dir")
@@ -231,3 +240,35 @@ def test_unbinded_test_file(
 
     assert got.returncode == expected_status, got.stdout.decode("utf-8").strip()
     assert got.stdout.decode("utf-8").strip().splitlines() == expected_out
+
+
+@pytest.mark.usefixtures("test_dir")
+@pytest.mark.parametrize(("file_structure", "config"), [
+    (
+        (
+            "src/__init__.py",
+            "src/entry.py",
+            "tests/test_entry.py",
+        ),
+        "\n".join([
+            "test_free_files:",
+            "  - src/__init__.py"
+        ]),
+    ),
+])
+def test_with_config(
+    create_path: Callable[[str], None],
+    create_config: Callable[[str], None],
+    file_structure: tuple[str, ...],
+    config: str,
+) -> None:
+    """Test config processing."""
+    [create_path(file) for file in file_structure]  # type: ignore [func-returns-value]
+    create_config(config)
+    got = subprocess.run(
+        ["./gotemir", "--ext", ".py", "src", "tests"],
+        stdout=subprocess.PIPE, check=False,
+    )
+
+    assert got.returncode == 0
+    assert got.stdout.decode("utf-8").strip() == "Complete!"
