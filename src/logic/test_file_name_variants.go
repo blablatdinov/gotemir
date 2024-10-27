@@ -27,37 +27,46 @@ import (
 	"strings"
 )
 
-func TestFileVariants(path string) []string {
-	fileExtension := "." + strings.Split(path, ".")[1]
-	_, fileName := filepath.Split(path)
-	fileNameWithoutExtension := strings.Split(fileName, ".")[0]
-	return []string{
-		strings.Replace(
-			path,
-			fileName,
-			fileNameWithoutExtension+"_test"+fileExtension,
-			1,
-		),
-		strings.Replace(
-			path,
-			fileName,
-			"test_"+fileNameWithoutExtension+fileExtension,
-			1,
-		),
-	}
+type TestFileNameVariants struct {
+	path string
 }
 
-func SourceFileVariants(path string) string {
-	testMarkers := []string{
+func TestFileNameVariantsCtor(path string) FileNameVariants {
+	return TestFileNameVariants{path}
+}
+
+func (testFileNameVariant TestFileNameVariants) AsList() []string {
+	dir, file := filepath.Split(testFileNameVariant.path)
+	fileExtension := "." + strings.Split(file, ".")[1]
+	appendixes := []string{
+		// Snake case
 		"test_",
 		"_test",
+		"_tests",
+		"tests_",
+		// Pascal case
+		"Test",
+		"Tests",
+		// Camel case
+		"test",
+		"Test",
+		"tests",
+		"Tests",
 	}
-	dir, file := filepath.Split(path)
-	result := file
-	for _, marker := range testMarkers {
-		result = strings.ReplaceAll(
-			result, marker, "",
+	fileNameWithoutExtension := strings.Split(file, ".")[0]
+	result := make([]string, 0)
+	for _, appendix := range appendixes {
+		result = append(
+			result,
+			filepath.Join(
+				dir,
+				fileNameWithoutExtension+appendix+fileExtension,
+			),
+			filepath.Join(
+				dir,
+				appendix+fileNameWithoutExtension+fileExtension,
+			),
 		)
 	}
-	return filepath.Join(dir, result)
+	return result
 }
