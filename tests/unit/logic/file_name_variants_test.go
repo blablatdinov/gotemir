@@ -140,11 +140,7 @@ func TestTestFileVariants(t *testing.T) { //nolint:funlen //Many cases
 		}
 		testCase.expected = sort.StringSlice(testCase.expected)
 		for idx, actualFile := range got {
-			localizedActual, err := filepath.Localize(actualFile)
-			if err != nil {
-				t.Fatalf("Err on localize path: %s. %s", actualFile, err)
-			}
-			if testCase.expected[idx] != localizedActual {
+			if testCase.expected[idx] != actualFile {
 				t.Errorf(
 					strings.Join(
 						[]string{
@@ -155,7 +151,7 @@ func TestTestFileVariants(t *testing.T) { //nolint:funlen //Many cases
 						},
 						"\n",
 					),
-					testIdx+1, testCase.name, got, localizedActual, testCase.expected[idx],
+					testIdx+1, testCase.name, got, actualFile, testCase.expected[idx],
 				)
 			}
 		}
