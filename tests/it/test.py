@@ -25,7 +25,6 @@
 import logging
 import os
 import subprocess
-import sys
 from collections.abc import Callable, Generator
 from pathlib import Path
 
