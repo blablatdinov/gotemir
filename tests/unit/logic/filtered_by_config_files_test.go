@@ -35,13 +35,13 @@ func TestFilteredbyConfigFiles(t *testing.T) {
 		patterns []string
 		expected []string
 	}{
-		// {
-		// 	paths: []gotemir.Path{
-		// 		gotemir.FkPathCtor("src/__init__.py", "src"),
-		// 	},
-		// 	patterns: []string{"__init__.py"},
-		// 	expected: []string{"src/__init__.py"},
-		// },
+		{
+			paths: []gotemir.Path{
+				gotemir.FkPathCtor("src/__init__.py", "src"),
+			},
+			patterns: []string{"__init__.py"},
+			expected: []string{"src/__init__.py"},
+		},
 		{
 			paths: []gotemir.Path{
 				gotemir.FkPathCtor("src/__init__.py", "src"),
