@@ -23,5 +23,5 @@
 package logic
 
 type Config struct {
-	TestFreeFiles []string `yaml:"test_free_files"`
+	TestFreeFiles []string `yaml:"test-free-files"` //nolint:tagliatelle
 }
