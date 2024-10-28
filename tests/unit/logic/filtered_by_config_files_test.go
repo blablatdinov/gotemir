@@ -30,6 +30,7 @@ import (
 )
 
 func TestFilteredbyConfigFiles(t *testing.T) {
+	t.Parallel()
 	cases := []struct {
 		paths    []gotemir.Path
 		patterns []string
@@ -76,7 +77,6 @@ func TestFilteredbyConfigFiles(t *testing.T) {
 					),
 					caseIdx, idx, got, testCase.expected[idx],
 				)
-
 			}
 		}
 	}

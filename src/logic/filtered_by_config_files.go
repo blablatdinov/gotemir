@@ -52,14 +52,14 @@ func (filteredByConfigFiles FilteredByConfigFiles) Structure() ([]Path, error) {
 		}
 		patternFound := false
 		for _, pattern := range filteredByConfigFiles.patterns {
-			re, err := regexp.Compile(pattern)
+			regexPattern, err := regexp.Compile(pattern)
 			if err != nil {
 				return nil, fmt.Errorf(
 					"%w. Fail compile regex, pattern: %s. err: %w",
 					errFiltering, pattern, err,
 				)
 			}
-			regexFoundString := re.FindString(originAbsolute)
+			regexFoundString := regexPattern.FindString(originAbsolute)
 			if len(regexFoundString) == len(originAbsolute) {
 				patternFound = true
 			}
