@@ -68,6 +68,7 @@ def create_path(test_dir: Path) -> Callable[[str], None]:
     """
     def _create_path(path: str) -> None:
         dir_ = "/".join(path.split("/")[:-1])
+        print(dir_)
         Path(test_dir / dir_).mkdir(exist_ok=True, parents=True)
         Path(test_dir / path).write_bytes(b"")
         log.debug("Created files: {0}".format(list(Path().glob("**/*"))))
