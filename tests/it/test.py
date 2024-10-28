@@ -145,9 +145,6 @@ def create_config() -> Callable[[str], None]:
         "tests/unit",
     ),
 ])
-# TODO @blablatdinov: fix test for windows
-# https://github.com/blablatdinov/gotemir/issues/14
-@pytest.mark.skipif(sys.platform == "win32", reason="Test fail on windows")
 def test_correct(
     create_path: Callable[[str], None],
     file_structure: tuple[str, ...],
