@@ -34,8 +34,7 @@ jobs:
       matrix:
         os: 
           - ubuntu-24.04
-          # TODO: Fix tests for windows
-          # - windows-2022
+          - windows-2022
           - macos-15
     runs-on: ${{ matrix.os }}
     steps:
