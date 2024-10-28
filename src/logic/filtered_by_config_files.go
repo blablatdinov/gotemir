@@ -52,7 +52,7 @@ func (filteredByConfigFiles FilteredByConfigFiles) Structure() ([]Path, error) {
 		}
 		patternFound := false
 		for _, pattern := range filteredByConfigFiles.config.TestFreeFiles {
-			patternFound, err = regexp.Match(pattern, []byte(originAbsolute))
+			patternFound, err = regexp.MatchString(pattern, originAbsolute)
 			if err != nil {
 				return nil, fmt.Errorf(
 					"%w. Fail regexp.Match, pattern: %s. err: %w",
