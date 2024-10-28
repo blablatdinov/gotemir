@@ -53,7 +53,7 @@ jobs:
 
       - name: Package binary in tar
         run: |
-          tar -cvf gotemir-${{ matrix.os }}-${{ matrix.arch }}.tar gotemir-${{ matrix.os }}-${{ matrix.arch }}
+          tar -czvf gotemir-${{ matrix.os }}-${{ matrix.arch }}.tar gotemir-${{ matrix.os }}-${{ matrix.arch }}
 
       - name: Upload tarball
         uses: actions/upload-release-asset@v1
