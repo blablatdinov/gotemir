@@ -20,14 +20,39 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 
-module github.com/blablatdinov/gotemir
+package logic
 
-go 1.23.0
-
-require (
-	github.com/cpuguy83/go-md2man/v2 v2.0.5 // indirect
-	github.com/russross/blackfriday/v2 v2.1.0 // indirect
-	github.com/urfave/cli/v2 v2.27.5
-	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
+import (
+	"errors"
+	"fmt"
+	"slices"
 )
+
+type FilteredByConfigFiles struct {
+	origin Directory
+	config Config
+}
+
+func FilteredByConfigFilesCtor(origin Directory, config Config) Directory {
+	return FilteredByConfigFiles{origin, config}
+}
+
+var errFiltering = errors.New("error on filtering")
+
+func (filteredByConfigFiles FilteredByConfigFiles) Structure() ([]Path, error) {
+	originFiles, err := filteredByConfigFiles.origin.Structure()
+	if err != nil {
+		return nil, fmt.Errorf("%w %w", errFiltering, err)
+	}
+	result := make([]Path, 0)
+	for _, originFile := range originFiles {
+		originAbsolute, err := originFile.Absolute()
+		if err != nil {
+			return nil, fmt.Errorf("%w %w", errFiltering, err)
+		}
+		if !slices.Contains(filteredByConfigFiles.config.TestFreeFiles, originAbsolute) {
+			result = append(result, originFile)
+		}
+	}
+	return result, nil
+}

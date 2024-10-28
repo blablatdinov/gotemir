@@ -27,10 +27,12 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 
 	gotemir "github.com/blablatdinov/gotemir/src/logic"
 	"github.com/urfave/cli/v2"
+	"gopkg.in/yaml.v3"
 )
 
 var errOptions = errors.New("you must provide both source and test directories")
@@ -59,24 +61,30 @@ func main() {
 			if cliCtx.NArg() < expectedOptionCount {
 				return errOptions
 			}
+			config, exitStatus := parseConfig()
+			if exitStatus != 0 {
+				os.Exit(exitStatus)
+			}
 			testsDir := gotemir.OsDirectoryCtor(
 				cliCtx.Args().Get(1),
 				cliCtx.String("ext"),
 			)
-			allSrcFiles := gotemir.OsDirectoryCtor(
-				cliCtx.Args().Get(0),
-				cliCtx.String("ext"),
-			)
-			srcDir := gotemir.ExcludedTestsDirectoryCtor(
-				allSrcFiles,
-				testsDir,
-			)
 			cmprd := gotemir.CmprdStructuresCtor(
-				srcDir, testsDir,
+				gotemir.FilteredByConfigFilesCtor(
+					gotemir.ExcludedTestsDirectoryCtor(
+						gotemir.OsDirectoryCtor(
+							cliCtx.Args().Get(0),
+							cliCtx.String("ext"),
+						),
+						testsDir,
+					),
+					config,
+				),
+				testsDir,
 			)
 			filesWithoutTests := cmprd.FilesWithoutTests()
 			testsWithoutSourceFiles := cmprd.TestsWithoutSrcFiles()
-			exitStatus := writeResult(filesWithoutTests, testsWithoutSourceFiles)
+			exitStatus = writeResult(filesWithoutTests, testsWithoutSourceFiles)
 			os.Exit(exitStatus)
 			return nil
 		},
@@ -84,6 +92,26 @@ func main() {
 	if err := app.Run(os.Args); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func parseConfig() (gotemir.Config, int) {
+	config := gotemir.Config{} //nolint:exhaustruct
+	configFileContent, _ := os.ReadFile(".gotemir.yaml")
+	err := yaml.Unmarshal(configFileContent, &config)
+	if err != nil {
+		fmt.Printf("Fail on parse .gotemir.yaml content: %s\n", err) //nolint:forbidigo
+		return gotemir.Config{}, 1                                   //nolint:exhaustruct
+	}
+	localizedPaths := make([]string, 0)
+	for _, testFreeFilePath := range config.TestFreeFiles {
+		localized, err := filepath.Localize(testFreeFilePath)
+		if err != nil {
+			fmt.Printf("Fail on localize path: '%s' err: %s\n", testFreeFilePath, err) //nolint:forbidigo
+		}
+		localizedPaths = append(localizedPaths, localized) //nolint:wsl
+	}
+	config.TestFreeFiles = localizedPaths
+	return config, 0
 }
 
 func writeResult(filesWithoutTests, testsWithoutSourceFiles []string) int {
