@@ -23,6 +23,8 @@
 package logic
 
 import (
+	"errors"
+	"fmt"
 	"slices"
 )
 
@@ -35,16 +37,18 @@ func FilteredByConfigFilesCtor(origin Directory, config Config) Directory {
 	return FilteredByConfigFiles{origin, config}
 }
 
+var errFiltering = errors.New("error on filtering")
+
 func (filteredByConfigFiles FilteredByConfigFiles) Structure() ([]Path, error) {
 	originFiles, err := filteredByConfigFiles.origin.Structure()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w %w", errFiltering, err)
 	}
 	result := make([]Path, 0)
 	for _, originFile := range originFiles {
 		originAbsolute, err := originFile.Absolute()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w %w", errFiltering, err)
 		}
 		if !slices.Contains(filteredByConfigFiles.config.TestFreeFiles, originAbsolute) {
 			result = append(result, originFile)

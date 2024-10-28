@@ -100,7 +100,7 @@ func parseConfig() (gotemir.Config, int) {
 	err := yaml.Unmarshal(configFileContent, &config)
 	if err != nil {
 		fmt.Printf("Fail on parse .gotemir.yaml content: %s\n", err) //nolint:forbidigo
-		return gotemir.Config{}, 1
+		return gotemir.Config{}, 1                                   //nolint:exhaustruct
 	}
 	localizedPaths := make([]string, 0)
 	for _, testFreeFilePath := range config.TestFreeFiles {
@@ -108,7 +108,7 @@ func parseConfig() (gotemir.Config, int) {
 		if err != nil {
 			fmt.Printf("Fail on localize path: '%s' err: %s\n", testFreeFilePath, err) //nolint:forbidigo
 		}
-		localizedPaths = append(localizedPaths, localized)
+		localizedPaths = append(localizedPaths, localized) //nolint:wsl
 	}
 	config.TestFreeFiles = localizedPaths
 	return config, 0
