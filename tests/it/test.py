@@ -247,7 +247,7 @@ def test_unbinded_test_file(
         ),
         "\n".join([
             "test-free-files:",
-            "  - src/__init__.py",
+            "  - .*__init__.py",
         ]),
     ),
 ])
