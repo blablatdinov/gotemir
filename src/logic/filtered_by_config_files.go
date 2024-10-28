@@ -25,7 +25,7 @@ package logic
 import (
 	"errors"
 	"fmt"
-	"slices"
+	"regexp"
 )
 
 type FilteredByConfigFiles struct {
@@ -50,7 +50,17 @@ func (filteredByConfigFiles FilteredByConfigFiles) Structure() ([]Path, error) {
 		if err != nil {
 			return nil, fmt.Errorf("%w %w", errFiltering, err)
 		}
-		if !slices.Contains(filteredByConfigFiles.config.TestFreeFiles, originAbsolute) {
+		patternFound := false
+		for _, pattern := range filteredByConfigFiles.config.TestFreeFiles {
+			patternFound, err = regexp.Match(pattern, []byte(originAbsolute))
+			if err != nil {
+				return nil, fmt.Errorf(
+					"%w. Fail regexp.Match, pattern: %s. err: %w",
+					errFiltering, pattern, err,
+				)
+			}
+		}
+		if !patternFound {
 			result = append(result, originFile)
 		}
 	}
