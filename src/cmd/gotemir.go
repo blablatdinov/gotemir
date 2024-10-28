@@ -78,9 +78,12 @@ func main() {
 						),
 						testsDir,
 					),
-					config,
+					config.TestFreeFiles,
 				),
-				testsDir,
+				gotemir.FilteredByConfigFilesCtor(
+					testsDir,
+					config.TestHelpers,
+				),
 			)
 			filesWithoutTests := cmprd.FilesWithoutTests()
 			testsWithoutSourceFiles := cmprd.TestsWithoutSrcFiles()

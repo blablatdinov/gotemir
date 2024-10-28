@@ -29,12 +29,12 @@ import (
 )
 
 type FilteredByConfigFiles struct {
-	origin Directory
-	config Config
+	origin   Directory
+	patterns []string
 }
 
-func FilteredByConfigFilesCtor(origin Directory, config Config) Directory {
-	return FilteredByConfigFiles{origin, config}
+func FilteredByConfigFilesCtor(origin Directory, patterns []string) Directory {
+	return FilteredByConfigFiles{origin, patterns}
 }
 
 var errFiltering = errors.New("error on filtering")
@@ -51,7 +51,7 @@ func (filteredByConfigFiles FilteredByConfigFiles) Structure() ([]Path, error) {
 			return nil, fmt.Errorf("%w %w", errFiltering, err)
 		}
 		patternFound := false
-		for _, pattern := range filteredByConfigFiles.config.TestFreeFiles {
+		for _, pattern := range filteredByConfigFiles.patterns {
 			patternFound, err = regexp.MatchString(pattern, originAbsolute)
 			if err != nil {
 				return nil, fmt.Errorf(

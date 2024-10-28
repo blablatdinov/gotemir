@@ -250,6 +250,17 @@ def test_unbinded_test_file(
             "  - .*__init__.py",
         ]),
     ),
+    (
+        (
+            "src/entry.py",
+            "tests/conftest.py",
+            "tests/test_entry.py",
+        ),
+        "\n".join([
+            "test-helpers:",
+            "  - .*conftest.py",
+        ]),
+    ),
 ])
 def test_with_config(
     create_path: Callable[[str], None],
