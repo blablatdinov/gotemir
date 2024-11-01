@@ -37,7 +37,7 @@ import (
 
 var errOptions = errors.New("you must provide both source and test directories")
 
-func main() {
+func main() { //nolint:funlen //TODO: fix
 	app := &cli.App{ //nolint:exhaustruct
 		Name:  "Gotemir",
 		Usage: "golang tests mirrow",
