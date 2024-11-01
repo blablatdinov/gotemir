@@ -37,15 +37,28 @@ import (
 
 var errOptions = errors.New("you must provide both source and test directories")
 
-func main() {
+func main() { //nolint:funlen //TODO: fix
 	app := &cli.App{ //nolint:exhaustruct
-		Name: "Gotemir",
+		Name:  "Gotemir",
+		Usage: "golang tests mirrow",
 		Description: strings.Join(
 			[]string{
 				"is a tool that verifies if the structure of the test directory",
 				"mirrors the structure of the source code directory. It ensures",
 				"that for every source file, a corresponding test file exists",
-				"in the appropriate directory.",
+				"in the appropriate directory.\n\n",
+				"Example of usage\n",
+				"We have next project structure:\n",
+				"src/\n",
+				"├── main.py\n",
+				"├── service/\n",
+				"│   └── user.py\n",
+				"tests/\n",
+				"├── main_test.py\n",
+				"└── service/\n",
+				"    └── user_test.py\n\n",
+				"Run gotemir:\n",
+				"./gotemir --ext .py src tests",
 			},
 			" ",
 		),
