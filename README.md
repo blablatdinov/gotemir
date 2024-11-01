@@ -29,6 +29,8 @@ OR OTHER DEALINGS IN THE SOFTWARE.
 
 Gotemir is a tool that verifies if the structure of the test directory mirrors the structure of the source code directory. It ensures that for every source file, a corresponding test file exists in the appropriate directory.
 
+[On the Layout of Tests](https://www.yegor256.com/2023/01/19/layout-of-tests.html)
+
 ## Features
 
 - Recursively scans both source and test directories.
