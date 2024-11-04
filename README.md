@@ -46,7 +46,7 @@ Clone the repository or download the code and compile it:
 ```bash
 git clone https://github.com/blablatdinov/gotemir.git
 cd gotemir
-go build
+go build src/cmd/gotemir.go
 ```
 
 ## Usage
