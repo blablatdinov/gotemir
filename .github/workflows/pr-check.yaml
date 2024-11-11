@@ -90,7 +90,7 @@ jobs:
           version: v1.60
 
   tidied:
-    name: lint via golangci
+    name: check "go mod tidy" applied
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
