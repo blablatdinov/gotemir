@@ -89,6 +89,21 @@ jobs:
         with:
           version: v1.60
 
+  tidied:
+    name: lint via golangci
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 1.23.2
+      - name: check tidy
+        run: |
+          go mod tidy
+          if [[ $(git status -s | wc -l ) -ne 0 ]]; then
+            exit 1
+          fi
+
   python-lint:
     name: lint via ruff / mypy
     runs-on: ubuntu-24.04
