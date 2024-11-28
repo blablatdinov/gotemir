@@ -19,13 +19,36 @@
 # DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
+---
+version: '3'
 
-test:
-	go test ./...
-	uv run pytest tests/it/test.py
+tasks:
+  default:
+    desc: "Build the app"
+    deps: [install-deps,unit-tests,integration-tests,lint]
+    cmds:
+      - go build -o dist/gotemir src/cmd/gotemir.go
 
-lint:
-	golangci-lint run
-	uv run isort tests
-	uv run ruff check tests
-	uv run mypy tests
+  install-deps:
+    desc: "Install dependencies"
+    cmds:
+     - go mod tidy
+     - uv sync
+
+  unit-tests:
+    desc: "Run unit tests"
+    cmds:
+      - go test ./...
+
+  integration-tests:
+    desc: "Run integration tests"
+    cmds:
+      - uv run pytest tests/it/test.py -s
+
+  lint:
+    desc: "Run linters"
+    cmds:
+      - golangci-lint run
+      - uv run isort tests
+      - uv run ruff check tests
+      - uv run mypy tests
