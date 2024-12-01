@@ -37,8 +37,10 @@ tasks:
 
   unit-tests:
     desc: "Run unit tests"
+    vars:
+      TEST_NAME: '{{ .CLI_ARGS | default "./..." }}'
     cmds:
-      - go test ./...
+      - go test {{.TEST_NAME}} -test.v
 
   integration-tests:
     desc: "Run integration tests"
@@ -52,3 +54,8 @@ tasks:
       - uv run isort tests
       - uv run ruff check tests
       - uv run mypy tests
+
+  clean:
+    desc: "Clean caches"
+    cmds:
+      - git clean -f -d -x
