@@ -24,8 +24,12 @@ version: '3'
 
 tasks:
   default:
+    desc: "Build pipeline"
+    deps: [install-deps,unit-tests,integration-tests,lint,build]
+
+  build:
     desc: "Build the app"
-    deps: [install-deps,unit-tests,integration-tests,lint]
+    deps: [install-deps]
     cmds:
       - go build -o dist/gotemir src/cmd/gotemir.go
 
