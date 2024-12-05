@@ -51,11 +51,17 @@ tasks:
     cmds:
       - uv run pytest tests/it/test.py -s
 
+  fmt:
+    desc: "Run formatters"
+    cmds:
+      - golangci-lint run
+      - uv run isort tests
+      - uv run ruff check tests --fix
+
   lint:
     desc: "Run linters"
     cmds:
       - golangci-lint run
-      - uv run isort tests
       - uv run ruff check tests
       - uv run mypy tests
 

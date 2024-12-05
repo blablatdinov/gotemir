@@ -278,3 +278,31 @@ def test_with_config(
 
     assert got.returncode == 0
     assert got.stdout.decode("utf-8").strip() == "Complete!"
+
+
+@pytest.mark.skip
+def test_not_skip_file_on_ignore(
+    create_path: Callable[[str], None],
+    create_config: Callable[[str], None],
+) -> None:
+    """Gotemir not found file for test.
+
+    Case: file placed in "test-free-files" list and gotemir
+    generate violation, because not found src this file
+    """
+    file_structure = (
+        "src/entry.py",
+        "tests/test_entry.py",
+    )
+    [create_path(file) for file in file_structure]  # type: ignore [func-returns-value]
+    create_config("\n".join([
+        "test-free-files",
+        "  - entry.py",
+    ]))
+    got = subprocess.run(
+        ["./gotemir", "--ext", ".py", "src", "tests"],
+        stdout=subprocess.PIPE, check=False,
+    )
+
+    assert got.returncode == 0
+    assert got.stdout.decode("utf-8").strip() == "Complete!"
