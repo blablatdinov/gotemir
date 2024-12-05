@@ -284,7 +284,7 @@ def test_with_config(
 def test_not_skip_file_on_ignore(
     create_path: Callable[[str], None],
     create_config: Callable[[str], None],
-):
+) -> None:
     """Gotemir not found file for test.
 
     Case: file placed in "test-free-files" list and gotemir
@@ -295,9 +295,9 @@ def test_not_skip_file_on_ignore(
         "tests/test_entry.py",
     )
     [create_path(file) for file in file_structure]  # type: ignore [func-returns-value]
-    create_config('\n'.join([
-        'test-free-files',
-        '  - entry.py',
+    create_config("\n".join([
+        "test-free-files",
+        "  - entry.py",
     ]))
     got = subprocess.run(
         ["./gotemir", "--ext", ".py", "src", "tests"],
