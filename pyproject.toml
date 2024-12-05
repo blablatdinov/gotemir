@@ -10,7 +10,7 @@ dev-dependencies = [
   "isort==5.13.2",
   "mypy==1.13.0",
   "pytest==8.3.4",
-  "ruff==0.8.1",
+  "ruff==0.8.2",
 ]
 
 [tool.isort]
