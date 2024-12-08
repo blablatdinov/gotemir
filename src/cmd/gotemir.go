@@ -82,21 +82,17 @@ func main() { //nolint:funlen //TODO: fix
 				cliCtx.Args().Get(1),
 				cliCtx.String("ext"),
 			)
-			cmprd := gotemir.CmprdStructuresCtor(
-				gotemir.FilteredByConfigFilesCtor(
-					gotemir.ExcludedTestsDirectoryCtor(
-						gotemir.OsDirectoryCtor(
-							cliCtx.Args().Get(0),
-							cliCtx.String("ext"),
-						),
+			cmprd := gotemir.FilterOutFromConfifCtor(
+				gotemir.CmprdStructuresCtor(
+					gotemir.ExcludedTestsDirectoryCtor(gotemir.OsDirectoryCtor(
+						cliCtx.Args().Get(0),
+						cliCtx.String("ext"),
+					),
 						testsDir,
 					),
-					config.TestFreeFiles,
-				),
-				gotemir.FilteredByConfigFilesCtor(
 					testsDir,
-					config.TestHelpers,
 				),
+				config,
 			)
 			filesWithoutTests := cmprd.FilesWithoutTests()
 			testsWithoutSourceFiles := cmprd.TestsWithoutSrcFiles()

@@ -280,7 +280,7 @@ def test_with_config(
     assert got.stdout.decode("utf-8").strip() == "Complete!"
 
 
-@pytest.mark.skip
+# @pytest.mark.skip
 def test_not_skip_file_on_ignore(
     create_path: Callable[[str], None],
     create_config: Callable[[str], None],
@@ -296,7 +296,7 @@ def test_not_skip_file_on_ignore(
     )
     [create_path(file) for file in file_structure]  # type: ignore [func-returns-value]
     create_config("\n".join([
-        "test-free-files",
+        "test-free-files:",
         "  - entry.py",
     ]))
     got = subprocess.run(
