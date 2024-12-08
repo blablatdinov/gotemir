@@ -23,42 +23,32 @@
 package logic
 
 import (
-	"errors"
-	"fmt"
 	"regexp"
 )
 
-type FilteredByConfigFiles struct {
-	origin   Directory
-	patterns []string
+type FilterOutFromConfig struct {
+	origin ComparedStructures
+	config Config
 }
 
-func FilteredByConfigFilesCtor(origin Directory, patterns []string) Directory {
-	return FilteredByConfigFiles{origin, patterns}
+func FilterOutFromConfifCtor(cmprd ComparedStructures, config Config) ComparedStructures {
+	return FilterOutFromConfig{cmprd, config}
 }
 
-var errFiltering = errors.New("error on filtering")
-
-func (filteredByConfigFiles FilteredByConfigFiles) Structure() ([]Path, error) {
-	originFiles, err := filteredByConfigFiles.origin.Structure()
-	if err != nil {
-		return nil, fmt.Errorf("%w %w", errFiltering, err)
-	}
-	result := make([]Path, 0)
+func (filterOutFromConfig FilterOutFromConfig) FilesWithoutTests() []string {
+	originFiles := filterOutFromConfig.origin.FilesWithoutTests()
+	result := make([]string, 0)
 	for _, originFile := range originFiles {
-		originAbsolute, err := originFile.Absolute()
-		if err != nil {
-			return nil, fmt.Errorf("%w %w", errFiltering, err)
-		}
+		originAbsolute := originFile
 		patternFound := false
-		for _, pattern := range filteredByConfigFiles.patterns {
-			regexPattern, err := regexp.Compile(pattern)
-			if err != nil {
-				return nil, fmt.Errorf(
-					"%w. Fail compile regex, pattern: %s. err: %w",
-					errFiltering, pattern, err,
-				)
-			}
+		for _, pattern := range filterOutFromConfig.config.TestFreeFiles {
+			regexPattern, _ := regexp.Compile(pattern)
+			// if err != nil {
+			// 	return nil, fmt.Errorf(
+			// 		"%w. Fail compile regex, pattern: %s. err: %w",
+			// 		errFiltering, pattern, err,
+			// 	)
+			// }
 			regexFoundString := regexPattern.FindString(originAbsolute)
 			if len(regexFoundString) == len(originAbsolute) {
 				patternFound = true
@@ -68,5 +58,31 @@ func (filteredByConfigFiles FilteredByConfigFiles) Structure() ([]Path, error) {
 			result = append(result, originFile)
 		}
 	}
-	return result, nil
+	return result
+}
+
+func (filterOutFromConfig FilterOutFromConfig) TestsWithoutSrcFiles() []string {
+	originFiles := filterOutFromConfig.origin.TestsWithoutSrcFiles()
+	result := make([]string, 0)
+	for _, originFile := range originFiles {
+		originAbsolute := originFile
+		patternFound := false
+		for _, pattern := range filterOutFromConfig.config.TestHelpers {
+			regexPattern, _ := regexp.Compile(pattern)
+			// if err != nil {
+			// 	return nil, fmt.Errorf(
+			// 		"%w. Fail compile regex, pattern: %s. err: %w",
+			// 		errFiltering, pattern, err,
+			// 	)
+			// }
+			regexFoundString := regexPattern.FindString(originAbsolute)
+			if len(regexFoundString) == len(originAbsolute) {
+				patternFound = true
+			}
+		}
+		if !patternFound {
+			result = append(result, originFile)
+		}
+	}
+	return result
 }
