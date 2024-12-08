@@ -43,12 +43,6 @@ func (filterOutFromConfig FilterOutFromConfig) FilesWithoutTests() []string {
 		patternFound := false
 		for _, pattern := range filterOutFromConfig.config.TestFreeFiles {
 			regexPattern, _ := regexp.Compile(pattern)
-			// if err != nil {
-			// 	return nil, fmt.Errorf(
-			// 		"%w. Fail compile regex, pattern: %s. err: %w",
-			// 		errFiltering, pattern, err,
-			// 	)
-			// }
 			regexFoundString := regexPattern.FindString(originAbsolute)
 			if len(regexFoundString) == len(originAbsolute) {
 				patternFound = true
@@ -69,12 +63,6 @@ func (filterOutFromConfig FilterOutFromConfig) TestsWithoutSrcFiles() []string {
 		patternFound := false
 		for _, pattern := range filterOutFromConfig.config.TestHelpers {
 			regexPattern, _ := regexp.Compile(pattern)
-			// if err != nil {
-			// 	return nil, fmt.Errorf(
-			// 		"%w. Fail compile regex, pattern: %s. err: %w",
-			// 		errFiltering, pattern, err,
-			// 	)
-			// }
 			regexFoundString := regexPattern.FindString(originAbsolute)
 			if len(regexFoundString) == len(originAbsolute) {
 				patternFound = true
