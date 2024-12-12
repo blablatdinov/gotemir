@@ -39,6 +39,8 @@ Gotemir is a tool that verifies if the structure of the test directory mirrors t
 
 ## Installation
 
+### From source code
+
 To use Gotemir, you need to have Go installed. You can download Go here.
 
 Clone the repository or download the code and compile it:
@@ -47,6 +49,17 @@ Clone the repository or download the code and compile it:
 git clone https://github.com/blablatdinov/gotemir.git
 cd gotemir
 go build src/cmd/gotemir.go
+```
+
+### Download from github releases
+
+```
+VERSION="0.0.3"
+OS="linux"
+ARCH="amd64"
+curl -O -L -C - https://github.com/blablatdinov/gotemir/releases/download/$VERSION/gotemir-$OS-$ARCH.tar && \
+tar xzf gotemir-$OS-$ARCH.tar && \
+./gotemir-$OS-$ARCH src tests
 ```
 
 ## Usage
