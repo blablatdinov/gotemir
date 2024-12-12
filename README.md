@@ -39,7 +39,7 @@ Gotemir is a tool that verifies if the structure of the test directory mirrors t
 
 ## Installation
 
-To use TestMirror, you need to have Go installed. You can download Go here.
+To use Gotemir, you need to have Go installed. You can download Go here.
 
 Clone the repository or download the code and compile it:
 
@@ -51,7 +51,7 @@ go build src/cmd/gotemir.go
 
 ## Usage
 
-Once compiled, you can run TestMirror by specifying the source and test directories.
+Once compiled, you can run Gotemir by specifying the source and test directories.
 Example project structure:
 
 ```
