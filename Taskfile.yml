@@ -83,7 +83,7 @@ tasks:
     desc: "Run linters"
     cmds:
       - ec
-      - find -type f -name "*.go" | xargs golangci-lint run
+      - golangci-lint run
       - uv run ruff check tests
       - uv run mypy tests
 

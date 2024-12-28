@@ -23,6 +23,7 @@
 FROM golang:1.23.4 AS base
 WORKDIR /app
 ENV EC_VERSION="v3.0.3"
+ENV GOLANGCI_LINT_VERSION="v1.62.2"
 ENV PATH="/root/.local/bin:$PATH"
 RUN apt-get update && apt-get install -y \
     python3 \
@@ -31,7 +32,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 RUN curl -LSfs https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh \
-    | sh -s -- -b /usr/local/bin v1.54.2
+    | sh -s -- -b /usr/local/bin $GOLANGCI_LINT_VERSION
 RUN curl -LSfs https://astral.sh/uv/install.sh | sh
 RUN sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /bin
 RUN curl -O -L -C - https://github.com/editorconfig-checker/editorconfig-checker/releases/download/$EC_VERSION/ec-linux-amd64.tar.gz && \
