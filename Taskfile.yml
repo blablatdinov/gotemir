@@ -46,7 +46,12 @@ tasks:
 
   default:
     desc: "Build pipeline"
-    deps: [install-deps,unit-tests,integration-tests,lint,build]
+    deps:
+      - install-deps
+      - unit-tests
+      - integration-tests
+      - lint
+      - build
 
   build:
     desc: "Build the app"
@@ -83,6 +88,7 @@ tasks:
     desc: "Run linters"
     cmds:
       - ec
+      - yamllint .
       - golangci-lint run
       - uv run ruff check tests
       - uv run mypy tests
