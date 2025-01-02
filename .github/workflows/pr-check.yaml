@@ -22,11 +22,11 @@
 ---
 name: Build
 
-on:
+"on":
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
   push:
-    branches: [ "master" ]
+    branches: ["master"]
 
 jobs:
   build:
@@ -49,7 +49,7 @@ jobs:
   integration-test:
     strategy:
       matrix:
-        os: [ ubuntu-24.04, windows-2022, macos-15 ]
+        os: [ubuntu-24.04, windows-2022, macos-15]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -72,7 +72,8 @@ jobs:
       - name: Checking files for compliance with editorconfig
         run: |
           VERSION="v3.0.3"
-          curl -O -L -C - https://github.com/editorconfig-checker/editorconfig-checker/releases/download/$VERSION/ec-linux-amd64.tar.gz
+          curl -O -L -C - \
+          https://github.com/editorconfig-checker/editorconfig-checker/releases/download/$VERSION/ec-linux-amd64.tar.gz
           tar xzf ec-linux-amd64.tar.gz
           bin/ec-linux-amd64
 
@@ -103,6 +104,20 @@ jobs:
           if [[ $(git status -s | wc -l ) -ne 0 ]]; then
             exit 1
           fi
+
+  yamllint:
+    name: lint yaml files
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+      - name: Install yamllint
+        run: pip install yamllint==1.35.1
+      - name: Run yamllint
+        run: yamllint .
 
   python-lint:
     name: lint via ruff / mypy

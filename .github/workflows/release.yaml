@@ -22,7 +22,7 @@
 ---
 name: Release gotemir
 
-on:
+"on":
   release:
     types: [published]
 
@@ -49,7 +49,8 @@ jobs:
 
       - name: Build binary
         run: |
-          GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o gotemir-${{ matrix.os }}-${{ matrix.arch }} src/cmd/gotemir.go
+          GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }}
+          go build -o gotemir-${{ matrix.os }}-${{ matrix.arch }} src/cmd/gotemir.go
 
       - name: Package binary in tar
         run: |
