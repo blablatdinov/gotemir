@@ -46,7 +46,7 @@ jobs:
           go-version: 1.23.2
       - name: Run test
         run: go test ./...
-      - name: Run test
+      - name: Run gotemir
         run: go run src/cmd/gotemir.go src tests/unit
 
   integration-test:
