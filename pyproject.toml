@@ -29,7 +29,6 @@ dependencies = []
 
 [tool.uv]
 dev-dependencies = [
-  "isort==5.13.2",
   "mypy==1.14.1",
   "pytest==8.3.4",
   "ruff==0.9.3",

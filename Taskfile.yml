@@ -81,7 +81,6 @@ tasks:
     desc: "Run formatters"
     cmds:
       - golangci-lint run
-      - uv run isort tests
       - uv run ruff check tests --fix
 
   lint:
