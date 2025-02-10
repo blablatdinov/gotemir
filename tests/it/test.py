@@ -55,8 +55,7 @@ def test_dir(tmpdir_factory: TempdirFactory, current_dir: Path) -> Generator[Pat
 
 @pytest.fixture
 def create_path(test_dir: Path) -> Callable[[str], None]:
-    """
-    Creating structure via path to file.
+    """Creating structure via path to file.
 
     Exmaple:
 
@@ -285,8 +284,7 @@ def test_not_skip_file_on_ignore(
     create_path: Callable[[str], None],
     create_config: Callable[[str], None],
 ) -> None:
-    """
-    Gotemir not found file for test.
+    """Gotemir not found file for test.
 
     Case: file placed in "test-free-files" list and gotemir
     generate violation, because not found src this file
