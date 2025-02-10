@@ -23,6 +23,7 @@
 package logic
 
 import (
+	"fmt"
 	"regexp"
 )
 
@@ -47,7 +48,7 @@ func (filterOutFromConfig FilterOutFromConfig) FilesWithoutTests() ([]string, er
 		for _, pattern := range filterOutFromConfig.config.TestFreeFiles {
 			regexPattern, err := regexp.Compile(pattern)
 			if err != nil {
-				return []string{}, err
+				return []string{}, fmt.Errorf("fail parsing regex \"%s\" in .gotemir.yaml:\n  %w", pattern, err)
 			}
 			regexFoundString := regexPattern.FindString(originAbsolute)
 			if len(regexFoundString) == len(originAbsolute) {
@@ -73,7 +74,7 @@ func (filterOutFromConfig FilterOutFromConfig) TestsWithoutSrcFiles() ([]string,
 		for _, pattern := range filterOutFromConfig.config.TestHelpers {
 			regexPattern, err := regexp.Compile(pattern)
 			if err != nil {
-				return []string{}, nil
+				return []string{}, fmt.Errorf("fail parsing regex \"%s\" in .gotemir.yaml:\n  %w", pattern, err)
 			}
 			regexFoundString := regexPattern.FindString(originAbsolute)
 			if len(regexFoundString) == len(originAbsolute) {
