@@ -35,14 +35,20 @@ func FilterOutFromConfifCtor(cmprd ComparedStructures, config Config) ComparedSt
 	return FilterOutFromConfig{cmprd, config}
 }
 
-func (filterOutFromConfig FilterOutFromConfig) FilesWithoutTests() []string {
-	originFiles := filterOutFromConfig.origin.FilesWithoutTests()
+func (filterOutFromConfig FilterOutFromConfig) FilesWithoutTests() ([]string, error) {
+	originFiles, err := filterOutFromConfig.origin.FilesWithoutTests()
+	if err != nil {
+		return []string{}, err
+	}
 	result := make([]string, 0)
 	for _, originFile := range originFiles {
 		originAbsolute := originFile
 		patternFound := false
 		for _, pattern := range filterOutFromConfig.config.TestFreeFiles {
-			regexPattern, _ := regexp.Compile(pattern)
+			regexPattern, err := regexp.Compile(pattern)
+			if err != nil {
+				return []string{}, err
+			}
 			regexFoundString := regexPattern.FindString(originAbsolute)
 			if len(regexFoundString) == len(originAbsolute) {
 				patternFound = true
@@ -52,17 +58,23 @@ func (filterOutFromConfig FilterOutFromConfig) FilesWithoutTests() []string {
 			result = append(result, originFile)
 		}
 	}
-	return result
+	return result, nil
 }
 
-func (filterOutFromConfig FilterOutFromConfig) TestsWithoutSrcFiles() []string {
-	originFiles := filterOutFromConfig.origin.TestsWithoutSrcFiles()
+func (filterOutFromConfig FilterOutFromConfig) TestsWithoutSrcFiles() ([]string, error) {
+	originFiles, err := filterOutFromConfig.origin.TestsWithoutSrcFiles()
+	if err != nil {
+		return []string{}, err
+	}
 	result := make([]string, 0)
 	for _, originFile := range originFiles {
 		originAbsolute := originFile
 		patternFound := false
 		for _, pattern := range filterOutFromConfig.config.TestHelpers {
-			regexPattern, _ := regexp.Compile(pattern)
+			regexPattern, err := regexp.Compile(pattern)
+			if err != nil {
+				return []string{}, nil
+			}
 			regexFoundString := regexPattern.FindString(originAbsolute)
 			if len(regexFoundString) == len(originAbsolute) {
 				patternFound = true
@@ -72,5 +84,5 @@ func (filterOutFromConfig FilterOutFromConfig) TestsWithoutSrcFiles() []string {
 			result = append(result, originFile)
 		}
 	}
-	return result
+	return result, nil
 }
