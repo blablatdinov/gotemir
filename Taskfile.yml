@@ -80,8 +80,8 @@ tasks:
   fmt:
     desc: "Run formatters"
     cmds:
-      - golangci-lint run
-      - uv run ruff check tests --fix
+      - go fmt ./...
+      - uv run ruff check tests --fix --fix-only
 
   lint:
     desc: "Run linters"

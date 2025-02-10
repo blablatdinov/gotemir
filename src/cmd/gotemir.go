@@ -84,10 +84,11 @@ func main() { //nolint:funlen //TODO: fix
 			)
 			cmprd := gotemir.FilterOutFromConfifCtor(
 				gotemir.CmprdStructuresCtor(
-					gotemir.ExcludedTestsDirectoryCtor(gotemir.OsDirectoryCtor(
-						cliCtx.Args().Get(0),
-						cliCtx.String("ext"),
-					),
+					gotemir.ExcludedTestsDirectoryCtor(
+						gotemir.OsDirectoryCtor(
+							cliCtx.Args().Get(0),
+							cliCtx.String("ext"),
+						),
 						testsDir,
 					),
 					testsDir,
