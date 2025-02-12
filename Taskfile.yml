@@ -95,4 +95,4 @@ tasks:
   clean:
     desc: "Clean caches"
     cmds:
-      - git clean -f -d -x
+      - git clean -f -d -x -e .venv

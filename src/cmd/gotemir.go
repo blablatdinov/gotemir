@@ -95,8 +95,14 @@ func main() { //nolint:funlen //TODO: fix
 				),
 				config,
 			)
-			filesWithoutTests := cmprd.FilesWithoutTests()
-			testsWithoutSourceFiles := cmprd.TestsWithoutSrcFiles()
+			filesWithoutTests, err := cmprd.FilesWithoutTests()
+			if err != nil {
+				log.Fatal(err)
+			}
+			testsWithoutSourceFiles, err := cmprd.TestsWithoutSrcFiles()
+			if err != nil {
+				log.Fatal(err)
+			}
 			exitStatus = writeResult(filesWithoutTests, testsWithoutSourceFiles)
 			os.Exit(exitStatus)
 			return nil

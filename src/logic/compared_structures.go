@@ -23,6 +23,6 @@
 package logic
 
 type ComparedStructures interface {
-	FilesWithoutTests() []string
-	TestsWithoutSrcFiles() []string
+	FilesWithoutTests() ([]string, error)
+	TestsWithoutSrcFiles() ([]string, error)
 }

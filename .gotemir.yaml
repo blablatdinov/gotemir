@@ -21,7 +21,7 @@
 # OR OTHER DEALINGS IN THE SOFTWARE.
 ---
 test-free-files:
-  - src/cmd/gotemir.go # test by integration tests
+  - src/cmd/gotemir.go  # test by integration tests
   # fake objects:
   - src/logic/fk_directory.go
   # structures:

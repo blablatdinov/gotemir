@@ -101,7 +101,7 @@ func TestCompare(t *testing.T) { //nolint:funlen // Many cases
 		},
 	}
 	for _, testCase := range cases {
-		got := gotemir.CmprdStructuresCtor(testCase.srcDir, testCase.testsDir).FilesWithoutTests()
+		got, _ := gotemir.CmprdStructuresCtor(testCase.srcDir, testCase.testsDir).FilesWithoutTests()
 		if len(got) > 0 {
 			t.Errorf(
 				strings.Join(
@@ -176,7 +176,7 @@ func TestFileWithoutTest(t *testing.T) { //nolint:funlen // Many cases
 		},
 	}
 	for idx, testCase := range cases {
-		got := gotemir.CmprdStructuresCtor(testCase.srcDir, testCase.testsDir).FilesWithoutTests()
+		got, _ := gotemir.CmprdStructuresCtor(testCase.srcDir, testCase.testsDir).FilesWithoutTests()
 		if len(got) != len(testCase.expected) {
 			t.Fatalf(
 				"Case %d (%s): len of actual and expected not equal\nActual: %v\nExpected: %v\n",

@@ -34,7 +34,7 @@ func CmprdStructuresCtor(srcDir, testsDir Directory) ComparedStructures {
 	}
 }
 
-func (cmprdStructures CmprdStructures) FilesWithoutTests() []string {
+func (cmprdStructures CmprdStructures) FilesWithoutTests() ([]string, error) {
 	filesWithoutTests := make([]string, 0)
 	testFiles, _ := cmprdStructures.testsDir.Structure()
 	srcFiles, _ := cmprdStructures.srcDir.Structure()
@@ -57,10 +57,10 @@ func (cmprdStructures CmprdStructures) FilesWithoutTests() []string {
 			filesWithoutTests = append(filesWithoutTests, val)
 		}
 	}
-	return filesWithoutTests
+	return filesWithoutTests, nil
 }
 
-func (cmprdStructures CmprdStructures) TestsWithoutSrcFiles() []string {
+func (cmprdStructures CmprdStructures) TestsWithoutSrcFiles() ([]string, error) {
 	testsWithoutSrcFiles := make([]string, 0)
 	testFiles, _ := cmprdStructures.testsDir.Structure()
 	srcFiles, _ := cmprdStructures.srcDir.Structure()
@@ -82,5 +82,5 @@ func (cmprdStructures CmprdStructures) TestsWithoutSrcFiles() []string {
 			testsWithoutSrcFiles = append(testsWithoutSrcFiles, val)
 		}
 	}
-	return testsWithoutSrcFiles
+	return testsWithoutSrcFiles, nil
 }

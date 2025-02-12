@@ -280,7 +280,6 @@ def test_with_config(
     assert got.stdout.decode("utf-8").strip() == "Complete!"
 
 
-# @pytest.mark.skip
 def test_not_skip_file_on_ignore(
     create_path: Callable[[str], None],
     create_config: Callable[[str], None],
@@ -298,6 +297,32 @@ def test_not_skip_file_on_ignore(
     create_config("\n".join([
         "test-free-files:",
         "  - entry.py",
+    ]))
+    got = subprocess.run(
+        ["./gotemir", "--ext", ".py", "src", "tests"],
+        stdout=subprocess.PIPE, check=False,
+    )
+
+    assert got.returncode == 0
+    assert got.stdout.decode("utf-8").strip() == "Complete!"
+
+
+# TODO: must fail on a05173 commit
+@pytest.mark.usefixtures("test_dir")
+def test_invalid_regex(
+    create_path: Callable[[str], None],
+    create_config: Callable[[str], None],
+) -> None:
+    """Test invalid regex."""
+    file_structure = (
+        "src/entry.py",
+        "tests/test_entry.py",
+    )
+    [create_path(file) for file in file_structure]  # type: ignore [func-returns-value]
+    create_config("\n".join([
+        "---",
+        "test-free-files:",
+        "  - '*__init__.py'",
     ]))
     got = subprocess.run(
         ["./gotemir", "--ext", ".py", "src", "tests"],
