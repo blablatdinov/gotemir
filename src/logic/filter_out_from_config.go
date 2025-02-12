@@ -39,7 +39,7 @@ func FilterOutFromConfifCtor(cmprd ComparedStructures, config Config) ComparedSt
 func (filterOutFromConfig FilterOutFromConfig) FilesWithoutTests() ([]string, error) {
 	originFiles, err := filterOutFromConfig.origin.FilesWithoutTests()
 	if err != nil {
-		return []string{}, err
+		return []string{}, err //nolint:wrapcheck
 	}
 	result := make([]string, 0)
 	for _, originFile := range originFiles {
@@ -65,7 +65,7 @@ func (filterOutFromConfig FilterOutFromConfig) FilesWithoutTests() ([]string, er
 func (filterOutFromConfig FilterOutFromConfig) TestsWithoutSrcFiles() ([]string, error) {
 	originFiles, err := filterOutFromConfig.origin.TestsWithoutSrcFiles()
 	if err != nil {
-		return []string{}, err
+		return []string{}, err //nolint:wrapcheck
 	}
 	result := make([]string, 0)
 	for _, originFile := range originFiles {
