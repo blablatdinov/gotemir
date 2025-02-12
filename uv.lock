@@ -29,9 +29,8 @@ dev = [
 dev = [
     { name = "mypy", specifier = "==1.15.0" },
     { name = "pytest", specifier = "==8.3.4" },
-    { name = "ruff", specifier = "==0.9.6" },
     { name = "pytest-randomly", specifier = "==3.16.0" },
-    { name = "ruff", specifier = "==0.9.5" },
+    { name = "ruff", specifier = "==0.9.6" },
 ]
 
 [[package]]

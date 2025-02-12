@@ -23,8 +23,8 @@
 package logic
 
 type Config struct {
-	Version       int           `yaml:"version"` //nolint:tagliatelle
-	GotemirConfig GotemirConfig `yaml:"gotemir"` //nolint:tagliatelle
+	Version       int           `yaml:"version"`
+	GotemirConfig GotemirConfig `yaml:"gotemir"`
 }
 
 type GotemirConfig struct {
