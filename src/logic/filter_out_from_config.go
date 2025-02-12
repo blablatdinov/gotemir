@@ -45,7 +45,7 @@ func (filterOutFromConfig FilterOutFromConfig) FilesWithoutTests() ([]string, er
 	for _, originFile := range originFiles {
 		originAbsolute := originFile
 		patternFound := false
-		for _, pattern := range filterOutFromConfig.config.TestFreeFiles {
+		for _, pattern := range filterOutFromConfig.config.GotemirConfig.TestFreeFiles {
 			regexPattern, err := regexp.Compile(pattern)
 			if err != nil {
 				return []string{}, fmt.Errorf("fail parsing regex \"%s\" in .gotemir.yaml:\n  %w", pattern, err)
@@ -71,7 +71,7 @@ func (filterOutFromConfig FilterOutFromConfig) TestsWithoutSrcFiles() ([]string,
 	for _, originFile := range originFiles {
 		originAbsolute := originFile
 		patternFound := false
-		for _, pattern := range filterOutFromConfig.config.TestHelpers {
+		for _, pattern := range filterOutFromConfig.config.GotemirConfig.TestHelpers {
 			regexPattern, err := regexp.Compile(pattern)
 			if err != nil {
 				return []string{}, fmt.Errorf("fail parsing regex \"%s\" in .gotemir.yaml:\n  %w", pattern, err)

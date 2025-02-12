@@ -246,8 +246,11 @@ def test_unbinded_test_file(
             "tests/test_entry.py",
         ),
         "\n".join([
-            "test-free-files:",
-            "  - .*__init__.py",
+            "version: 1",
+            "",
+            "gotemir:",
+            "  test-free-files:",
+            "    - .*__init__.py",
         ]),
     ),
     (
@@ -257,8 +260,11 @@ def test_unbinded_test_file(
             "tests/test_entry.py",
         ),
         "\n".join([
-            "test-helpers:",
-            "  - .*conftest.py",
+            "version: 1",
+            "",
+            "gotemir:",
+            "  test-helpers:",
+            "    - .*conftest.py",
         ]),
     ),
 ])
@@ -295,8 +301,11 @@ def test_not_skip_file_on_ignore(
     )
     [create_path(file) for file in file_structure]  # type: ignore [func-returns-value]
     create_config("\n".join([
-        "test-free-files:",
-        "  - entry.py",
+        "version: 1",
+        "",
+        "gotemir:",
+        "  test-free-files:",
+        "    - entry.py",
     ]))
     got = subprocess.run(
         ["./gotemir", "--ext", ".py", "src", "tests"],

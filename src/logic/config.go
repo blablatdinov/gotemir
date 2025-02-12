@@ -23,6 +23,11 @@
 package logic
 
 type Config struct {
+	Version       int           `yaml:"version"` //nolint:tagliatelle
+	GotemirConfig GotemirConfig `yaml:"gotemir"` //nolint:tagliatelle
+}
+
+type GotemirConfig struct {
 	TestFreeFiles []string `yaml:"test-free-files"` //nolint:tagliatelle
 	TestHelpers   []string `yaml:"test-helpers"`    //nolint:tagliatelle
 }
