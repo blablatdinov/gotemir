@@ -122,14 +122,14 @@ func parseConfig() (gotemir.Config, int) {
 		return gotemir.Config{}, 1                                   //nolint:exhaustruct
 	}
 	localizedPaths := make([]string, 0)
-	for _, testFreeFilePath := range config.TestFreeFiles {
+	for _, testFreeFilePath := range config.GotemirConfig.TestFreeFiles {
 		localized, err := filepath.Localize(testFreeFilePath)
 		if err != nil {
 			fmt.Printf("Fail on localize path: '%s' err: %s\n", testFreeFilePath, err) //nolint:forbidigo
 		}
 		localizedPaths = append(localizedPaths, localized) //nolint:wsl
 	}
-	config.TestFreeFiles = localizedPaths
+	config.GotemirConfig.TestFreeFiles = localizedPaths
 	return config, 0
 }
 

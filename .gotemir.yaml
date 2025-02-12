@@ -20,16 +20,19 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
 ---
-test-free-files:
-  - src/cmd/gotemir.go  # test by integration tests
-  # fake objects:
-  - src/logic/fk_directory.go
-  # structures:
-  - src/logic/config.go
-  # interfaces:
-  - src/logic/compared_structures.go
-  - src/logic/directory.go
-  - src/logic/path.go
-  - src/logic/file_name_variants.go
-  # fix:
-  - src/logic/filter_out_from_config.go
+version: 1
+
+gotemir:
+  test-free-files:
+    - src/cmd/gotemir.go  # test by integration tests
+    # fake objects:
+    - src/logic/fk_directory.go
+    # structures:
+    - src/logic/config.go
+    # interfaces:
+    - src/logic/compared_structures.go
+    - src/logic/directory.go
+    - src/logic/path.go
+    - src/logic/file_name_variants.go
+    # fix:
+    - src/logic/filter_out_from_config.go
