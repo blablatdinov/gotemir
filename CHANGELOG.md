@@ -40,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixes
 
 - Licenses (#58)
+- Fix handle invalid regex (#77)
 
 ### Changed
 
