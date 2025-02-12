@@ -46,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update `README.md`
 - Update license year (#55)
+- Update config format (#80)
 
 ### Removed
 
