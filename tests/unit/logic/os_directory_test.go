@@ -34,10 +34,7 @@ import (
 
 func prepareFiles(t *testing.T, paths []string) string {
 	t.Helper()
-	tempDir, err := os.MkdirTemp(os.TempDir(), "gotemir_test")
-	if err != nil {
-		t.Fatalf("Fail on create temp dir: %s", err)
-	}
+	tempDir := t.TempDir()
 	for _, path := range paths {
 		localizedPath, _ := filepath.Localize(path)
 		joinedPath := filepath.Join(tempDir, localizedPath)
