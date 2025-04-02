@@ -70,7 +70,7 @@ func main() { //nolint:funlen //TODO: fix
 				Usage: "file extension for scan",
 			},
 		},
-		Action: func(cliCtx context.Context, cmd *cli.Command) error {
+		Action: func(_ context.Context, cmd *cli.Command) error {
 			expectedOptionCount := 2
 			if cmd.NArg() < expectedOptionCount {
 				return errOptions
