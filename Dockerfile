@@ -23,7 +23,7 @@
 FROM golang:1.24.2 AS base
 WORKDIR /app
 ENV EC_VERSION="v3.0.3"
-ENV GOLANGCI_LINT_VERSION="v1.62.2"
+ENV GOLANGCI_LINT_VERSION="v2.0.2"
 ENV YAMLLINT_VERSION="1.35.1"
 ENV PATH="/root/.local/bin:$PATH"
 RUN apt-get update && apt-get install -y \

@@ -23,6 +23,7 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"log"
@@ -31,14 +32,14 @@ import (
 	"strings"
 
 	gotemir "github.com/blablatdinov/gotemir/src/logic"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 	"gopkg.in/yaml.v3"
 )
 
 var errOptions = errors.New("you must provide both source and test directories")
 
 func main() { //nolint:funlen //TODO: fix
-	app := &cli.App{ //nolint:exhaustruct
+	app := &cli.Command{ //nolint:exhaustruct
 		Name:  "Gotemir",
 		Usage: "golang tests mirrow",
 		Description: strings.Join(
@@ -69,9 +70,9 @@ func main() { //nolint:funlen //TODO: fix
 				Usage: "file extension for scan",
 			},
 		},
-		Action: func(cliCtx *cli.Context) error {
+		Action: func(_ context.Context, cmd *cli.Command) error {
 			expectedOptionCount := 2
-			if cliCtx.NArg() < expectedOptionCount {
+			if cmd.NArg() < expectedOptionCount {
 				return errOptions
 			}
 			config, exitStatus := parseConfig()
@@ -79,15 +80,15 @@ func main() { //nolint:funlen //TODO: fix
 				os.Exit(exitStatus)
 			}
 			testsDir := gotemir.OsDirectoryCtor(
-				cliCtx.Args().Get(1),
-				cliCtx.String("ext"),
+				cmd.Args().Get(1),
+				cmd.String("ext"),
 			)
 			cmprd := gotemir.FilterOutFromConfifCtor(
 				gotemir.CmprdStructuresCtor(
 					gotemir.ExcludedTestsDirectoryCtor(
 						gotemir.OsDirectoryCtor(
-							cliCtx.Args().Get(0),
-							cliCtx.String("ext"),
+							cmd.Args().Get(0),
+							cmd.String("ext"),
 						),
 						testsDir,
 					),
@@ -108,7 +109,7 @@ func main() { //nolint:funlen //TODO: fix
 			return nil
 		},
 	}
-	if err := app.Run(os.Args); err != nil {
+	if err := app.Run(context.Background(), os.Args); err != nil {
 		log.Fatal(err)
 	}
 }

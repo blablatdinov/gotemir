@@ -20,31 +20,66 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 # OR OTHER DEALINGS IN THE SOFTWARE.
 ---
+version: "2"
 linters:
-  enable-all: true
-issues:
-  exclude:
-    # Work via interface only
-    # https://www.yegor256.com/2014/11/20/seven-virtues-of-good-object.html#2-he-works-by-contracts
-    - returns interface
-    # Empty line in function is smell
-    # https://www.yegor256.com/2014/11/03/empty-line-code-smell.html
-    - return with no blank line before
-    - break with no blank line before
-    - only one cuddle assignment allowed before range statement
-    - return statements should not be cuddled if block has more than two lines
-    - Assignments should only be cuddled with other assignments
-    - only one cuddle assignment allowed before if statement
-    - if statements should only be cuddled with assignments
-    - ranges should only be cuddled with assignments used in the iteration
-linters-settings:
-  depguard:
+  default: all
+  settings:
+    depguard:
+      rules:
+        main:
+          allow:
+            - $gostd
+            - github.com/blablatdinov/gotemir
+            - github.com/urfave/cli/v3
+            - gopkg.in/yaml.v3
+    godox:
+      keywords:
+        - FIXME
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
     rules:
-      main:
-        allow:
-          - $gostd
-          - github.com/blablatdinov/gotemir
-          - github.com/urfave/cli/v2
-  godox:
-    keywords:
-      - FIXME
+      # Work via interface only
+      # https://www.yegor256.com/2014/11/20/seven-virtues-of-good-object.html#2-he-works-by-contracts
+      - path: (.+)\.go$
+        text: returns interface
+      # Empty line in function is smell
+      # https://www.yegor256.com/2014/11/03/empty-line-code-smell.html
+      - path: (.+)\.go$
+        text: return with no blank line before
+      - path: (.+)\.go$
+        text: break with no blank line before
+      - path: (.+)\.go$
+        text: only one cuddle assignment allowed before range statement
+      - path: (.+)\.go$
+        text: return statements should not be cuddled if block has more than two lines
+      - path: (.+)\.go$
+        text: Assignments should only be cuddled with other assignments
+      - path: (.+)\.go$
+        text: only one cuddle assignment allowed before if statement
+      - path: (.+)\.go$
+        text: if statements should only be cuddled with assignments
+      - path: (.+)\.go$
+        text: ranges should only be cuddled with assignments used in the iteration
+      - path: (.+)\.go$
+        text: assignments should only be cuddled with other assignments
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gci
+    - gofmt
+    - gofumpt
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
