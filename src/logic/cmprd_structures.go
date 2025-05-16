@@ -22,6 +22,8 @@
 
 package logic
 
+import "slices"
+
 type CmprdStructures struct {
 	srcDir   Directory
 	testsDir Directory
@@ -70,11 +72,8 @@ func (cmprdStructures CmprdStructures) TestsWithoutSrcFiles() ([]string, error) 
 		srcFileFound := false
 		for _, srcFile := range srcFiles {
 			relativeSrcPath, _ := srcFile.Relative()
-			for _, srcFileVariant := range srcFileVariants {
-				if relativeSrcPath == srcFileVariant {
-					srcFileFound = true
-					break
-				}
+			if slices.Contains(srcFileVariants, relativeSrcPath) {
+				srcFileFound = true
 			}
 		}
 		if !srcFileFound {

@@ -89,6 +89,7 @@ tasks:
       - ec
       - yamllint .
       - golangci-lint run
+      - go run golang.org/x/tools/gopls/internal/analysis/modernize/cmd/modernize@latest -test ./...
       - uv run ruff check tests
       - uv run mypy tests
 
