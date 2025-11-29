@@ -31,7 +31,7 @@ dependencies = []
 dev-dependencies = [
   "mypy==1.19.0",
   "pytest==9.0.1",
-  "ruff==0.14.6",
+  "ruff==0.14.7",
   "pytest-randomly==4.0.1",
 ]
 
