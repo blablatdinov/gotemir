@@ -30,7 +30,7 @@ dependencies = []
 [tool.uv]
 dev-dependencies = [
   "mypy==1.19.0",
-  "pytest==9.0.1",
+  "pytest==9.0.2",
   "ruff==0.14.8",
   "pytest-randomly==4.0.1",
 ]
