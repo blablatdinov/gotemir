@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: Copyright (c) 2024-2026 Almaz Ilaletdinov <a.ilaletdinov@yandex.ru>
 # SPDX-License-Identifier: MIT
 
-FROM golang:1.25.7 AS base
+FROM golang:1.26.0 AS base
 WORKDIR /app
 ENV EC_VERSION="v3.0.3"
 ENV GOLANGCI_LINT_VERSION="v2.0.2"
