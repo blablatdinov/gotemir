@@ -15,5 +15,3 @@ gotemir:
     - src/logic/directory.go
     - src/logic/path.go
     - src/logic/file_name_variants.go
-    # fix:
-    - src/logic/filter_out_from_config.go
