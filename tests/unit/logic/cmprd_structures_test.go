@@ -4,12 +4,41 @@
 package logic_test
 
 import (
+	"errors"
 	"path/filepath"
 	"strings"
 	"testing"
 
 	gotemir "github.com/blablatdinov/gotemir/src/logic"
 )
+
+type SeDirectory struct{}
+
+func (seDirectory SeDirectory) Structure() ([]gotemir.Path, error) {
+	return []gotemir.Path{}, errors.New("fk error")
+}
+
+type SePath struct{}
+
+func (sePath SePath) Relative() (string, error) {
+	return "", errors.New("fk error")
+}
+
+func (sePath SePath) Absolute() (string, error) {
+	return "", errors.New("fk error")
+}
+
+type SePathBrokenAbsolute struct {
+	relative string
+}
+
+func (sePath SePathBrokenAbsolute) Relative() (string, error) {
+	return sePath.relative, nil
+}
+
+func (sePath SePathBrokenAbsolute) Absolute() (string, error) {
+	return "", errors.New("fk error")
+}
 
 func TestCompare(t *testing.T) { //nolint:funlen // Many cases
 	t.Parallel()
@@ -181,5 +210,51 @@ func TestFileWithoutTest(t *testing.T) { //nolint:funlen // Many cases
 				)
 			}
 		}
+	}
+}
+
+func TestErrorHandling(t *testing.T) {
+	t.Parallel()
+	_, err := gotemir.CmprdStructuresCtor(
+		gotemir.FkDirectoryCtor([]gotemir.Path{gotemir.FkPathCtor("", "")}),
+		SeDirectory{},
+	).FilesWithoutTests()
+	if err == nil {
+		t.Errorf("Error not handled")
+	}
+	_, err = gotemir.CmprdStructuresCtor(
+		SeDirectory{},
+		gotemir.FkDirectoryCtor([]gotemir.Path{gotemir.FkPathCtor("", "")}),
+	).FilesWithoutTests()
+	if err == nil {
+		t.Errorf("Error not handled")
+	}
+	_, err = gotemir.CmprdStructuresCtor(
+		gotemir.FkDirectoryCtor([]gotemir.Path{SePath{}}),
+		gotemir.FkDirectoryCtor([]gotemir.Path{gotemir.FkPathCtor("", "")}),
+	).FilesWithoutTests()
+	if err == nil {
+		t.Errorf("Error not handled")
+	}
+	_, err = gotemir.CmprdStructuresCtor(
+		gotemir.FkDirectoryCtor([]gotemir.Path{SePathBrokenAbsolute{"file.go"}}),
+		gotemir.FkDirectoryCtor([]gotemir.Path{gotemir.FkPathCtor("file_test.go", "src/file_test.go")}),
+	).FilesWithoutTests()
+	if err == nil {
+		t.Errorf("Error not handled")
+	}
+	_, err = gotemir.CmprdStructuresCtor(
+		gotemir.FkDirectoryCtor([]gotemir.Path{gotemir.FkPathCtor("", "")}),
+		SeDirectory{},
+	).TestsWithoutSrcFiles()
+	if err == nil {
+		t.Errorf("Error not handled")
+	}
+	_, err = gotemir.CmprdStructuresCtor(
+		SeDirectory{},
+		gotemir.FkDirectoryCtor([]gotemir.Path{gotemir.FkPathCtor("", "")}),
+	).TestsWithoutSrcFiles()
+	if err == nil {
+		t.Errorf("Error not handled")
 	}
 }
