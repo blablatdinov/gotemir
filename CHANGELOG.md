@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Test for `FilterOutFromConfig` (#205)
 - Installation instructions (#51)
 - Dev dockerfile (#56)
 - Yamllint (#61)
