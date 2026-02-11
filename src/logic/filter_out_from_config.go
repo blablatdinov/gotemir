@@ -22,23 +22,9 @@ func (filterOutFromConfig FilterOutFromConfig) FilesWithoutTests() ([]string, er
 	if err != nil {
 		return []string{}, err //nolint:wrapcheck
 	}
-	result := make([]string, 0)
-	for _, originFile := range originFiles {
-		originAbsolute := originFile
-		patternFound := false
-		for _, pattern := range filterOutFromConfig.config.GotemirConfig.TestFreeFiles {
-			regexPattern, err := regexp.Compile(pattern)
-			if err != nil {
-				return []string{}, fmt.Errorf("fail parsing regex \"%s\" in .gotemir.yaml:\n  %w", pattern, err)
-			}
-			regexFoundString := regexPattern.FindString(originAbsolute)
-			if len(regexFoundString) == len(originAbsolute) {
-				patternFound = true
-			}
-		}
-		if !patternFound {
-			result = append(result, originFile)
-		}
+	result, err := generic(originFiles, filterOutFromConfig.config.GotemirConfig.TestFreeFiles)
+	if err != nil {
+		return []string{}, err
 	}
 	return result, nil
 }
@@ -48,11 +34,19 @@ func (filterOutFromConfig FilterOutFromConfig) TestsWithoutSrcFiles() ([]string,
 	if err != nil {
 		return []string{}, err //nolint:wrapcheck
 	}
+	result, err := generic(originFiles, filterOutFromConfig.config.GotemirConfig.TestHelpers)
+	if err != nil {
+		return []string{}, err
+	}
+	return result, nil
+}
+
+func generic(files []string, exclude []string) ([]string, error) {
 	result := make([]string, 0)
-	for _, originFile := range originFiles {
+	for _, originFile := range files {
 		originAbsolute := originFile
 		patternFound := false
-		for _, pattern := range filterOutFromConfig.config.GotemirConfig.TestHelpers {
+		for _, pattern := range exclude {
 			regexPattern, err := regexp.Compile(pattern)
 			if err != nil {
 				return []string{}, fmt.Errorf("fail parsing regex \"%s\" in .gotemir.yaml:\n  %w", pattern, err)
