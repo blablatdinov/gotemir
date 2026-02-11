@@ -17,8 +17,8 @@ func TestFilterOut(t *testing.T) {
 		filtered := logic.FilterOutFromConfifCtor(
 			logic.FkComparedStructuresCtor([]string{}, []string{}),
 			logic.Config{
-				Version:        0,
-				GotemirConfig:  logic.GotemirConfig{TestFreeFiles: []string{}, TestHelpers: []string{}},
+				Version:       0,
+				GotemirConfig: logic.GotemirConfig{TestFreeFiles: []string{}, TestHelpers: []string{}},
 			},
 		)
 		files, err := filtered.FilesWithoutTests()
