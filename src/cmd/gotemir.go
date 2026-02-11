@@ -64,18 +64,20 @@ func main() { //nolint:funlen //TODO: fix
 				cmd.Args().Get(1),
 				cmd.String("ext"),
 			)
-			cmprd := gotemir.FilterOutFromConfifCtor(
-				gotemir.CmprdStructuresCtor(
-					gotemir.ExcludedTestsDirectoryCtor(
-						gotemir.OsDirectoryCtor(
-							cmd.Args().Get(0),
-							cmd.String("ext"),
-						),
-						testsDir,
-					),
-					testsDir,
+			srcDir := gotemir.ExcludedTestsDirectoryCtor(
+				gotemir.OsDirectoryCtor(
+					cmd.Args().Get(0),
+					cmd.String("ext"),
+				),
+				testsDir,
+			)
+			cmprd := gotemir.WarnOnUnusedConfigCtor(
+				gotemir.FilterOutFromConfifCtor(
+					gotemir.CmprdStructuresCtor(srcDir, testsDir),
+					config,
 				),
 				config,
+				srcDir,
 			)
 			filesWithoutTests, err := cmprd.FilesWithoutTests()
 			if err != nil {
@@ -84,6 +86,17 @@ func main() { //nolint:funlen //TODO: fix
 			testsWithoutSourceFiles, err := cmprd.TestsWithoutSrcFiles()
 			if err != nil {
 				log.Fatal(err)
+			}
+			if w, ok := cmprd.(gotemir.WarnOnUnusedConfig); ok {
+				unused, err := w.UnusedTestFreeFilesPatterns()
+				if err != nil {
+					log.Fatal(err)
+				}
+				for _, u := range unused {
+					for _, path := range u.MatchedPaths {
+						fmt.Printf("%s:0:0 Warning: test-free-files pattern %q matches file that has tests\n", path, u.Pattern) //nolint:forbidigo
+					}
+				}
 			}
 			exitStatus = writeResult(filesWithoutTests, testsWithoutSourceFiles)
 			os.Exit(exitStatus)
