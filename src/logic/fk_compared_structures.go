@@ -8,10 +8,10 @@ type FkComparedStructures struct {
 	TestsWthtSrcFiles []string
 }
 
-func FkComparedStructuresCtor(FilesWthtTests []string, TestsWthtSrcFiles []string) ComparedStructures {
+func FkComparedStructuresCtor(filesWthtTests []string, testsWthtSrcFiles []string) ComparedStructures {
 	return FkComparedStructures{
-		FilesWthtTests,
-		TestsWthtSrcFiles,
+		filesWthtTests,
+		testsWthtSrcFiles,
 	}
 }
 
