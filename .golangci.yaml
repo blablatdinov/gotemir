@@ -48,6 +48,8 @@ linters:
         text: ranges should only be cuddled with assignments used in the iteration
       - path: (.+)\.go$
         text: assignments should only be cuddled with other assignments
+      - path: (.+)\.go$
+        text: missing whitespace above this line
     paths:
       - third_party$
       - builtin$

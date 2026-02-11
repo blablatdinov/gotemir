@@ -4,8 +4,12 @@
 package logic
 
 import (
+	"errors"
+	"fmt"
 	"slices"
 )
+
+var errCmprdStructures = errors.New("compared structures error")
 
 type CmprdStructures struct {
 	srcDir   Directory
@@ -23,16 +27,16 @@ func (cmprdStructures CmprdStructures) FilesWithoutTests() ([]string, error) {
 	filesWithoutTests := make([]string, 0)
 	testFiles, err := cmprdStructures.testsDir.Structure()
 	if err != nil {
-		return []string{}, err
+		return []string{}, fmt.Errorf("%w %w", err, errCmprdStructures)
 	}
 	srcFiles, err := cmprdStructures.srcDir.Structure()
 	if err != nil {
-		return []string{}, err
+		return []string{}, fmt.Errorf("%w %w", err, errCmprdStructures)
 	}
 	for _, srcFile := range srcFiles {
 		relativePath, err := srcFile.Relative()
 		if err != nil {
-			return []string{}, err
+			return []string{}, fmt.Errorf("%w %w", err, errCmprdStructures)
 		}
 		testFileVariants := TestFileNameVariantsCtor(relativePath).AsList()
 		testFileFound := false
@@ -48,10 +52,10 @@ func (cmprdStructures CmprdStructures) FilesWithoutTests() ([]string, error) {
 		}
 		if !testFileFound {
 			val, err := srcFile.Absolute()
-			if err != nil {
-				return []string{}, err
-			}
 			filesWithoutTests = append(filesWithoutTests, val)
+			if err != nil {
+				return []string{}, fmt.Errorf("%w %w", err, errCmprdStructures)
+			}
 		}
 	}
 	return filesWithoutTests, nil
@@ -61,11 +65,11 @@ func (cmprdStructures CmprdStructures) TestsWithoutSrcFiles() ([]string, error) 
 	testsWithoutSrcFiles := make([]string, 0)
 	testFiles, err := cmprdStructures.testsDir.Structure()
 	if err != nil {
-		return []string{}, err
+		return []string{}, fmt.Errorf("%w %w", err, errCmprdStructures)
 	}
 	srcFiles, err := cmprdStructures.srcDir.Structure()
 	if err != nil {
-		return []string{}, err
+		return []string{}, fmt.Errorf("%w %w", err, errCmprdStructures)
 	}
 	for _, testFile := range testFiles {
 		relativeTestPath, _ := testFile.Relative()
