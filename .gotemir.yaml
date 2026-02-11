@@ -8,6 +8,7 @@ gotemir:
     - src/cmd/gotemir.go  # test by integration tests
     # fake objects:
     - src/logic/fk_directory.go
+    - src/logic/fk_compared_structures.go
     # structures:
     - src/logic/config.go
     # interfaces:
@@ -15,5 +16,3 @@ gotemir:
     - src/logic/directory.go
     - src/logic/path.go
     - src/logic/file_name_variants.go
-    # fix:
-    - src/logic/filter_out_from_config.go
