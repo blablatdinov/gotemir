@@ -35,7 +35,7 @@ func (testFileNameVariant TestFileNameVariants) AsList() []string {
 		"Tests",
 	}
 	fileNameWithoutExtension := strings.Split(file, ".")[0]
-	result := make([]string, 0)
+	result := make([]string, 0, 2*len(appendixes)) //nolint:mnd
 	for _, appendix := range appendixes {
 		result = append(
 			result,

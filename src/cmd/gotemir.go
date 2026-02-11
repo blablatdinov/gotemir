@@ -90,7 +90,8 @@ func main() { //nolint:funlen //TODO: fix
 			return nil
 		},
 	}
-	if err := app.Run(context.Background(), os.Args); err != nil {
+	err := app.Run(context.Background(), os.Args)
+	if err != nil {
 		log.Fatal(err)
 	}
 }

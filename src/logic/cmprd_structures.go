@@ -3,7 +3,13 @@
 
 package logic
 
-import "slices"
+import (
+	"errors"
+	"fmt"
+	"slices"
+)
+
+var errCmprdStructures = errors.New("compared structures error")
 
 type CmprdStructures struct {
 	srcDir   Directory
@@ -19,10 +25,19 @@ func CmprdStructuresCtor(srcDir, testsDir Directory) ComparedStructures {
 
 func (cmprdStructures CmprdStructures) FilesWithoutTests() ([]string, error) {
 	filesWithoutTests := make([]string, 0)
-	testFiles, _ := cmprdStructures.testsDir.Structure()
-	srcFiles, _ := cmprdStructures.srcDir.Structure()
+	testFiles, err := cmprdStructures.testsDir.Structure()
+	if err != nil {
+		return []string{}, fmt.Errorf("%w %w", err, errCmprdStructures)
+	}
+	srcFiles, err := cmprdStructures.srcDir.Structure()
+	if err != nil {
+		return []string{}, fmt.Errorf("%w %w", err, errCmprdStructures)
+	}
 	for _, srcFile := range srcFiles {
-		relativePath, _ := srcFile.Relative()
+		relativePath, err := srcFile.Relative()
+		if err != nil {
+			return []string{}, fmt.Errorf("%w %w", err, errCmprdStructures)
+		}
 		testFileVariants := TestFileNameVariantsCtor(relativePath).AsList()
 		testFileFound := false
 	out:
@@ -36,8 +51,11 @@ func (cmprdStructures CmprdStructures) FilesWithoutTests() ([]string, error) {
 			}
 		}
 		if !testFileFound {
-			val, _ := srcFile.Absolute()
+			val, err := srcFile.Absolute()
 			filesWithoutTests = append(filesWithoutTests, val)
+			if err != nil {
+				return []string{}, fmt.Errorf("%w %w", err, errCmprdStructures)
+			}
 		}
 	}
 	return filesWithoutTests, nil
@@ -45,8 +63,14 @@ func (cmprdStructures CmprdStructures) FilesWithoutTests() ([]string, error) {
 
 func (cmprdStructures CmprdStructures) TestsWithoutSrcFiles() ([]string, error) {
 	testsWithoutSrcFiles := make([]string, 0)
-	testFiles, _ := cmprdStructures.testsDir.Structure()
-	srcFiles, _ := cmprdStructures.srcDir.Structure()
+	testFiles, err := cmprdStructures.testsDir.Structure()
+	if err != nil {
+		return []string{}, fmt.Errorf("%w %w", err, errCmprdStructures)
+	}
+	srcFiles, err := cmprdStructures.srcDir.Structure()
+	if err != nil {
+		return []string{}, fmt.Errorf("%w %w", err, errCmprdStructures)
+	}
 	for _, testFile := range testFiles {
 		relativeTestPath, _ := testFile.Relative()
 		srcFileVariants := SourceFileNameVariantCtor(relativeTestPath).AsList()
