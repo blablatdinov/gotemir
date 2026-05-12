@@ -46,7 +46,7 @@ jobs:
         with:
           python-version: 3.14
       - name: Install uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@v8.1.0
       - name: Run test
         run: uv run pytest tests/it/test.py
 
@@ -115,7 +115,7 @@ jobs:
         with:
           python-version: 3.14
       - name: Install uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@v8.1.0
       - name: Run ruff
         run: uv run ruff check tests
       - name: Run mypy
