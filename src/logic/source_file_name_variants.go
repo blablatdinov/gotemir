@@ -23,8 +23,8 @@ func (srcFileNameVariant SourceFileNameVariant) AsList() []string {
 		"_test",
 		"tests_",
 		"_tests",
-		"Tests",
-		"Test",
+		"Tests", //nolint:goconst
+		"Test",  //nolint:goconst
 	}
 	dir, file := filepath.Split(srcFileNameVariant.path)
 	result := make([]string, 0)

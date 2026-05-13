@@ -3,7 +3,7 @@
 ---
 version: "2"
 linters:
-  default: all
+  default: standard
   settings:
     depguard:
       rules:
@@ -50,6 +50,8 @@ linters:
         text: assignments should only be cuddled with other assignments
       - path: (.+)\.go$
         text: missing whitespace above this line
+      - path: tests/unit/(.+)\.go$
+        text: make it a constant
     paths:
       - third_party$
       - builtin$

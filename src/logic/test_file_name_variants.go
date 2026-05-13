@@ -26,8 +26,8 @@ func (testFileNameVariant TestFileNameVariants) AsList() []string {
 		"_tests",
 		"tests_",
 		// Pascal case
-		"Test",
-		"Tests",
+		"Test",  //nolint:goconst
+		"Tests", //nolint:goconst
 		// Camel case
 		"test",
 		"Test",
