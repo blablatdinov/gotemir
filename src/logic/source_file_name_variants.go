@@ -28,7 +28,7 @@ func (srcFileNameVariant SourceFileNameVariant) AsList() []string {
 	}
 	dir, file := filepath.Split(srcFileNameVariant.path)
 	result := make([]string, 0)
-	fileNameWithoutExtension := strings.Split(file, ".")[0]
+	fileNameWithoutExtension, _, _ := strings.Cut(file, ".")
 	fileExt := "." + strings.Split(file, ".")[1]
 	for _, marker := range testMarkers {
 		markerBegin := fileNameWithoutExtension[0:len(marker)] == marker
