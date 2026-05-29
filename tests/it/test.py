@@ -39,12 +39,12 @@ def create_path(test_dir: Path) -> Callable[[str], None]:
     """Creating structure via path to file.
 
     Example:
-
     from "src/handlers/users.py" create_path generate next structure:
 
     src
     └── handlers
         └── users.py
+
     """
     def _create_path(path: str) -> None:
         dir_ = "/".join(path.split("/")[:-1])
