@@ -64,7 +64,7 @@ func main() { //nolint:funlen //TODO: fix
 				cmd.Args().Get(1),
 				cmd.String("ext"),
 			)
-			cmprd := gotemir.FilterOutFromConfifCtor(
+			cmprd := gotemir.FilterOutFromConfigCtor(
 				gotemir.CmprdStructuresCtor(
 					gotemir.ExcludedTestsDirectoryCtor(
 						gotemir.OsDirectoryCtor(

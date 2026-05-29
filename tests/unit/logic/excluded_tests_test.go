@@ -65,7 +65,7 @@ func TestWithoutTests(t *testing.T) { //nolint:funlen // TODO
 			t.Errorf(
 				strings.Join(
 					[]string{
-						"Incompare actual and expected at index=%d",
+						"Doesn't match actual and expected at index=%d",
 						"Actual: %v != Expected: %v",
 						"\n",
 					},

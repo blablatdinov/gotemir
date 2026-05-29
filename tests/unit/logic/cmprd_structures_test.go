@@ -80,7 +80,7 @@ func TestCompare(t *testing.T) { //nolint:funlen // Many cases
 			),
 		},
 		{
-			name: "Case nested deirectories",
+			name: "Case nested directories",
 			srcDir: gotemir.FkDirectoryCtor(
 				[]gotemir.Path{
 					gotemir.FkPathCtor(
@@ -200,7 +200,7 @@ func TestFileWithoutTest(t *testing.T) { //nolint:funlen // Many cases
 				t.Errorf(
 					strings.Join(
 						[]string{
-							"Incompare actual and expected at index=%d (%s)",
+							"Doesn't match actual and expected at index=%d (%s)",
 							"src directory content: %v",
 							"tests directory content: %v",
 							"Actual: %s != Expected: %s",

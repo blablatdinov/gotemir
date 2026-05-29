@@ -58,7 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Compress release archieve
+- Compress release archive
 - Filter test free files by regex (#32)
 - Ignore test helpers (#33)
 - Unit test for `FilteredByConfigFiles` (#34)
