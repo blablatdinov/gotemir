@@ -13,7 +13,7 @@ type FilterOutFromConfig struct {
 	config Config
 }
 
-func FilterOutFromConfifCtor(cmprd ComparedStructures, config Config) ComparedStructures {
+func FilterOutFromConfigCtor(cmprd ComparedStructures, config Config) ComparedStructures {
 	return FilterOutFromConfig{cmprd, config}
 }
 

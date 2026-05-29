@@ -1,0 +1,19 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "dictionaryDefinitions": [
+    {
+      "name": "cspell-custom-words",
+      "path": "./cspell_custom_words.txt",
+      "addWords": true
+    }
+  ],
+  "dictionaries": [
+    "cspell-custom-words",
+    "python",
+    "go",
+    "html"
+  ],
+  "import": [],
+  "ignorePaths": []
+}

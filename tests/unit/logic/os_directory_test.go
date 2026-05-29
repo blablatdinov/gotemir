@@ -79,7 +79,7 @@ func TestOsDirectory(t *testing.T) {
 			t.Errorf(
 				strings.Join(
 					[]string{
-						"Incompare actual and expected at index=%d",
+						"Doesn't match actual and expected at index=%d",
 						"Actual: %v != Expected: %v",
 						"\n",
 					},
@@ -141,7 +141,7 @@ func TestOsDirectorySeparated(t *testing.T) { //nolint:funlen //TODO
 			t.Errorf(
 				strings.Join(
 					[]string{
-						"Incompare actual absolute and expected at index=%d",
+						"Doesn't match actual absolute and expected at index=%d",
 						"Actual: %s != Expected: %s",
 						"\n",
 					},
@@ -157,7 +157,7 @@ func TestOsDirectorySeparated(t *testing.T) { //nolint:funlen //TODO
 			t.Errorf(
 				strings.Join(
 					[]string{
-						"Incompare actual relative and expected at index=%d",
+						"Doesn't match actual relative and expected at index=%d",
 						"Actual: %s != Expected: %s",
 						"\n",
 					},

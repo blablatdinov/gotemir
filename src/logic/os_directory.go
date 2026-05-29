@@ -27,8 +27,8 @@ var errWalking = errors.New("fail on walk directory")
 
 func (osDirectory OsDirectory) Structure() ([]Path, error) {
 	var files []Path
-	splittedPath := strings.SplitSeq(osDirectory.path, ",")
-	for sPath := range splittedPath {
+	splitPath := strings.SplitSeq(osDirectory.path, ",")
+	for sPath := range splitPath {
 		err := filepath.Walk(sPath, func(path string, info os.FileInfo, err error) error {
 			if err != nil {
 				return fmt.Errorf("%w. Dirname=%s error: %w", errWalking, path, err)

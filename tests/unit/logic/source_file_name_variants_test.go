@@ -87,7 +87,7 @@ func TestSourceFileVariants(t *testing.T) { //nolint:funlen //Many cases
 				t.Errorf(
 					strings.Join(
 						[]string{
-							"Incompare actual and expected at index=%d (%s)",
+							"Doesn't match actual and expected at index=%d (%s)",
 							"input: %s",
 							"test file variants: %v",
 							"Actual: '%s' != Expected: %s",

@@ -38,7 +38,7 @@ def test_dir(tmpdir_factory: TempdirFactory, current_dir: Path) -> Generator[Pat
 def create_path(test_dir: Path) -> Callable[[str], None]:
     """Creating structure via path to file.
 
-    Exmaple:
+    Example:
 
     from "src/handlers/users.py" create_path generate next structure:
 
@@ -201,7 +201,7 @@ def test_invalid(create_path: Callable[[str], None], file_structure: tuple[str, 
         0,
     ),
 ])
-def test_unbinded_test_file(
+def test_unbound_test_file(
     create_path: Callable[[str], None],
     file_structure: tuple[str, ...],
     expected_out: list[str],

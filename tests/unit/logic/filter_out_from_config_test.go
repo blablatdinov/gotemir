@@ -12,7 +12,7 @@ import (
 
 func TestFilterOut_emptyInputReturnsEmpty(t *testing.T) {
 	t.Parallel()
-	filtered := logic.FilterOutFromConfifCtor(
+	filtered := logic.FilterOutFromConfigCtor(
 		logic.FkComparedStructuresCtor([]string{}, []string{}),
 		logic.Config{
 			Version:       0,
@@ -37,7 +37,7 @@ func TestFilterOut_emptyInputReturnsEmpty(t *testing.T) {
 
 func TestFilterOut_TestFreeFilesExcludesMatchingFiles(t *testing.T) {
 	t.Parallel()
-	filtered := logic.FilterOutFromConfifCtor(
+	filtered := logic.FilterOutFromConfigCtor(
 		logic.FkComparedStructuresCtor(
 			[]string{"pkg/foo.go", "pkg/bar.go", "cmd/main.go"},
 			[]string{},
@@ -62,7 +62,7 @@ func TestFilterOut_TestFreeFilesExcludesMatchingFiles(t *testing.T) {
 
 func TestFilterOut_TestHelpersExcludesMatchingTests(t *testing.T) {
 	t.Parallel()
-	filtered := logic.FilterOutFromConfifCtor(
+	filtered := logic.FilterOutFromConfigCtor(
 		logic.FkComparedStructuresCtor(
 			[]string{},
 			[]string{"tests/helper.go", "tests/foo_test.go", "tests/util.go"},
@@ -87,7 +87,7 @@ func TestFilterOut_TestHelpersExcludesMatchingTests(t *testing.T) {
 
 func TestFilterOut_invalidRegexInTestFreeFilesReturnsError(t *testing.T) {
 	t.Parallel()
-	filtered := logic.FilterOutFromConfifCtor(
+	filtered := logic.FilterOutFromConfigCtor(
 		logic.FkComparedStructuresCtor([]string{"foo.go"}, []string{}),
 		logic.Config{
 			Version: 0,
@@ -105,7 +105,7 @@ func TestFilterOut_invalidRegexInTestFreeFilesReturnsError(t *testing.T) {
 
 func TestFilterOut_invalidRegexInTestHelpersReturnsError(t *testing.T) {
 	t.Parallel()
-	filtered := logic.FilterOutFromConfifCtor(
+	filtered := logic.FilterOutFromConfigCtor(
 		logic.FkComparedStructuresCtor([]string{}, []string{"helper.go"}),
 		logic.Config{
 			Version: 0,
