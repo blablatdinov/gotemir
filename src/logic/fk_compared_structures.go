@@ -4,21 +4,21 @@
 package logic
 
 type FkComparedStructures struct {
-	FilesWthtTests    []string
-	TestsWthtSrcFiles []string
+	FilesWithTests    []string
+	TestsWithSrcFiles []string
 }
 
-func FkComparedStructuresCtor(filesWthtTests []string, testsWthtSrcFiles []string) ComparedStructures {
+func FkComparedStructuresCtor(filesWithTests []string, testsWithSrcFiles []string) ComparedStructures {
 	return FkComparedStructures{
-		filesWthtTests,
-		testsWthtSrcFiles,
+		filesWithTests,
+		testsWithSrcFiles,
 	}
 }
 
 func (fkComparedStructures FkComparedStructures) FilesWithoutTests() ([]string, error) {
-	return fkComparedStructures.FilesWthtTests, nil
+	return fkComparedStructures.FilesWithTests, nil
 }
 
 func (fkComparedStructures FkComparedStructures) TestsWithoutSrcFiles() ([]string, error) {
-	return fkComparedStructures.TestsWthtSrcFiles, nil
+	return fkComparedStructures.TestsWithSrcFiles, nil
 }
