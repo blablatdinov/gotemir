@@ -11,7 +11,7 @@ dependencies = []
 [tool.uv]
 dev-dependencies = [
   "mypy==2.3.0",
-  "pytest==9.0.3",
+  "pytest==9.1.1",
   "ruff==0.15.22",
   "pytest-randomly==4.1.0",
 ]
