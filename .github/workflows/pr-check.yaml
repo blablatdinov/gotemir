@@ -127,7 +127,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
       - name: Install jscpd
         run: npm i jscpd@4.0.5 -g
       - name: Run jscpd
@@ -139,7 +139,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
       - name: Install cspell
         run: npm i cspell@10.0.0 -g
       - name: Run cspell
