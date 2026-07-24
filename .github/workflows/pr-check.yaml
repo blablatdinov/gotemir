@@ -147,7 +147,7 @@ jobs:
 
   deltaver:
     runs-on: ubuntu-24.04
-    name: Check spelling
+    name: Check dependencies relevance
     steps:
       - name: Checkout
         uses: actions/checkout@v6
