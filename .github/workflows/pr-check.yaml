@@ -144,3 +144,20 @@ jobs:
         run: npm i cspell@10.0.0 -g
       - name: Run cspell
         run: cspell . no-progress --show-suggestions --show-context
+
+  deltaver:
+    runs-on: ubuntu-24.04
+    name: Check spelling
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: 3.14
+      - name: Install deltaver
+        run: pip install deltaver==1.0.1
+      - name: Check golang dependencies relevance
+        run: deltaver go.sum --format golang
+      # - name: Check python dependencies relevance
+      #   run: deltaver uv.lock --format golang
